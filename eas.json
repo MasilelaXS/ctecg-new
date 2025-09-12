@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 16.13.3",
+    "version": ">= 3.0.0", 
     "appVersionSource": "remote"
   },
   "build": {
@@ -24,9 +24,11 @@
       }
     },
     "production": {
+      "distribution": "store", 
       "autoIncrement": true,
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "buildType": "release" 
       },
       "android": {
         "buildType": "app-bundle"
