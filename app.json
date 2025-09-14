@@ -33,7 +33,7 @@
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
       ],
-      "package": "com.ctecg.mobile",
+  "package": "com.dannel.ctecg",
       "versionCode": 1
     },
     "web": {
