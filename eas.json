@@ -31,7 +31,8 @@
       },
       "android": {
         "buildType": "app-bundle"
-      }
+      },
+      "developmentClient": false
     }
   },
   "submit": {
