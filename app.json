@@ -33,8 +33,8 @@
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
       ],
-  "package": "com.dannel.ctecg",
-      "versionCode": 1
+      "package": "com.dannel.ctecg",
+      "versionCode": 15
     },
     "web": {
       "bundler": "metro",
