@@ -228,7 +228,7 @@ export default function BillingScreen() {
           },
           {
             text: 'Continue',
-            onPress: (amountText) => {
+            onPress: (amountText?: string) => {
               console.log('💰 Amount entered:', amountText);
               if (amountText && amountText.trim()) {
                 const amount = parseFloat(amountText.trim());
@@ -290,7 +290,7 @@ export default function BillingScreen() {
         },
         {
           text: 'Continue',
-          onPress: (email) => {
+          onPress: (email?: string) => {
             if (email && email.trim()) {
               // Basic email validation
               const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
