@@ -1,0 +1,8 @@
+# EAS Build ignore file
+node_modules/
+.expo/
+.git/
+*.log
+.vscode/
+.idea/
+errors.txt

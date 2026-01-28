@@ -1,0 +1,967 @@
+tar: android/.gitignore: Cannot open: Permission denied
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/build.gradle: Cannot open: Permission denied
+tar: android/gradle: Cannot mkdir: Permission denied
+tar: android/gradle.properties: Cannot open: Permission denied
+tar: android/gradlew: Cannot open: Permission denied
+tar: android/gradlew.bat: Cannot open: Permission denied
+tar: android/settings.gradle: Cannot open: Permission denied
+tar: assets/adaptive-icon.png: Cannot open: Permission denied
+tar: assets/adaptive-icons.png: Cannot open: Permission denied
+tar: assets/client.png: Cannot open: Permission denied
+tar: assets/icon.png: Cannot open: Permission denied
+tar: assets/logo-clean.png: Cannot open: Permission denied
+tar: assets/splash.png: Cannot open: Permission denied
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/contexts: Cannot mkdir: Permission denied
+tar: src/navigation: Cannot mkdir: Permission denied
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/utils: Cannot mkdir: Permission denied
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/build.gradle: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/debug.keystore: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/google-services.json: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/proguard-rules.pro: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/gradle: Cannot mkdir: Permission denied
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/AdBanner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/AdModal.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Card.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/ConfirmationModal.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/CustomButton.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Header.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/LoadingSpinner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/OnlineStatusIndicator.tsx: Cannot open: No such file or directory
+tar:
+src/components: Cannot mkdir: Permission denied
+tar: src/components/OutageBanner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Toast.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/TopNavigation.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/UncappedUsageCard.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/YocoPaymentWebView.tsx: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/api.ts: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/colors.ts: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/Design.ts: Cannot open: No such file or directory
+tar: src/contexts: Cannot mkdir: Permission denied
+tar: src/contexts/AuthContext.tsx: Cannot open: No such file or directory
+tar: src/navigation: Cannot mkdir: Permission denied
+tar: src/navigation/AppNavigator.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/BillingScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ComprehensiveDataScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/CreatePasswordScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/DashboardScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/FAQScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ForgotEmailScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/LinkAccountScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/LoginScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/MakePaymentScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/OutageDetailsScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/OutageScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ProfileScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ResetPasswordScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/SupportScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/UsageScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/VerifyOTPScreen.tsx: Cannot open: No such file or directory
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/services/api.ts: Cannot open: No such file or directory
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/services/PushNotificationService.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/api.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/api.tsx: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/index.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/index.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/customerTypeUtils.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/customerValidation.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/helpers-new.ts: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/helpers.ts: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/phoneValidation.ts: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debug: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debugOptimized: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper/gradle-wrapper.jar: Cannot open: No such file or directory
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper/gradle-wrapper.properties: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debug/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debugOptimized/AndroidManifest.xml: Cannot open
+: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-hdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-mdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values-night: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg: Cannot mkdir: No such file or directory
+tar:
+android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable/ic_launcher_background.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable/rn_edit_text_material.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-hdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-mdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/colors.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/strings.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/styles.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values-night/colors.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel/MainActivity.kt: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel/MainApplication.kt: Cannot open: No such file or directory
+tar:
+Exiting with failure status due to previous errors
+tar: android/.gitignore: Cannot open: Permission denied
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/build.gradle: Cannot open: Permission denied
+tar: android/gradle: Cannot mkdir: Permission denied
+tar: android/gradle.properties: Cannot open: Permission denied
+tar: android/gradlew: Cannot open: Permission denied
+tar: android/gradlew.bat: Cannot open: Permission denied
+tar: android/settings.gradle: Cannot open: Permission denied
+tar: assets/adaptive-icon.png: Cannot open: Permission denied
+tar: assets/adaptive-icons.png: Cannot open: Permission denied
+tar: assets/client.png: Cannot open: Permission denied
+tar: assets/icon.png: Cannot open: Permission denied
+tar: assets/logo-clean.png: Cannot open: Permission denied
+tar: assets/splash.png: Cannot open: Permission denied
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/contexts: Cannot mkdir: Permission denied
+tar: src/navigation: Cannot mkdir: Permission denied
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/utils: Cannot mkdir: Permission denied
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/build.gradle: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/debug.keystore: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/google-services.json: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/proguard-rules.pro: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/gradle: Cannot mkdir: Permission denied
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/AdBanner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/AdModal.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Card.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/ConfirmationModal.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/CustomButton.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Header.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/LoadingSpinner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/OnlineStatusIndicator.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/OutageBanner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Toast.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/TopNavigation.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/UncappedUsageCard.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/YocoPaymentWebView.tsx: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/api.ts: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/colors.ts: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/Design.ts: Cannot open: No such file or directory
+tar: src/contexts: Cannot mkdir: Permission denied
+tar: src/contexts/AuthContext.tsx: Cannot open: No such file or directory
+tar: src/navigation: Cannot mkdir: Permission denied
+tar: src/navigation/AppNavigator.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/BillingScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ComprehensiveDataScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/CreatePasswordScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/DashboardScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/FAQScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ForgotEmailScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/LinkAccountScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/LoginScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/MakePaymentScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/OutageDetailsScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/OutageScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ProfileScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ResetPasswordScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/SupportScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/UsageScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/VerifyOTPScreen.tsx: Cannot open: No such file or directory
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/services/api.ts: Cannot open: No such file or directory
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/services/PushNotificationService.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/api.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/api.tsx: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/index.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/index.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/customerTypeUtils.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/customerValidation.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/helpers-new.ts: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/helpers.ts: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/phoneValidation.ts: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debug: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar:
+android/app/src/debugOptimized: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper/gradle-wrapper.jar: Cannot open: No such file or directory
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper/gradle-wrapper.properties: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debug/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debugOptimized/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-hdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-mdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values-night: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable/ic_launcher_background.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable/rn_edit_text_material.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-hdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-mdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/colors.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/strings.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/styles.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values-night/colors.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel/MainActivity.kt: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel/MainApplication.kt: Cannot open: No such file or directory
+tar: Exiting with failure status due to previous errors
+tar: android/.gitignore: Cannot open: Permission denied
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/build.gradle: Cannot open: Permission denied
+tar: android/gradle: Cannot mkdir: Permission denied
+tar: android/gradle.properties: Cannot open: Permission denied
+tar: android/gradlew: Cannot open: Permission denied
+tar: android/gradlew.bat: Cannot open: Permission denied
+tar: android/settings.gradle: Cannot open: Permission denied
+tar: assets/adaptive-icon.png: Cannot open: Permission denied
+tar: assets/adaptive-icons.png: Cannot open: Permission denied
+tar: assets/client.png: Cannot open: Permission denied
+tar: assets/icon.png: Cannot open: Permission denied
+tar: assets/logo-clean.png: Cannot open: Permission denied
+tar: assets/splash.png: Cannot open: Permission denied
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/contexts: Cannot mkdir: Permission denied
+tar: src/navigation: Cannot mkdir: Permission denied
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/utils: Cannot mkdir: Permission denied
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/build.gradle: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/debug.keystore: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/google-services.json: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/proguard-rules.pro: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/gradle: Cannot mkdir: Permission denied
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/AdBanner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/AdModal.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Card.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/ConfirmationModal.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/CustomButton.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Header.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/LoadingSpinner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/OnlineStatusIndicator.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/OutageBanner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Toast.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/TopNavigation.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/UncappedUsageCard.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/YocoPaymentWebView.tsx: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/api.ts: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/colors.ts: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/Design.ts: Cannot open: No such file or directory
+tar: src/contexts: Cannot mkdir: Permission denied
+tar: src/contexts/AuthContext.tsx: Cannot open: No such file or directory
+tar: src/navigation: Cannot mkdir: Permission denied
+tar: src/navigation/AppNavigator.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/BillingScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ComprehensiveDataScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/CreatePasswordScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/DashboardScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/FAQScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ForgotEmailScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/LinkAccountScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/LoginScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/MakePaymentScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/OutageDetailsScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/OutageScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ProfileScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ResetPasswordScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/SupportScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/UsageScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/VerifyOTPScreen.tsx: Cannot open: No such file or directory
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/services/api.ts: Cannot open: No such file or directory
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/services/PushNotificationService.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/api.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/api.tsx: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/index.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/index.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/customerTypeUtils.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/customerValidation.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/helpers-new.ts: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/helpers.ts: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/phoneValidation.ts: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debug: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debugOptimized: Cannot mkdir
+: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper/gradle-wrapper.jar: Cannot open: No such file or directory
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper/gradle-wrapper.properties: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debug/AndroidManifest.xml: Cannot open
+: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debugOptimized/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-hdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-mdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values-night: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable/ic_launcher_background.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable/rn_edit_text_material.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-hdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-mdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/colors.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/strings.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/styles.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values-night/colors.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel/MainActivity.kt: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel/MainApplication.kt: Cannot open: No such file or directory
+tar: Exiting with failure status due to previous errors
+tar: android/.gitignore: Cannot open: Permission denied
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/build.gradle: Cannot open: Permission denied
+tar: android/gradle: Cannot mkdir: Permission denied
+tar: android/gradle.properties: Cannot open: Permission denied
+tar: android/gradlew: Cannot open: Permission denied
+tar: android/gradlew.bat: Cannot open: Permission denied
+tar: android/settings.gradle: Cannot open: Permission denied
+tar: assets/adaptive-icon.png: Cannot open: Permission denied
+tar: assets/adaptive-icons.png: Cannot open: Permission denied
+tar: assets/client.png: Cannot open: Permission denied
+tar: assets/icon.png: Cannot open: Permission denied
+tar: assets/logo-clean.png: Cannot open: Permission denied
+tar: assets/splash.png: Cannot open: Permission denied
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/contexts: Cannot mkdir: Permission denied
+tar: src/navigation: Cannot mkdir: Permission denied
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/utils: Cannot mkdir: Permission denied
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/build.gradle: Cannot open: No such file or directory
+tar:
+android/app: Cannot mkdir: Permission denied
+tar: android/app/debug.keystore: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/google-services.json: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/proguard-rules.pro: Cannot open: No such file or directory
+tar: android/app: Cannot mkdir: Permission denied
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/gradle: Cannot mkdir: Permission denied
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/AdBanner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/AdModal.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Card.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/ConfirmationModal.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/CustomButton.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir
+: Permission denied
+tar: src/components/Header.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/LoadingSpinner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/OnlineStatusIndicator.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/OutageBanner.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/Toast.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/TopNavigation.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/UncappedUsageCard.tsx: Cannot open: No such file or directory
+tar: src/components: Cannot mkdir: Permission denied
+tar: src/components/YocoPaymentWebView.tsx: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/api.ts: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/colors.ts: Cannot open: No such file or directory
+tar: src/constants: Cannot mkdir: Permission denied
+tar: src/constants/Design.ts: Cannot open: No such file or directory
+tar: src/contexts: Cannot mkdir: Permission denied
+tar: src/contexts/AuthContext.tsx: Cannot open: No such file or directory
+tar: src/navigation: Cannot mkdir: Permission denied
+tar: src/navigation/AppNavigator.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/BillingScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ComprehensiveDataScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/CreatePasswordScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/DashboardScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/FAQScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ForgotEmailScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/LinkAccountScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/LoginScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/MakePaymentScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/OutageDetailsScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/OutageScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ProfileScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/ResetPasswordScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/SupportScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/UsageScreen.tsx: Cannot open: No such file or directory
+tar: src/screens: Cannot mkdir: Permission denied
+tar: src/screens/VerifyOTPScreen.tsx: Cannot open: No such file or directory
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/services/api.ts: Cannot open: No such file or directory
+tar: src/services: Cannot mkdir: Permission denied
+tar: src/services/PushNotificationService.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/api.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/api.tsx: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/index.ts: Cannot open: No such file or directory
+tar: src/types: Cannot mkdir: Permission denied
+tar: src/types/index.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/customerTypeUtils.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/customerValidation.tsx: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/helpers-new.ts: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/helpers.ts: Cannot open: No such file or directory
+tar: src/utils: Cannot mkdir: Permission denied
+tar: src/utils/phoneValidation.ts: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debug: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debugOptimized: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper/gradle-wrapper.jar: Cannot open: No such file or directory
+tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
+tar: android/gradle/wrapper/gradle-wrapper.properties: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debug/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/debugOptimized/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/AndroidManifest.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-hdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-mdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values-night: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable/ic_launcher_background.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable/rn_edit_text_material.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-hdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-mdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar:
+android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/colors.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/strings.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values/styles.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/res/values-night/colors.xml: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel: Cannot mkdir: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel/MainActivity.kt: Cannot open: No such file or directory
+tar: android/app/src: Cannot mkdir: No such file or directory
+tar: android/app/src/main/java/com/myctecg/dannel/MainApplication.kt: Cannot open: No such file or directory
+tar: Exiting with failure status due to previous errors
+tar -C /home/expo/workingdir/build --strip-components 1 -zxf /home/expo/workingdir/project.tar.gz exited with non-zero code: 2

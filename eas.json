@@ -4,6 +4,12 @@
     "appVersionSource": "remote"
   },
   "build": {
+    "base": {
+      "withoutCredentials": false,
+      "cache": {
+        "disabled": false
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
