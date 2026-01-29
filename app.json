@@ -2,7 +2,7 @@
   "expo": {
     "name": "CTECG Mobile",
     "slug": "my-ctecg",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "platforms": [
       "ios",
       "android"
@@ -44,7 +44,7 @@
       ],
       "package": "com.dannel.ctecg",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 16
+      "versionCode": 17
     },
     "web": {
       "bundler": "metro",
