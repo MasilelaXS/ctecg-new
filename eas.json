@@ -41,7 +41,8 @@
       },
       "android": {
         "buildType": "app-bundle",
-        "image": "latest"
+        "image": "latest",
+        "credentialsSource": "remote"
       },
       "developmentClient": false
     }
