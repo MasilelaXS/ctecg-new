@@ -32,11 +32,15 @@
     "production": {
       "distribution": "store",
       "autoIncrement": true,
+      "cache": {
+        "disabled": true
+      },
       "ios": {
         "resourceClass": "m-medium"
       },
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "image": "latest"
       },
       "developmentClient": false
     }
