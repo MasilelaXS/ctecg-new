@@ -40,8 +40,5 @@
       },
       "developmentClient": false
     }
-  },
-  "submit": {
-    "production": {}
   }
 }
