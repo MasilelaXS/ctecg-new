@@ -1,4 +1,4 @@
-# CTECG Mobile App
+# My CTECG App
 
 A comprehensive React Native mobile application for CTECG Internet customers to manage their accounts, view usage, billing, and get support.
 

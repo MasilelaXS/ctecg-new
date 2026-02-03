@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import TopNavigation from '../components/TopNavigation';
 import Card from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -41,6 +41,7 @@ export default function OutageDetailsScreen() {
   const { notification } = route.params;
   const [refreshing, setRefreshing] = useState(false);
   const [currentNotification, setCurrentNotification] = useState(notification);
+  const navigation = useNavigation();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -119,7 +120,7 @@ export default function OutageDetailsScreen() {
         title="Outage Details" 
         subtitle={currentNotification.tower_name}
         showBackButton={true}
-        showBack 
+        onBackPress={() => navigation.goBack()}
       />
       
       <ScrollView

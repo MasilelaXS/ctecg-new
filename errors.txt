@@ -1,967 +1,530 @@
-tar: android/.gitignore: Cannot open: Permission denied
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/build.gradle: Cannot open: Permission denied
-tar: android/gradle: Cannot mkdir: Permission denied
-tar: android/gradle.properties: Cannot open: Permission denied
-tar: android/gradlew: Cannot open: Permission denied
-tar: android/gradlew.bat: Cannot open: Permission denied
-tar: android/settings.gradle: Cannot open: Permission denied
-tar: assets/adaptive-icon.png: Cannot open: Permission denied
-tar: assets/adaptive-icons.png: Cannot open: Permission denied
-tar: assets/client.png: Cannot open: Permission denied
-tar: assets/icon.png: Cannot open: Permission denied
-tar: assets/logo-clean.png: Cannot open: Permission denied
-tar: assets/splash.png: Cannot open: Permission denied
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/contexts: Cannot mkdir: Permission denied
-tar: src/navigation: Cannot mkdir: Permission denied
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/utils: Cannot mkdir: Permission denied
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/build.gradle: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/debug.keystore: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/google-services.json: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/proguard-rules.pro: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/gradle: Cannot mkdir: Permission denied
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/AdBanner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/AdModal.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Card.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/ConfirmationModal.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/CustomButton.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Header.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/LoadingSpinner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/OnlineStatusIndicator.tsx: Cannot open: No such file or directory
-tar:
-src/components: Cannot mkdir: Permission denied
-tar: src/components/OutageBanner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Toast.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/TopNavigation.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/UncappedUsageCard.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/YocoPaymentWebView.tsx: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/api.ts: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/colors.ts: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/Design.ts: Cannot open: No such file or directory
-tar: src/contexts: Cannot mkdir: Permission denied
-tar: src/contexts/AuthContext.tsx: Cannot open: No such file or directory
-tar: src/navigation: Cannot mkdir: Permission denied
-tar: src/navigation/AppNavigator.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/BillingScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ComprehensiveDataScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/CreatePasswordScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/DashboardScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/FAQScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ForgotEmailScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/LinkAccountScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/LoginScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/MakePaymentScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/OutageDetailsScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/OutageScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ProfileScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ResetPasswordScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/SupportScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/UsageScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/VerifyOTPScreen.tsx: Cannot open: No such file or directory
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/services/api.ts: Cannot open: No such file or directory
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/services/PushNotificationService.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/api.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/api.tsx: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/index.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/index.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/customerTypeUtils.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/customerValidation.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/helpers-new.ts: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/helpers.ts: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/phoneValidation.ts: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debug: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debugOptimized: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper/gradle-wrapper.jar: Cannot open: No such file or directory
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper/gradle-wrapper.properties: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debug/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debugOptimized/AndroidManifest.xml: Cannot open
-: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-hdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-mdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values-night: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg: Cannot mkdir: No such file or directory
-tar:
-android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable/ic_launcher_background.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable/rn_edit_text_material.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-hdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-mdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/colors.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/strings.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/styles.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values-night/colors.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel/MainActivity.kt: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel/MainApplication.kt: Cannot open: No such file or directory
-tar:
-Exiting with failure status due to previous errors
-tar: android/.gitignore: Cannot open: Permission denied
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/build.gradle: Cannot open: Permission denied
-tar: android/gradle: Cannot mkdir: Permission denied
-tar: android/gradle.properties: Cannot open: Permission denied
-tar: android/gradlew: Cannot open: Permission denied
-tar: android/gradlew.bat: Cannot open: Permission denied
-tar: android/settings.gradle: Cannot open: Permission denied
-tar: assets/adaptive-icon.png: Cannot open: Permission denied
-tar: assets/adaptive-icons.png: Cannot open: Permission denied
-tar: assets/client.png: Cannot open: Permission denied
-tar: assets/icon.png: Cannot open: Permission denied
-tar: assets/logo-clean.png: Cannot open: Permission denied
-tar: assets/splash.png: Cannot open: Permission denied
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/contexts: Cannot mkdir: Permission denied
-tar: src/navigation: Cannot mkdir: Permission denied
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/utils: Cannot mkdir: Permission denied
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/build.gradle: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/debug.keystore: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/google-services.json: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/proguard-rules.pro: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/gradle: Cannot mkdir: Permission denied
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/AdBanner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/AdModal.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Card.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/ConfirmationModal.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/CustomButton.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Header.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/LoadingSpinner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/OnlineStatusIndicator.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/OutageBanner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Toast.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/TopNavigation.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/UncappedUsageCard.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/YocoPaymentWebView.tsx: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/api.ts: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/colors.ts: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/Design.ts: Cannot open: No such file or directory
-tar: src/contexts: Cannot mkdir: Permission denied
-tar: src/contexts/AuthContext.tsx: Cannot open: No such file or directory
-tar: src/navigation: Cannot mkdir: Permission denied
-tar: src/navigation/AppNavigator.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/BillingScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ComprehensiveDataScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/CreatePasswordScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/DashboardScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/FAQScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ForgotEmailScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/LinkAccountScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/LoginScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/MakePaymentScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/OutageDetailsScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/OutageScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ProfileScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ResetPasswordScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/SupportScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/UsageScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/VerifyOTPScreen.tsx: Cannot open: No such file or directory
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/services/api.ts: Cannot open: No such file or directory
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/services/PushNotificationService.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/api.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/api.tsx: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/index.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/index.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/customerTypeUtils.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/customerValidation.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/helpers-new.ts: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/helpers.ts: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/phoneValidation.ts: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debug: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar:
-android/app/src/debugOptimized: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper/gradle-wrapper.jar: Cannot open: No such file or directory
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper/gradle-wrapper.properties: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debug/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debugOptimized/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-hdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-mdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values-night: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable/ic_launcher_background.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable/rn_edit_text_material.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-hdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-mdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/colors.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/strings.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/styles.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values-night/colors.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel/MainActivity.kt: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel/MainApplication.kt: Cannot open: No such file or directory
-tar: Exiting with failure status due to previous errors
-tar: android/.gitignore: Cannot open: Permission denied
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/build.gradle: Cannot open: Permission denied
-tar: android/gradle: Cannot mkdir: Permission denied
-tar: android/gradle.properties: Cannot open: Permission denied
-tar: android/gradlew: Cannot open: Permission denied
-tar: android/gradlew.bat: Cannot open: Permission denied
-tar: android/settings.gradle: Cannot open: Permission denied
-tar: assets/adaptive-icon.png: Cannot open: Permission denied
-tar: assets/adaptive-icons.png: Cannot open: Permission denied
-tar: assets/client.png: Cannot open: Permission denied
-tar: assets/icon.png: Cannot open: Permission denied
-tar: assets/logo-clean.png: Cannot open: Permission denied
-tar: assets/splash.png: Cannot open: Permission denied
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/contexts: Cannot mkdir: Permission denied
-tar: src/navigation: Cannot mkdir: Permission denied
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/utils: Cannot mkdir: Permission denied
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/build.gradle: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/debug.keystore: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/google-services.json: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/proguard-rules.pro: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/gradle: Cannot mkdir: Permission denied
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/AdBanner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/AdModal.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Card.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/ConfirmationModal.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/CustomButton.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Header.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/LoadingSpinner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/OnlineStatusIndicator.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/OutageBanner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Toast.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/TopNavigation.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/UncappedUsageCard.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/YocoPaymentWebView.tsx: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/api.ts: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/colors.ts: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/Design.ts: Cannot open: No such file or directory
-tar: src/contexts: Cannot mkdir: Permission denied
-tar: src/contexts/AuthContext.tsx: Cannot open: No such file or directory
-tar: src/navigation: Cannot mkdir: Permission denied
-tar: src/navigation/AppNavigator.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/BillingScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ComprehensiveDataScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/CreatePasswordScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/DashboardScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/FAQScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ForgotEmailScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/LinkAccountScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/LoginScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/MakePaymentScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/OutageDetailsScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/OutageScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ProfileScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ResetPasswordScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/SupportScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/UsageScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/VerifyOTPScreen.tsx: Cannot open: No such file or directory
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/services/api.ts: Cannot open: No such file or directory
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/services/PushNotificationService.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/api.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/api.tsx: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/index.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/index.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/customerTypeUtils.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/customerValidation.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/helpers-new.ts: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/helpers.ts: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/phoneValidation.ts: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debug: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debugOptimized: Cannot mkdir
-: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper/gradle-wrapper.jar: Cannot open: No such file or directory
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper/gradle-wrapper.properties: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debug/AndroidManifest.xml: Cannot open
-: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debugOptimized/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-hdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-mdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values-night: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable/ic_launcher_background.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable/rn_edit_text_material.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-hdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-mdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/colors.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/strings.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/styles.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values-night/colors.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel/MainActivity.kt: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel/MainApplication.kt: Cannot open: No such file or directory
-tar: Exiting with failure status due to previous errors
-tar: android/.gitignore: Cannot open: Permission denied
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/build.gradle: Cannot open: Permission denied
-tar: android/gradle: Cannot mkdir: Permission denied
-tar: android/gradle.properties: Cannot open: Permission denied
-tar: android/gradlew: Cannot open: Permission denied
-tar: android/gradlew.bat: Cannot open: Permission denied
-tar: android/settings.gradle: Cannot open: Permission denied
-tar: assets/adaptive-icon.png: Cannot open: Permission denied
-tar: assets/adaptive-icons.png: Cannot open: Permission denied
-tar: assets/client.png: Cannot open: Permission denied
-tar: assets/icon.png: Cannot open: Permission denied
-tar: assets/logo-clean.png: Cannot open: Permission denied
-tar: assets/splash.png: Cannot open: Permission denied
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/contexts: Cannot mkdir: Permission denied
-tar: src/navigation: Cannot mkdir: Permission denied
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/utils: Cannot mkdir: Permission denied
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/build.gradle: Cannot open: No such file or directory
-tar:
-android/app: Cannot mkdir: Permission denied
-tar: android/app/debug.keystore: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/google-services.json: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/proguard-rules.pro: Cannot open: No such file or directory
-tar: android/app: Cannot mkdir: Permission denied
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/gradle: Cannot mkdir: Permission denied
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/AdBanner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/AdModal.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Card.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/ConfirmationModal.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/CustomButton.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir
-: Permission denied
-tar: src/components/Header.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/LoadingSpinner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/OnlineStatusIndicator.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/OutageBanner.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/Toast.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/TopNavigation.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/UncappedUsageCard.tsx: Cannot open: No such file or directory
-tar: src/components: Cannot mkdir: Permission denied
-tar: src/components/YocoPaymentWebView.tsx: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/api.ts: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/colors.ts: Cannot open: No such file or directory
-tar: src/constants: Cannot mkdir: Permission denied
-tar: src/constants/Design.ts: Cannot open: No such file or directory
-tar: src/contexts: Cannot mkdir: Permission denied
-tar: src/contexts/AuthContext.tsx: Cannot open: No such file or directory
-tar: src/navigation: Cannot mkdir: Permission denied
-tar: src/navigation/AppNavigator.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/BillingScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ComprehensiveDataScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/CreatePasswordScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/DashboardScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/FAQScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ForgotEmailScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/LinkAccountScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/LoginScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/MakePaymentScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/OutageDetailsScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/OutageScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ProfileScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/ResetPasswordScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/SupportScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/UsageScreen.tsx: Cannot open: No such file or directory
-tar: src/screens: Cannot mkdir: Permission denied
-tar: src/screens/VerifyOTPScreen.tsx: Cannot open: No such file or directory
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/services/api.ts: Cannot open: No such file or directory
-tar: src/services: Cannot mkdir: Permission denied
-tar: src/services/PushNotificationService.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/api.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/api.tsx: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/index.ts: Cannot open: No such file or directory
-tar: src/types: Cannot mkdir: Permission denied
-tar: src/types/index.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/customerTypeUtils.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/customerValidation.tsx: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/helpers-new.ts: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/helpers.ts: Cannot open: No such file or directory
-tar: src/utils: Cannot mkdir: Permission denied
-tar: src/utils/phoneValidation.ts: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debug: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debugOptimized: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper/gradle-wrapper.jar: Cannot open: No such file or directory
-tar: android/gradle/wrapper: Cannot mkdir: No such file or directory
-tar: android/gradle/wrapper/gradle-wrapper.properties: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debug/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/debugOptimized/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/AndroidManifest.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-hdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-mdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values-night: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable/ic_launcher_background.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable/rn_edit_text_material.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-hdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-mdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/drawable-xxxhdpi/splashscreen_logo.png: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar:
-android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/colors.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/strings.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values/styles.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/res/values-night/colors.xml: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel: Cannot mkdir: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel/MainActivity.kt: Cannot open: No such file or directory
-tar: android/app/src: Cannot mkdir: No such file or directory
-tar: android/app/src/main/java/com/myctecg/dannel/MainApplication.kt: Cannot open: No such file or directory
-tar: Exiting with failure status due to previous errors
-tar -C /home/expo/workingdir/build --strip-components 1 -zxf /home/expo/workingdir/project.tar.gz exited with non-zero code: 2
+Running 'gradlew :app:bundleRelease' in /home/expo/workingdir/build/android
+Downloading https://services.gradle.org/distributions/gradle-8.14.3-bin.zip
+10%.
+20%.
+30%.
+40%.
+50%.
+60%.
+70%
+80%.
+90%.
+100%
+Welcome to Gradle 8.14.3!
+Here are the highlights of this release:
+ - Java 24 support
+- GraalVM Native Image toolchain selection
+- Enhancements to test reporting
+ - Build Authoring improvements
+For more details see https://docs.gradle.org/8.14.3/release-notes.html
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build
+> Configure project :expo-gradle-plugin:expo-autolinking-plugin
+w: file:///home/expo/workingdir/build/node_modules/expo-modules-autolinking/android/expo-gradle-plugin/expo-autolinking-plugin/build.gradle.kts:25:3: 'kotlinOptions(KotlinJvmOptionsDeprecated /* = KotlinJvmOptions */.() -> Unit): Unit' is deprecated. Please migrate to the compilerOptions DSL. More details are here: https://kotl.in/u1r8ln
+> Configure project :expo-gradle-plugin:expo-autolinking-settings-plugin
+w: file:///home/expo/workingdir/build/node_modules/expo-modules-autolinking/android/expo-gradle-plugin/expo-autolinking-settings-plugin/build.gradle.kts:30:3: 'kotlinOptions(KotlinJvmOptionsDeprecated /* = KotlinJvmOptions */.() -> Unit): Unit' is deprecated. Please migrate to the compilerOptions DSL. More details are here: https://kotl.in/u1r8ln
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:settings-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:settings-plugin:pluginDescriptors
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:pluginDescriptors
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:processResources
+> Task :gradle-plugin:settings-plugin:processResources
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:processResources NO-SOURCE
+> Task :gradle-plugin:shared:processResources NO-SOURCE
+> Task :gradle-plugin:shared:compileKotlin
+> Task :gradle-plugin:shared:compileJava NO-SOURCE
+> Task :gradle-plugin:shared:classes UP-TO-DATE
+> Task :gradle-plugin:shared:jar
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:compileKotlin
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:compileJava
+NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:classes UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:jar
+> Task :gradle-plugin:settings-plugin:compileKotlin
+> Task :gradle-plugin:settings-plugin:compileJava NO-SOURCE
+> Task :gradle-plugin:settings-plugin:classes
+> Task :gradle-plugin:settings-plugin:jar
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:compileKotlin
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:classes
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:jar
+> Configure project :expo-dev-launcher-gradle-plugin
+w: file:///home/expo/workingdir/build/node_modules/expo-dev-launcher/expo-dev-launcher-gradle-plugin/build.gradle.kts:25:3: 'kotlinOptions(KotlinJvmOptionsDeprecated /* = KotlinJvmOptions */.() -> Unit): Unit' is deprecated. Please migrate to the compilerOptions DSL. More details are here: https://kotl.in/u1r8ln
+> Configure project :expo-module-gradle-plugin
+w: file:///home/expo/workingdir/build/node_modules/expo-modules-core/expo-module-gradle-plugin/build.gradle.kts:58:3: 'kotlinOptions(KotlinJvmOptionsDeprecated /* = KotlinJvmOptions */.() -> Unit): Unit' is deprecated. Please migrate to the compilerOptions DSL. More details are here: https://kotl.in/u1r8ln
+> Task :expo-gradle-plugin:expo-autolinking-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:react-native-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-dev-launcher-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-module-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-module-gradle-plugin:pluginDescriptors
+> Task :expo-dev-launcher-gradle-plugin:pluginDescriptors
+> Task :expo-dev-launcher-gradle-plugin:processResources
+> Task :expo-module-gradle-plugin:processResources
+> Task :expo-gradle-plugin:expo-autolinking-plugin:pluginDescriptors
+> Task :expo-gradle-plugin:expo-autolinking-plugin:processResources
+> Task :gradle-plugin:react-native-gradle-plugin:pluginDescriptors
+> Task :gradle-plugin:react-native-gradle-plugin:processResources
+> Task :expo-gradle-plugin:expo-autolinking-plugin:compileKotlin
+> Task :expo-gradle-plugin:expo-autolinking-plugin:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:classes
+> Task :expo-gradle-plugin:expo-autolinking-plugin:jar
+> Task :gradle-plugin:react-native-gradle-plugin:compileKotlin
+> Task :gradle-plugin:react-native-gradle-plugin:compileJava NO-SOURCE
+> Task :gradle-plugin:react-native-gradle-plugin:classes
+> Task :gradle-plugin:react-native-gradle-plugin:jar
+> Task :expo-dev-launcher-gradle-plugin:compileKotlin
+> Task :expo-dev-launcher-gradle-plugin:compileJava NO-SOURCE
+> Task :expo-dev-launcher-gradle-plugin:classes
+> Task :expo-dev-launcher-gradle-plugin:jar
+> Task :expo-module-gradle-plugin:compileKotlin
+w: file:///home/expo/workingdir/build/node_modules/expo-modules-core/expo-module-gradle-plugin/src/main/kotlin/expo/modules/plugin/android/AndroidLibraryExtension.kt:9:24 'var targetSdk: Int?' is deprecated. Will be removed from library DSL in v9.0. Use testOptions.targetSdk or/and lint.targetSdk instead.
+> Task :expo-module-gradle-plugin:compileJava NO-SOURCE
+> Task :expo-module-gradle-plugin:classes
+> Task :expo-module-gradle-plugin:jar
+> Configure project :
+[32m[ExpoRootProject][0m Using the following versions:
+  - buildTools:  [32m35.0.0[0m
+  - minSdk:      [32m24[0m
+  - compileSdk:  [32m35[0m
+  - targetSdk:   [32m35[0m
+  - ndk:         [32m27.1.12297006[0m
+  - kotlin:      [32m2.1.20[0m
+  - ksp:         [32m2.1.20-2.0.1[0m
+> Configure project :app
+ ℹ️  [33mApplying gradle plugin[0m '[32mexpo-dev-launcher-gradle-plugin[0m'
+> Configure project :expo
+Using expo modules
+  - [32mexpo-constants[0m (18.0.13)
+  - [32mexpo-dev-client[0m (6.0.20)
+  - [32mexpo-dev-launcher[0m (6.0.20)
+- [32mexpo-dev-menu[0m (7.0.18)
+- [32mexpo-dev-menu-interface[0m (2.0.0)
+- [32mexpo-json-utils[0m (0.15.0)
+- [32mexpo-manifests[0m (1.0.10)
+- [32mexpo-modules-core[0m (3.0.29)
+- [32mexpo-updates-interface[0m (2.0.0)
+- [33m[📦][0m [32mexpo-application[0m (7.0.8)
+  - [33m[📦][0m [32mexpo-asset[0m (12.0.12)
+  - [33m[📦][0m [32mexpo-blur[0m (15.0.8)
+  - [33m[📦][0m [32mexpo-device[0m (8.0.10)
+  - [33m[📦][0m [32mexpo-file-system[0m (19.0.21)
+  - [33m[📦][0m [32mexpo-font[0m (14.0.11)
+  - [33m[📦][0m [32mexpo-keep-awake[0m (15.0.8)
+  - [33m[📦][0m [32mexpo-notifications[0m (0.32.16)
+  - [33m[📦][0m [32mexpo-secure-store[0m (15.0.8)
+  - [33m[📦][0m [32mexpo-splash-screen[0m (31.0.13)
+> Task :expo-dev-client:preBuild UP-TO-DATE
+> Task :expo-dev-launcher:preBuild UP-TO-DATE
+> Task :expo-dev-menu:preBuild UP-TO-DATE
+> Task :expo-dev-menu-interface:preBuild UP-TO-DATE
+> Task :expo-json-utils:preBuild UP-TO-DATE
+> Task :expo-manifests:preBuild UP-TO-DATE
+> Task :expo-modules-core:preBuild UP-TO-DATE
+> Task :expo-updates-interface:preBuild UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateCodegenSchemaFromJavaScript
+> Task :expo-constants:createExpoConfig
+> Task :expo-constants:preBuild
+The NODE_ENV environment variable is required but was not specified. Ensure the project is bundled with Expo CLI or NODE_ENV is set. Using only .env.local and .env
+> Task :expo:generatePackagesList
+> Task :expo:preBuild
+> Task :react-native-async-storage_async-storage:generateCodegenArtifactsFromSchema
+> Task :react-native-async-storage_async-storage:preBuild
+> Task :react-native-reanimated:assertMinimalReactNativeVersionTask
+> Task :react-native-reanimated:assertNewArchitectureEnabledTask SKIPPED
+> Task :react-native-gesture-handler:generateCodegenSchemaFromJavaScript
+> Task :react-native-reanimated:assertWorkletsVersionTask
+> Task :react-native-safe-area-context:generateCodegenSchemaFromJavaScript
+> Task :react-native-gesture-handler:generateCodegenArtifactsFromSchema
+> Task :react-native-gesture-handler:preBuild
+> Task :react-native-reanimated:generateCodegenSchemaFromJavaScript
+> Task :react-native-safe-area-context:generateCodegenArtifactsFromSchema
+> Task :react-native-safe-area-context:preBuild
+> Task :react-native-reanimated:generateCodegenArtifactsFromSchema
+> Task :react-native-screens:generateCodegenSchemaFromJavaScript
+> Task :react-native-reanimated:prepareReanimatedHeadersForPrefabs
+> Task :react-native-reanimated:preBuild
+> Task :react-native-worklets:assertMinimalReactNativeVersionTask
+> Task :react-native-worklets:assertNewArchitectureEnabledTask SKIPPED
+> Task :react-native-webview:generateCodegenSchemaFromJavaScript
+> Task :react-native-screens:generateCodegenArtifactsFromSchema
+> Task :react-native-screens:preBuild
+> Task :expo:preReleaseBuild
+> Task :expo:generateReleaseResValues
+> Task :expo:generateReleaseResources
+> Task :react-native-worklets:generateCodegenSchemaFromJavaScript
+> Task :expo:packageReleaseResources
+> Task :expo-constants:preReleaseBuild
+> Task :expo-constants:generateReleaseResValues
+> Task :expo-constants:generateReleaseResources
+> Task :react-native-webview:generateCodegenArtifactsFromSchema
+> Task :react-native-webview:preBuild
+> Task :expo-dev-client:preReleaseBuild UP-TO-DATE
+> Task :expo-dev-client:generateReleaseResValues
+> Task :expo-dev-client:generateReleaseResources
+> Task :expo-constants:packageReleaseResources
+> Task :expo-dev-launcher:preReleaseBuild UP-TO-DATE
+> Task :expo-dev-launcher:generateReleaseResValues
+> Task :expo-dev-launcher:generateReleaseResources
+> Task :expo-dev-client:packageReleaseResources
+> Task :expo-dev-menu:preReleaseBuild UP-TO-DATE
+> Task :expo-dev-menu:generateReleaseResValues
+> Task :expo-dev-menu:generateReleaseResources
+> Task :react-native-worklets:generateCodegenArtifactsFromSchema
+> Task :expo-dev-launcher:packageReleaseResources
+> Task :expo-dev-menu-interface:preReleaseBuild UP-TO-DATE
+> Task :expo-dev-menu-interface:generateReleaseResValues
+> Task :expo-dev-menu-interface:generateReleaseResources
+> Task :expo-dev-menu-interface:packageReleaseResources
+> Task :expo-json-utils:preReleaseBuild UP-TO-DATE
+> Task :expo-dev-menu:packageReleaseResources
+> Task :expo-manifests:preReleaseBuild UP-TO-DATE
+> Task :react-native-worklets:prepareWorkletsHeadersForPrefabs
+> Task :react-native-worklets:preBuild
+> Task :expo-modules-core:preReleaseBuild UP-TO-DATE
+> Task :expo-json-utils:generateReleaseResValues
+> Task :expo-manifests:generateReleaseResValues
+> Task :expo-json-utils:generateReleaseResources
+> Task :expo-modules-core:generateReleaseResValues
+> Task :expo-manifests:generateReleaseResources
+> Task :expo-modules-core:generateReleaseResources
+> Task :expo-json-utils:packageReleaseResources
+> Task :expo-updates-interface:preReleaseBuild UP-TO-DATE
+> Task :expo-manifests:packageReleaseResources
+> Task :react-native-async-storage_async-storage:preReleaseBuild
+> Task :expo-updates-interface:generateReleaseResValues
+> Task :expo-modules-core:packageReleaseResources
+> Task :react-native-async-storage_async-storage:generateReleaseResValues
+> Task :react-native-gesture-handler:preReleaseBuild
+> Task :react-native-gesture-handler:generateReleaseResValues
+> Task :react-native-async-storage_async-storage:generateReleaseResources
+> Task :expo-updates-interface:generateReleaseResources
+> Task :react-native-gesture-handler:generateReleaseResources
+> Task :expo-updates-interface:packageReleaseResources
+> Task :react-native-reanimated:preReleaseBuild
+> Task :react-native-gesture-handler:packageReleaseResources
+> Task :react-native-safe-area-context:preReleaseBuild
+> Task :react-native-async-storage_async-storage:packageReleaseResources
+> Task :react-native-reanimated:generateReleaseResValues
+> Task :react-native-screens:preReleaseBuild
+> Task :react-native-safe-area-context:generateReleaseResValues
+> Task :react-native-screens:generateReleaseResValues
+> Task :react-native-reanimated:generateReleaseResources
+> Task :react-native-safe-area-context:generateReleaseResources
+> Task :react-native-screens:generateReleaseResources
+> Task :react-native-reanimated:packageReleaseResources
+> Task :react-native-webview:preReleaseBuild
+> Task :react-native-webview:generateReleaseResValues
+> Task :react-native-safe-area-context:packageReleaseResources
+> Task :react-native-worklets:preReleaseBuild
+> Task :react-native-worklets:generateReleaseResValues
+> Task :react-native-webview:generateReleaseResources
+> Task :react-native-worklets:generateReleaseResources
+> Task :react-native-worklets:packageReleaseResources
+> Task :react-native-webview:packageReleaseResources
+> Task :expo:extractDeepLinksRelease
+> Task :expo-constants:extractDeepLinksRelease
+> Task :react-native-screens:packageReleaseResources
+> Task :expo-dev-client:extractDeepLinksRelease
+> Task :app:createBundleReleaseJsAndAssets
+Starting Metro Bundler
+> Task :expo-dev-client:processReleaseManifest
+> Task :expo-constants:processReleaseManifest
+> Task :expo:processReleaseManifest
+> Task :expo-dev-launcher:extractDeepLinksRelease
+> Task :expo-dev-menu:extractDeepLinksRelease
+> Task :expo-dev-menu-interface:extractDeepLinksRelease
+> Task :expo-dev-menu-interface:processReleaseManifest
+> Task :expo-dev-menu:processReleaseManifest
+> Task :expo-dev-launcher:processReleaseManifest
+> Task :expo-json-utils:extractDeepLinksRelease
+> Task :expo-manifests:extractDeepLinksRelease
+> Task :expo-modules-core:extractDeepLinksRelease
+> Task :expo-json-utils:processReleaseManifest
+> Task :expo-manifests:processReleaseManifest
+> Task :expo-updates-interface:extractDeepLinksRelease
+> Task :react-native-async-storage_async-storage:extractDeepLinksRelease
+> Task :expo-modules-core:processReleaseManifest
+/home/expo/workingdir/build/node_modules/expo-modules-core/android/src/main/AndroidManifest.xml:8:9-11:45 Warning:
+	meta-data#com.facebook.soloader.enabled@android:value was tagged at AndroidManifest.xml:8 to replace other declarations but no other declaration present
+> Task :react-native-gesture-handler:extractDeepLinksRelease
+> Task :react-native-async-storage_async-storage:processReleaseManifest
+package="com.reactnativecommunity.asyncstorage" found in source AndroidManifest.xml: /home/expo/workingdir/build/node_modules/@react-native-async-storage/async-storage/android/src/main/AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.reactnativecommunity.asyncstorage" from the source AndroidManifest.xml: /home/expo/workingdir/build/node_modules/@react-native-async-storage/async-storage/android/src/main/AndroidManifest.xml.
+> Task :expo-updates-interface:processReleaseManifest
+> Task :react-native-gesture-handler:processReleaseManifest
+> Task :react-native-reanimated:extractDeepLinksRelease
+> Task :react-native-safe-area-context:extractDeepLinksRelease
+> Task :react-native-screens:extractDeepLinksRelease
+> Task :react-native-reanimated:processReleaseManifest
+> Task :react-native-webview:extractDeepLinksRelease
+> Task :react-native-screens:processReleaseManifest
+> Task :react-native-safe-area-context:processReleaseManifest
+package="com.th3rdwave.safeareacontext" found in source AndroidManifest.xml: /home/expo/workingdir/build/node_modules/react-native-safe-area-context/android/src/main/AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.th3rdwave.safeareacontext" from the source AndroidManifest.xml: /home/expo/workingdir/build/node_modules/react-native-safe-area-context/android/src/main/AndroidManifest.xml.
+> Task :react-native-worklets:extractDeepLinksRelease
+> Task :expo:writeReleaseAarMetadata
+> Task :react-native-worklets:processReleaseManifest
+> Task :react-native-webview:processReleaseManifest
+> Task :expo-constants:writeReleaseAarMetadata
+> Task :expo-dev-client:writeReleaseAarMetadata
+> Task :expo-dev-launcher:writeReleaseAarMetadata
+> Task :expo-dev-menu-interface:writeReleaseAarMetadata
+> Task :expo-dev-menu:writeReleaseAarMetadata
+> Task :expo-json-utils:writeReleaseAarMetadata
+> Task :expo-updates-interface:writeReleaseAarMetadata
+> Task :expo-modules-core:writeReleaseAarMetadata
+> Task :expo-manifests:writeReleaseAarMetadata
+> Task :react-native-async-storage_async-storage:writeReleaseAarMetadata
+> Task :react-native-gesture-handler:writeReleaseAarMetadata
+> Task :react-native-reanimated:writeReleaseAarMetadata
+> Task :react-native-safe-area-context:writeReleaseAarMetadata
+> Task :react-native-webview:writeReleaseAarMetadata
+> Task :react-native-screens:writeReleaseAarMetadata
+> Task :react-native-worklets:writeReleaseAarMetadata
+> Task :expo:compileReleaseLibraryResources
+> Task :expo-dev-client:compileReleaseLibraryResources
+> Task :expo-constants:compileReleaseLibraryResources
+> Task :expo:parseReleaseLocalResources
+> Task :expo-constants:parseReleaseLocalResources
+> Task :expo-dev-client:parseReleaseLocalResources
+> Task :expo-constants:generateReleaseRFile
+> Task :expo:generateReleaseRFile
+> Task :expo-dev-client:generateReleaseRFile
+> Task :expo-dev-menu-interface:compileReleaseLibraryResources
+> Task :expo-dev-launcher:parseReleaseLocalResources
+> Task :expo-dev-launcher:compileReleaseLibraryResources
+> Task :expo-dev-launcher:generateReleaseRFile
+> Task :expo-dev-menu:compileReleaseLibraryResources
+> Task :expo-json-utils:compileReleaseLibraryResources
+> Task :expo-dev-menu:parseReleaseLocalResources
+> Task :expo-dev-menu-interface:parseReleaseLocalResources
+> Task :expo-json-utils:parseReleaseLocalResources
+> Task :expo-dev-menu-interface:generateReleaseRFile
+> Task :expo-dev-menu:generateReleaseRFile
+> Task :expo-manifests:compileReleaseLibraryResources
+> Task :expo-modules-core:compileReleaseLibraryResources
+> Task :expo-json-utils:generateReleaseRFile
+> Task :expo-modules-core:parseReleaseLocalResources
+> Task :expo-manifests:parseReleaseLocalResources
+> Task :expo-updates-interface:compileReleaseLibraryResources
+> Task :expo-updates-interface:parseReleaseLocalResources
+> Task :expo-modules-core:generateReleaseRFile
+> Task :expo-manifests:generateReleaseRFile
+> Task :react-native-gesture-handler:compileReleaseLibraryResources
+> Task :expo-updates-interface:generateReleaseRFile
+> Task :react-native-async-storage_async-storage:compileReleaseLibraryResources
+> Task :react-native-reanimated:compileReleaseLibraryResources
+> Task :react-native-async-storage_async-storage:parseReleaseLocalResources
+> Task :react-native-gesture-handler:parseReleaseLocalResources
+> Task :react-native-reanimated:parseReleaseLocalResources
+> Task :react-native-reanimated:generateReleaseRFile
+> Task :react-native-async-storage_async-storage:generateReleaseRFile
+> Task :react-native-safe-area-context:compileReleaseLibraryResources
+> Task :react-native-gesture-handler:generateReleaseRFile
+> Task :react-native-webview:compileReleaseLibraryResources
+> Task :react-native-safe-area-context:parseReleaseLocalResources
+> Task :react-native-safe-area-context:generateReleaseRFile
+> Task :react-native-screens:parseReleaseLocalResources
+> Task :react-native-screens:compileReleaseLibraryResources
+> Task :react-native-webview:parseReleaseLocalResources
+> Task :react-native-worklets:compileReleaseLibraryResources
+> Task :react-native-screens:generateReleaseRFile
+> Task :react-native-gesture-handler:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-worklets:parseReleaseLocalResources
+> Task :react-native-webview:generateReleaseRFile
+> Task :react-native-gesture-handler:generateReleaseBuildConfig
+> Task :react-native-reanimated:generateReleaseBuildConfig
+> Task :react-native-worklets:generateReleaseRFile
+> Task :react-native-worklets:generateReleaseBuildConfig
+> Task :react-native-worklets:javaPreCompileRelease
+> Task :react-native-gesture-handler:javaPreCompileRelease
+> Task :react-native-reanimated:javaPreCompileRelease
+> Task :react-native-screens:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-safe-area-context:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-screens:generateReleaseBuildConfig
+> Task :react-native-safe-area-context:generateReleaseBuildConfig
+> Task :app:createBundleReleaseJsAndAssets
+Android Bundled 2209ms index.ts (1472 modules)
+Writing bundle output to: /home/expo/workingdir/build/android/app/build/generated/assets/createBundleReleaseJsAndAssets/index.android.bundle
+Writing sourcemap output to: /home/expo/workingdir/build/android/app/build/intermediates/sourcemaps/react/release/index.android.bundle.packager.map
+Copying 26 asset files
+Done writing bundle output
+Done writing sourcemap output
+> Task :react-native-safe-area-context:compileReleaseKotlin
+w: file:///home/expo/workingdir/build/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaView.kt:59:23 'val uiImplementation: UIImplementation!' is deprecated. Deprecated in Java.
+> Task :react-native-safe-area-context:javaPreCompileRelease
+> Task :react-native-worklets:compileReleaseJavaWithJavac
+Note: /home/expo/workingdir/build/node_modules/react-native-worklets/android/src/main/java/com/swmansion/worklets/WorkletsPackage.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+> Task :react-native-safe-area-context:compileReleaseJavaWithJavac
+> Task :react-native-safe-area-context:bundleLibRuntimeToDirRelease
+> Task :react-native-worklets:bundleLibCompileToJarRelease
+> Task :react-native-reanimated:compileReleaseJavaWithJavac
+> Task :react-native-reanimated:bundleLibCompileToJarRelease
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+> Task :react-native-screens:javaPreCompileRelease
+> Task :react-native-webview:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-webview:generateReleaseBuildConfig
+> Task :app:generateAutolinkingNewArchitectureFiles
+> Task :app:generateAutolinkingPackageList
+> Task :app:generateCodegenSchemaFromJavaScript SKIPPED
+> Task :app:generateCodegenArtifactsFromSchema SKIPPED
+> Task :app:generateReactNativeEntryPoint
+> Task :app:preBuild
+> Task :app:preReleaseBuild
+> Task :app:generateReleaseResValues
+> Task :app:processReleaseGoogleServices FAILED
+> Task :react-native-webview:compileReleaseKotlin
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:22:8 'object MapBuilder : Any' is deprecated. Use Kotlin's built-in collections extensions.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:82:18 'var allowFileAccessFromFileURLs: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:83:18 'var allowUniversalAccessFromFileURLs: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:125:21 'fun allowScanningByMediaScanner(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:162:36 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:301:14 'object MapBuilder : Any' is deprecated. Use Kotlin's built-in collections extensions.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:351:34 Condition is always 'true'.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:370:38 'var allowUniversalAccessFromFileURLs: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:431:51 Unchecked cast of 'Any?' to 'HashMap<String, String>'.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:487:23 'var savePassword: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:488:23 'var saveFormData: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:558:23 'var allowFileAccessFromFileURLs: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:603:52 'static field FORCE_DARK_ON: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:603:89 'static field FORCE_DARK_OFF: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:604:35 'static fun setForceDark(p0: @NonNull() WebSettings, p1: Int): Unit' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:613:35 'static fun setForceDarkStrategy(p0: @NonNull() WebSettings, p1: Int): Unit' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:615:39 'static field DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:659:65 Unchecked cast of 'ArrayList<Any?>' to 'List<Map<String, String>>'.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:680:23 'var saveFormData: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopCustomMenuSelectionEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopCustomMenuSelectionEvent.kt:11:3 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopCustomMenuSelectionEvent.kt:22:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopCustomMenuSelectionEvent.kt:22:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopCustomMenuSelectionEvent.kt:23:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopHttpErrorEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopHttpErrorEvent.kt:11:3 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopHttpErrorEvent.kt:22:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopHttpErrorEvent.kt:22:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopHttpErrorEvent.kt:23:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingErrorEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingErrorEvent.kt:11:3 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingErrorEvent.kt:22:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingErrorEvent.kt:22:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingErrorEvent.kt:23:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingFinishEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingFinishEvent.kt:11:3 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingFinishEvent.kt:22:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingFinishEvent.kt:22:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingFinishEvent.kt:23:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingProgressEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingProgressEvent.kt:11:3 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingProgressEvent.kt:22:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingProgressEvent.kt:22:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingProgressEvent.kt:23:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingStartEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingStartEvent.kt:11:3 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingStartEvent.kt:22:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingStartEvent.kt:22:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingStartEvent.kt:23:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopMessageEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopMessageEvent.kt:10:75 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopMessageEvent.kt:21:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopMessageEvent.kt:21:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopMessageEvent.kt:22:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopNewWindowEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopNewWindowEvent.kt:11:3 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopNewWindowEvent.kt:22:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopNewWindowEvent.kt:22:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopNewWindowEvent.kt:23:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopRenderProcessGoneEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopRenderProcessGoneEvent.kt:12:3 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopRenderProcessGoneEvent.kt:23:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopRenderProcessGoneEvent.kt:23:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopRenderProcessGoneEvent.kt:24:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopShouldStartLoadWithRequestEvent.kt:5:8 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopShouldStartLoadWithRequestEvent.kt:10:89 'constructor<T : Event<T>>(viewTag: Int): Event<T>' is deprecated. Use constructor with explicit surfaceId instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopShouldStartLoadWithRequestEvent.kt:27:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopShouldStartLoadWithRequestEvent.kt:27:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopShouldStartLoadWithRequestEvent.kt:28:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
+> Task :react-native-gesture-handler:compileReleaseKotlin
+w: file:///home/expo/workingdir/build/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerRootView.kt:41:43 The corresponding parameter in the supertype 'ReactViewGroup' is named 'ev'. This may cause problems when calling this function with named arguments.
+> Task :react-native-screens:compileReleaseKotlin
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt:56:9 The corresponding parameter in the supertype 'BaseReactPackage' is named 'name'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt:57:9 The corresponding parameter in the supertype 'BaseReactPackage' is named 'reactContext'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt:70:17 'constructor(name: String, className: String, canOverrideExistingModule: Boolean, needsEagerInit: Boolean, hasConstants: Boolean, isCxxModule: Boolean, isTurboModule: Boolean): ReactModuleInfo' is deprecated. This constructor is deprecated and will be removed in the future. Use ReactModuleInfo(String, String, boolean, boolean, boolean, boolean)].
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:48:77 Unchecked cast of '(CoordinatorLayout.Behavior<View!>?..CoordinatorLayout.Behavior<*>?)' to 'BottomSheetBehavior<Screen>'.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:383:36 'fun setTranslucent(screen: Screen, activity: Activity?, context: ReactContext?): Unit' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:402:36 'fun setColor(screen: Screen, activity: Activity?, context: ReactContext?): Unit' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:420:36 'fun setNavigationBarColor(screen: Screen, activity: Activity?): Unit' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:437:36 'fun setNavigationBarTranslucent(screen: Screen, activity: Activity?): Unit' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:217:31 'var targetElevation: Float' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:220:13 'fun setHasOptionsMenu(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:397:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:404:22 'fun onPrepareOptionsMenu(p0: Menu): Unit' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:407:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:412:22 'fun onCreateOptionsMenu(p0: Menu, p1: MenuInflater): Unit' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackHeaderConfig.kt:435:18 'val reactNativeHost: ReactNativeHost' is deprecated. You should not use ReactNativeHost directly in the New Architecture. Use ReactHost instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:203:14 'var statusBarColor: Int?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:220:14 'var isStatusBarTranslucent: Boolean?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:237:14 'var navigationBarColor: Int?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:246:14 'var isNavigationBarTranslucent: Boolean?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:55:42 'fun replaceSystemWindowInsets(p0: Int, p1: Int, p2: Int, p3: Int): WindowInsetsCompat' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:56:39 'val systemWindowInsetLeft: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:58:39 'val systemWindowInsetRight: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:59:39 'val systemWindowInsetBottom: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:102:53 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:106:37 'var statusBarColor: Int?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:113:48 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:116:32 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:162:49 'var isStatusBarTranslucent: Boolean?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:218:43 'var navigationBarColor: Int?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:218:72 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:224:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:241:55 'var isNavigationBarTranslucent: Boolean?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:283:13 'fun setColor(screen: Screen, activity: Activity?, context: ReactContext?): Unit' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:285:13 'fun setTranslucent(screen: Screen, activity: Activity?, context: ReactContext?): Unit' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:289:13 'fun setNavigationBarColor(screen: Screen, activity: Activity?): Unit' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:290:13 'fun setNavigationBarTranslucent(screen: Screen, activity: Activity?): Unit' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:354:42 'var statusBarColor: Int?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:356:48 'var isStatusBarTranslucent: Boolean?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:359:57 'var navigationBarColor: Int?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:360:63 'var isNavigationBarTranslucent: Boolean?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:7:8 'object ReactFeatureFlags : Any' is deprecated. Use com.facebook.react.internal.featureflags.ReactNativeFeatureFlags instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:25:13 'object ReactFeatureFlags : Any' is deprecated. Use com.facebook.react.internal.featureflags.ReactNativeFeatureFlags instead.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:32:9 The corresponding parameter in the supertype 'ReactViewGroup' is named 'left'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:33:9 The corresponding parameter in the supertype 'ReactViewGroup' is named 'top'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:34:9 The corresponding parameter in the supertype 'ReactViewGroup' is named 'right'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:35:9 The corresponding parameter in the supertype 'ReactViewGroup' is named 'bottom'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:71:9 The corresponding parameter in the supertype 'RootView' is named 'childView'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:72:9 The corresponding parameter in the supertype 'RootView' is named 'ev'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:79:46 The corresponding parameter in the supertype 'RootView' is named 'ev'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:83:9 The corresponding parameter in the supertype 'RootView' is named 'childView'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:84:9 The corresponding parameter in the supertype 'RootView' is named 'ev'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:95:34 The corresponding parameter in the supertype 'RootView' is named 't'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/DimmingView.kt:63:9 The corresponding parameter in the supertype 'ReactCompoundView' is named 'touchX'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/DimmingView.kt:64:9 The corresponding parameter in the supertype 'ReactCompoundView' is named 'touchY'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/DimmingView.kt:68:9 The corresponding parameter in the supertype 'ReactCompoundViewGroup' is named 'touchX'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/DimmingView.kt:69:9 The corresponding parameter in the supertype 'ReactCompoundViewGroup' is named 'touchY'. This may cause problems when calling this function with named arguments.
+w: file:///home/expo/workingdir/build/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/gamma/tabs/TabsHostViewManager.kt:37:9 The corresponding parameter in the supertype 'TabsHostViewManager' is named 'view'. This may cause problems when calling this function with named arguments.
+[Incubating] Problems report is available at: file:///home/expo/workingdir/build/android/build/reports/problems/problems-report.html
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':app:processReleaseGoogleServices'.
+> No matching client found for package name 'com.dannel.ctecg' in /home/expo/workingdir/build/android/app/google-services.json
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with
+--info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+BUILD FAILED in 2m 25s
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+229 actionable tasks: 229 executed
+Error: Gradle build failed with unknown error. See logs for the "Run gradlew" phase for more information.

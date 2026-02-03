@@ -1,4 +1,4 @@
-// Helper functions for the CTECG mobile app
+// Helper functions for the My CTECG app
 
 export const formatCurrency = (amount: number, currency: string = 'ZAR'): string => {
   return new Intl.NumberFormat('en-ZA', {
