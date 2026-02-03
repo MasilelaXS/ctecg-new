@@ -2,7 +2,7 @@
   "expo": {
     "name": "My CTECG",
     "slug": "my-ctecg",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "platforms": [
       "ios",
       "android"
