@@ -59,6 +59,11 @@ export default function DashboardScreen() {
       setOutageNotifications([]);
       loadDashboardData();
       loadOutageNotifications();
+      const intervalId = setInterval(() => {
+        loadOutageNotifications();
+      }, 30000);
+
+      return () => clearInterval(intervalId);
     } else {
       console.log('No user found, waiting for authentication');
     }
@@ -105,7 +110,7 @@ export default function DashboardScreen() {
   const handleDismissOutage = async (notificationId: number) => {
     try {
       await apiService.dismissNotification(notificationId);
-      setOutageNotifications(prev => prev.filter(n => n.notification_id !== notificationId));
+      setOutageNotifications(prev => prev.filter(n => (n.notification_id ?? n.ticket_id) !== notificationId));
       showToast.success('Dismissed', 'Outage notification dismissed');
     } catch (error) {
       showToast.error('Error', 'Failed to dismiss notification');
@@ -287,7 +292,7 @@ export default function DashboardScreen() {
           <OutageBanner
             notification={outageNotifications[0]}
             onPress={() => handleViewOutageDetails(outageNotifications[0])}
-            onDismiss={() => handleDismissOutage(outageNotifications[0].notification_id)}
+            onDismiss={() => handleDismissOutage(outageNotifications[0].notification_id ?? outageNotifications[0].ticket_id)}
             style={{ marginBottom: Spacing.md }}
           />
         ) : (

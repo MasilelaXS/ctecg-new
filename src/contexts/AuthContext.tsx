@@ -129,6 +129,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             // Update stored user data with fresh data
             await AsyncStorage.setItem(USER_KEY, JSON.stringify(response.data));
             console.log('Auth validated successfully for user:', response.data.invoicingid);
+            // Ensure push token is registered on app start
+            registerForPushNotifications();
           } else {
             // Token is invalid, clear stored auth
             console.log('Stored token is invalid, clearing auth');

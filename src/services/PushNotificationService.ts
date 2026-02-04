@@ -68,15 +68,24 @@ class PushNotificationService {
       }
 
       // Get the push token
-      // For FCM, we need to get the device push token, not Expo push token
-      const tokenData = await Notifications.getDevicePushTokenAsync();
-      this.pushToken = tokenData.data;
-
-      console.log('FCM Token:', this.pushToken);
-
-      // Android specific: Create notification channel
       if (Platform.OS === 'android') {
+        // For Android, use FCM device token
+        const tokenData = await Notifications.getDevicePushTokenAsync();
+        this.pushToken = tokenData.data;
+        console.log('FCM Token:', this.pushToken);
+
+        // Android specific: Create notification channel
         await this.setupAndroidChannels();
+      } else {
+        // For iOS, use Expo push token (handled by Expo push service)
+        const projectId =
+          Constants.expoConfig?.extra?.eas?.projectId ||
+          Constants.easConfig?.projectId;
+        const tokenData = await Notifications.getExpoPushTokenAsync(
+          projectId ? { projectId } : undefined
+        );
+        this.pushToken = tokenData.data;
+        console.log('Expo Push Token:', this.pushToken);
       }
 
       return this.pushToken;

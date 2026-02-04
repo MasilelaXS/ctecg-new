@@ -554,9 +554,20 @@ export interface ReportIssueRequest {
 }
 
 export interface ReportIssueResponse {
-  success: boolean;
   message: string;
-  ticket_id?: string;
+  reference?: string;
+  priority?: string;
+  category?: string;
+  support_email?: string;
+  quota?: SupportIssueQuota;
+}
+
+export interface SupportIssueQuota {
+  daily_limit: number;
+  used_today: number;
+  remaining_today: number;
+  reset_at: string;
+  limit_reached: boolean;
 }
 
 // Outage Types

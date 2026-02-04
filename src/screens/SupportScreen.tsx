@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -18,7 +18,7 @@ import Card from '../components/Card';
 import { showToast } from '../components/Toast';
 import { Colors, Typography, CommonStyles, Spacing } from '../constants/Design';
 import { apiService } from '../services/api';
-import { ReportIssueRequest } from '../types/api';
+import { ReportIssueRequest, SupportIssueQuota } from '../types/api';
 
 interface PriorityOption {
   value: 'low' | 'medium' | 'high' | 'urgent';
@@ -62,7 +62,7 @@ const SOCIAL_MEDIA: SocialMediaItem[] = [
   { id: 'instagram', name: 'Instagram', icon: 'instagram', color: '#E4405F', url: 'https://www.instagram.com/ctecg_internet/' },
   { id: 'telegram', name: 'Telegram', icon: 'telegram-plane', color: '#0088CC', url: 'https://t.me/joinchat/AAAAAFk4fEjDkzEDZmezUQ' },
   { id: 'twitter', name: 'X', icon: 'twitter', color: '#000000', url: 'https://x.com/CTECG1' },
-  { id: 'whatsapp', name: 'WhatsApp', icon: 'whatsapp', color: '#25D366', url: 'https://whatsapp.com/channel/0029Vb5j21U2kNFlXvsmMJ3m' },
+  { id: 'whatsapp', name: 'WhatsApp', icon: 'whatsapp', color: '#25D366', url: 'https://wa.me/27769790642' },
   { id: 'website', name: 'Website', icon: 'globe', color: Colors.primary, url: 'http://www.ctecg.co.za' },
 ];
 
@@ -73,6 +73,10 @@ export default function SupportScreen() {
   const [priority, setPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium');
   const [category, setCategory] = useState('Technical Support');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [issueQuota, setIssueQuota] = useState<SupportIssueQuota | null>(null);
+  const [isQuotaLoading, setIsQuotaLoading] = useState(false);
+
+  const supportWhatsAppUrl = 'https://wa.me/27769790642';
 
   const handleSocialPress = async (url: string) => {
     try {
@@ -87,7 +91,34 @@ export default function SupportScreen() {
     }
   };
 
+  const loadIssueQuota = async () => {
+    setIsQuotaLoading(true);
+    try {
+      const response = await apiService.getSupportIssueQuota();
+      if (response.success && response.data) {
+        setIssueQuota(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to load support issue quota:', error);
+    } finally {
+      setIsQuotaLoading(false);
+    }
+  };
+
+  const handleChatSupport = () => {
+    handleSocialPress(supportWhatsAppUrl);
+  };
+
+  useEffect(() => {
+    loadIssueQuota();
+  }, []);
+
   const handleSubmit = async () => {
+    if (issueQuota?.limit_reached) {
+      showToast.error('Limit reached', 'Daily email limit reached. Please chat to support.');
+      return;
+    }
+
     // Validation
     if (!message.trim()) {
       showToast.error('Error', 'Please describe your issue.');
@@ -112,12 +143,29 @@ export default function SupportScreen() {
         setMessage('');
         setPriority('medium');
         setCategory('Technical Support');
+        if (response.data?.quota) {
+          setIssueQuota(response.data.quota);
+        } else {
+          loadIssueQuota();
+        }
       } else {
         showToast.error('Error', response.message || 'Failed to submit your issue. Please try again.');
       }
     } catch (error) {
-      console.error('Error submitting issue:', error);
-      showToast.error('Error', 'Failed to submit your issue. Please check your connection and try again.');
+      const err: any = error;
+      if (err?.code === 429 && err?.details?.daily_limit_reached) {
+        setIssueQuota({
+          daily_limit: err.details.daily_limit ?? 3,
+          used_today: err.details.used_today ?? err.details.daily_limit ?? 3,
+          remaining_today: 0,
+          reset_at: err.details.reset_at ?? '',
+          limit_reached: true
+        });
+        showToast.error('Limit reached', 'Daily email limit reached. Please chat to support.');
+      } else {
+        console.error('Error submitting issue:', error);
+        showToast.error('Error', 'Failed to submit your issue. Please check your connection and try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -258,21 +306,37 @@ export default function SupportScreen() {
               <Text style={styles.charCount}>{message.length}/1000</Text>
             </View>
 
+            {issueQuota?.limit_reached && (
+              <Text style={styles.limitNotice}>
+                Daily limit reached. Please chat to support.
+              </Text>
+            )}
+
             {/* Submit Button */}
-            <TouchableOpacity
-              style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
-              onPress={handleSubmit}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <ActivityIndicator color={Colors.surface} size="small" />
-              ) : (
-                <>
-                  <Ionicons name="send" size={20} color={Colors.surface} />
-                  <Text style={styles.submitButtonText}>Submit Issue</Text>
-                </>
-              )}
-            </TouchableOpacity>
+            {issueQuota?.limit_reached ? (
+              <TouchableOpacity
+                style={[styles.submitButton, styles.chatButton]}
+                onPress={handleChatSupport}
+              >
+                <Ionicons name="logo-whatsapp" size={20} color={Colors.surface} />
+                <Text style={styles.submitButtonText}>Chat to Support</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.submitButton, (isSubmitting || isQuotaLoading) && styles.submitButtonDisabled]}
+                onPress={handleSubmit}
+                disabled={isSubmitting || isQuotaLoading}
+              >
+                {isSubmitting ? (
+                  <ActivityIndicator color={Colors.surface} size="small" />
+                ) : (
+                  <>
+                    <Ionicons name="send" size={20} color={Colors.surface} />
+                    <Text style={styles.submitButtonText}>Submit Issue</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            )}
           </View>
         </Card>
 
@@ -449,6 +513,9 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
     marginTop: Spacing.md,
   },
+  chatButton: {
+    backgroundColor: '#25D366',
+  },
   submitButtonDisabled: {
     backgroundColor: Colors.textMuted,
   },
@@ -456,6 +523,11 @@ const styles = StyleSheet.create({
     fontSize: Typography.md,
     fontWeight: Typography.weights.semibold,
     color: Colors.surface,
+  },
+  limitNotice: {
+    fontSize: Typography.sm,
+    color: Colors.error,
+    textAlign: 'center',
   },
   faqLinkContainer: {
     padding: Spacing.sm,

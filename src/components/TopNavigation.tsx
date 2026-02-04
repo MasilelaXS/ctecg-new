@@ -263,7 +263,7 @@ export default function TopNavigation({
           <View style={styles.speedTestBanner}>
             <Ionicons name="speedometer" size={20} color={Colors.primary} />
             <Text style={styles.speedTestBannerText}>
-              Test your internet connection speed
+              Testing your CTECG line? Connect to your Wi‑Fi first.
             </Text>
           </View>
 

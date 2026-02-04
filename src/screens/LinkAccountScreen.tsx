@@ -19,7 +19,7 @@ export default function LinkAccountScreen() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   
   const [accountId, setAccountId] = useState('');
-  const [emailOptions, setEmailOptions] = useState<string[]>([]);
+  const [emailOptions, setEmailOptions] = useState<Array<{display: string; value: string}>>([]);
   const [selectedEmail, setSelectedEmail] = useState('');
   const [targetAccount, setTargetAccount] = useState<any>(null);
   const [otpCode, setOtpCode] = useState('');
@@ -162,13 +162,13 @@ export default function LinkAccountScreen() {
             </View>
 
             <View style={styles.emailList}>
-              {emailOptions.map((email, index) => (
+              {emailOptions.map((emailOption, index) => (
                 <TouchableOpacity
                   key={index}
                   style={styles.emailOption}
-                  onPress={() => handleSendOTP(email)}
+                  onPress={() => handleSendOTP(emailOption.value)}
                 >
-                  <Text style={styles.emailText}>{email}</Text>
+                  <Text style={styles.emailText}>{emailOption.display}</Text>
                 </TouchableOpacity>
               ))}
             </View>

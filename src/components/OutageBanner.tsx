@@ -5,7 +5,7 @@ import { Colors, Typography, Spacing } from '../constants/Design';
 
 interface OutageBannerProps {
   notification: {
-    notification_id: number;
+    notification_id?: number | null;
     ticket_id: number;
     tower_name: string;
     status: 'open' | 'closed';

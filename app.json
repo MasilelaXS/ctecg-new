@@ -2,7 +2,7 @@
   "expo": {
     "name": "My CTECG",
     "slug": "my-ctecg",
-    "version": "1.0.2",
+    "version": "1.0.10",
     "platforms": [
       "ios",
       "android"
@@ -40,11 +40,12 @@
       },
       "permissions": [
         "android.permission.INTERNET",
-        "android.permission.ACCESS_NETWORK_STATE"
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.POST_NOTIFICATIONS"
       ],
       "package": "com.dannel.ctecg",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 17
+      "versionCode": 18
     },
     "web": {
       "bundler": "metro",

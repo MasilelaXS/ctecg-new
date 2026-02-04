@@ -19,7 +19,8 @@ import {
   EmailDisplay,
   OutagesResponse,
   ReportIssueRequest,
-  ReportIssueResponse
+  ReportIssueResponse,
+  SupportIssueQuota
 } from '../types/api';
 
 // const API_BASE_URL = 'http://192.168.1.128:8500/api'; // Local development
@@ -603,17 +604,6 @@ class ApiService {
     });
   }
 
-  async reportOutage(outageData: {
-    description: string;
-    location: string;
-    severity: string;
-  }): Promise<ApiResponse<any>> {
-    return this.makeRequest('/outage.php?action=report', {
-      method: 'POST',
-      body: JSON.stringify(outageData),
-    });
-  }
-
   // Payments
   async getPayments(): Promise<ApiResponse<Payment[]>> {
     return this.makeRequest<Payment[]>('/payment.php?action=list');
@@ -742,6 +732,12 @@ class ApiService {
     return this.makeRequest<ReportIssueResponse>('/mobile-api.php?action=report-issue', {
       method: 'POST',
       body: JSON.stringify(issueData),
+    });
+  }
+
+  async getSupportIssueQuota(): Promise<ApiResponse<SupportIssueQuota>> {
+    return this.makeRequest<SupportIssueQuota>('/mobile-api.php?endpoint=support-issue-quota', {
+      method: 'GET',
     });
   }
 
