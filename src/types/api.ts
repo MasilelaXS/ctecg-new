@@ -101,9 +101,9 @@ export interface UserAccount {
   account_name: string | null;
   customer_name: string;
   is_primary: boolean;
-  status: string;
-  linked_at: string;
-  is_selected: boolean;
+  status?: string;
+  linked_at?: string;
+  is_selected?: boolean;
 }
 
 export interface LinkedAccount {
