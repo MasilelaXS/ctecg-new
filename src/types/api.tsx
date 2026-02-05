@@ -31,6 +31,9 @@ export interface AuthResponse {
     lastName: string;
     invoicingid?: string;
   };
+  requires_password_creation?: boolean;
+  user_id?: number;
+  email?: string;
 }
 
 // Customer Data Types
