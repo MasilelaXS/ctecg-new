@@ -67,6 +67,19 @@ export interface User {
   firstName: string;
   lastName: string;
   invoicingid?: string;
+  account_status?: string;
+  biometric_enabled?: boolean;
+  last_login?: string | null;
+  created_at?: string;
+  accounts?: Array<{
+    id: number;
+    client_code: string;
+    account_name: string | null;
+    customer_name: string;
+    is_primary: boolean;
+    is_selected?: boolean;
+  }>;
+  selected_account_id?: number;
 }
 
 // Check User Response Type
