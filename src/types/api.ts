@@ -49,6 +49,9 @@ export interface AuthResponse {
     customer_name: string;
     is_primary: boolean;
   }[];
+  requires_password_creation?: boolean;
+  user_id?: number;
+  email?: string;
 }
 
 // Customer Data Types

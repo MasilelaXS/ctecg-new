@@ -45,7 +45,7 @@
       ],
       "package": "com.dannel.ctecg",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 18
+      "versionCode": 31
     },
     "web": {
       "bundler": "metro",
