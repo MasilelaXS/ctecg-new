@@ -87,10 +87,10 @@ export interface User {
   firstName?: string;
   lastName?: string;
   invoicingid?: string;
-  account_status: string;
-  biometric_enabled: boolean;
-  last_login: string | null;
-  created_at: string;
+  account_status?: string;
+  biometric_enabled?: boolean;
+  last_login?: string | null;
+  created_at?: string;
   accounts?: UserAccount[];
   selected_account_id?: number;
 }
