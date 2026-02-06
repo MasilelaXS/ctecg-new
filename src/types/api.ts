@@ -150,6 +150,8 @@ export interface VerifyOTPResponse {
 export interface CheckUserResponse {
   client_code: string;
   customer_name: string;
+  email_options?: string[];
+  phone_options?: string[];
   accounts: {
     account_number: string;
     customer_name: string;

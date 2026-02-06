@@ -124,16 +124,16 @@ class ApiService {
   async register(userData: {
     invoicingid: string;
     password: string;
-    email: string;
-    phone: string;
+    selected_email: string;
+    selected_phone: string;
   }): Promise<ApiResponse<AuthResponse>> {
     return this.makeRequest<AuthResponse>('/auth.php?action=register', {
       method: 'POST',
       body: JSON.stringify({
         client_code: userData.invoicingid,
         password: userData.password,
-        email: userData.email,
-        phone: userData.phone
+        selected_email: userData.selected_email,
+        selected_phone: userData.selected_phone
       }),
     });
   }

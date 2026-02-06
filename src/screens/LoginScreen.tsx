@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -29,6 +30,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 interface CheckUserData {
   client_code: string;
   customer_name: string;
+  email_options?: string[];
+  phone_options?: string[];
   accounts: {
     account_number: string;
     customer_name: string;
@@ -51,7 +54,18 @@ export default function LoginScreen({ navigation }: Props) {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [loginWithEmail, setLoginWithEmail] = useState(true);
   const [userData, setUserData] = useState<CheckUserData | null>(null);
+  const [emailOptions, setEmailOptions] = useState<string[]>([]);
+  const [phoneOptions, setPhoneOptions] = useState<string[]>([]);
+  const [selectedEmail, setSelectedEmail] = useState('');
+  const [selectedPhone, setSelectedPhone] = useState('');
+  const [emailInput, setEmailInput] = useState('');
+  const [phoneInput, setPhoneInput] = useState('');
+  const [mismatchAttempts, setMismatchAttempts] = useState(0);
+  const [showMismatchModal, setShowMismatchModal] = useState(false);
+  const [mismatchType, setMismatchType] = useState<'email' | 'phone' | 'both'>('email');
   const { login } = useAuth();
+
+  const supportWhatsAppUrl = 'https://wa.me/27769790642';
 
   // Modal states
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -168,6 +182,19 @@ export default function LoginScreen({ navigation }: Props) {
     }
   };
 
+  const handleWhatsAppSupport = async () => {
+    try {
+      const supported = await Linking.canOpenURL(supportWhatsAppUrl);
+      if (supported) {
+        await Linking.openURL(supportWhatsAppUrl);
+      } else {
+        showToast.error('Error', 'Unable to open WhatsApp');
+      }
+    } catch (error) {
+      showToast.error('Error', 'Failed to open WhatsApp');
+    }
+  };
+
   const handleCheckUser = async () => {
     if (!clientCode.trim()) {
       showToast.error('Error', 'Please enter your client code');
@@ -183,6 +210,15 @@ export default function LoginScreen({ navigation }: Props) {
       
       if (response.success && response.data) {
         setUserData(response.data);
+
+        const fetchedEmailOptions = response.data.email_options ?? [];
+        const fetchedPhoneOptions = response.data.phone_options ?? [];
+        setEmailOptions(fetchedEmailOptions);
+        setPhoneOptions(fetchedPhoneOptions);
+        // Don't auto-fill for security
+        setEmailInput('');
+        setPhoneInput('');
+        setMismatchAttempts(0);
         
         // Pre-fill email from first account if available
         if (response.data.accounts && response.data.accounts.length > 0) {
@@ -214,37 +250,93 @@ export default function LoginScreen({ navigation }: Props) {
       return;
     }
 
-    if (!email.trim()) {
+    if (!emailInput.trim()) {
       showToast.error('Error', 'Please enter your email address');
       return;
     }
 
-    if (!phone.trim()) {
+    if (!phoneInput.trim()) {
       showToast.error('Error', 'Please enter your phone number');
       return;
     }
 
-    // Validate phone number
-    if (!validatePhone()) {
+    // Validate against Azotel options
+    const emailMatches = emailOptions.some(opt => opt.toLowerCase() === emailInput.toLowerCase().trim());
+    const phoneMatches = phoneOptions.some(opt => {
+      const normalizedInput = phoneInput.trim().replace(/\s/g, '');
+      const normalizedOpt = opt.replace(/\s/g, '');
+      return normalizedOpt === normalizedInput || normalizedOpt === '+27' + normalizedInput.replace(/^0/, '');
+    });
+
+    if (!emailMatches || !phoneMatches) {
+      // Show mismatch modal for confirmation
+      if (!emailMatches && !phoneMatches) {
+        setMismatchType('both');
+      } else if (!emailMatches) {
+        setMismatchType('email');
+      } else {
+        setMismatchType('phone');
+      }
+      setShowMismatchModal(true);
       return;
     }
 
+    // Match found, use the matched values
+    const matchedEmail = emailOptions.find(opt => opt.toLowerCase() === emailInput.toLowerCase().trim())!;
+    const matchedPhone = phoneOptions.find(opt => {
+      const normalizedInput = phoneInput.trim().replace(/\s/g, '');
+      const normalizedOpt = opt.replace(/\s/g, '');
+      return normalizedOpt === normalizedInput || normalizedOpt === '+27' + normalizedInput.replace(/^0/, '');
+    })!
+
     setIsLoading(true);
     try {
-      // Normalize phone to +27 format for backend
-      const normalizedPhone = normalizePhoneNumber(phone);
-      
       const response = await apiService.register({
         invoicingid: clientCode.trim(),
-        email: email.trim(),
-        phone: normalizedPhone,
+        selected_email: matchedEmail,
+        selected_phone: matchedPhone,
         password: password,
       });
 
       if (response.success && response.data) {
         // Navigate to OTP verification screen
         navigation.navigate('VerifyOTP', { 
-          email: email.trim(), 
+          email: matchedEmail, 
+          password: password 
+        });
+      }
+    } catch (error: any) {
+      showToast.error('Registration Failed', error.message || 'Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMismatchConfirm = () => {
+    setShowMismatchModal(false);
+    setMismatchAttempts(prev => prev + 1);
+  };
+
+  const handleMismatchRetry = () => {
+    setShowMismatchModal(false);
+  };
+
+  const handleRegisterWithMismatch = async () => {
+    setShowMismatchModal(false);
+    
+    // Use user-provided values even if they don't match
+    setIsLoading(true);
+    try {
+      const response = await apiService.register({
+        invoicingid: clientCode.trim(),
+        selected_email: emailInput.trim(),
+        selected_phone: phoneInput.trim(),
+        password: password,
+      });
+
+      if (response.success && response.data) {
+        navigation.navigate('VerifyOTP', { 
+          email: emailInput.trim(), 
           password: password 
         });
       }
@@ -262,6 +354,13 @@ export default function LoginScreen({ navigation }: Props) {
     setPhone('');
     setPassword('');
     setUserData(null);
+    setEmailOptions([]);
+    setPhoneOptions([]);
+    setSelectedEmail('');
+    setSelectedPhone('');
+    setEmailInput('');
+    setPhoneInput('');
+    setMismatchAttempts(0);
   };
 
   const toggleLoginMethod = () => {
@@ -269,6 +368,18 @@ export default function LoginScreen({ navigation }: Props) {
     setEmail('');
     setPhone('');
   };
+
+  const missingEmail = emailOptions.length === 0;
+  const missingPhone = phoneOptions.length === 0;
+  const needsSupport = !!userData && !userData.user_exists && (missingEmail || missingPhone || mismatchAttempts >= 2);
+  const supportMessage = mismatchAttempts >= 2
+    ? 'The information you entered does not match our records. Please contact support for assistance.'
+    : missingEmail && missingPhone
+      ? 'No email address or phone number found for this account. Please contact support.'
+      : missingEmail
+        ? 'No email address found for this account. Please contact support.'
+        : 'No phone number found for this account. Please contact support.';
+  const canRegister = !!userData && !userData.user_exists && !missingEmail && !missingPhone;
 
   if (isLoading) {
     return <LoadingSpinner message="Please wait..." />;
@@ -518,54 +629,69 @@ export default function LoginScreen({ navigation }: Props) {
                     {/* Email Input */}
                     <View style={styles.inputContainer}>
                       <Text style={styles.inputLabel}>Email Address</Text>
-                      <View style={styles.inputWrapper}>
-                        <Ionicons
-                          name="mail-outline"
-                          size={20}
-                          color={Colors.textSecondary}
-                          style={styles.inputIcon}
-                        />
-                        <TextInput
-                          style={styles.textInput}
-                          value={email}
-                          onChangeText={setEmail}
-                          placeholder="Enter your email address"
-                          placeholderTextColor={Colors.textMuted}
-                          keyboardType="email-address"
-                          autoCapitalize="none"
-                          autoCorrect={false}
-                        />
-                      </View>
+                      {emailOptions.length > 0 ? (
+                        <View style={styles.inputWrapper}>
+                          <Ionicons
+                            name="mail-outline"
+                            size={20}
+                            color={Colors.textSecondary}
+                            style={styles.inputIcon}
+                          />
+                          <TextInput
+                            style={styles.textInput}
+                            value={emailInput}
+                            onChangeText={setEmailInput}
+                            placeholder="Enter your email address"
+                            placeholderTextColor={Colors.textMuted}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                          />
+                        </View>
+                      ) : (
+                        <Text style={styles.supportHintText}>No email address found for this account.</Text>
+                      )}
                     </View>
 
                     {/* Phone Input */}
                     <View style={styles.inputContainer}>
                       <Text style={styles.inputLabel}>Phone Number</Text>
-                      <View style={styles.inputWrapper}>
-                        <Ionicons
-                          name="call-outline"
-                          size={20}
-                          color={Colors.textSecondary}
-                          style={styles.inputIcon}
-                        />
-                        <TextInput
-                          style={styles.textInput}
-                          value={phone}
-                          onChangeText={handlePhoneChange}
-                          placeholder="e.g., 0769790642"
-                          placeholderTextColor={Colors.textMuted}
-                          keyboardType="phone-pad"
-                          autoCorrect={false}
-                          maxLength={12}
-                        />
-                      </View>
-                      {phoneError && (
-                        <Text style={styles.errorText}>{phoneError}</Text>
-                      )}
-                      {!phoneError && phone.length > 0 && (
-                        <Text style={styles.hintText}>Format: 0XX XXX XXXX (10 digits)</Text>
+                      {phoneOptions.length > 0 ? (
+                        <View style={styles.inputWrapper}>
+                          <Ionicons
+                            name="call-outline"
+                            size={20}
+                            color={Colors.textSecondary}
+                            style={styles.inputIcon}
+                          />
+                          <TextInput
+                            style={styles.textInput}
+                            value={phoneInput}
+                            onChangeText={setPhoneInput}
+                            placeholder="e.g., 0769790642"
+                            placeholderTextColor={Colors.textMuted}
+                            keyboardType="phone-pad"
+                            autoCorrect={false}
+                          />
+                        </View>
+                      ) : (
+                        <Text style={styles.supportHintText}>No phone number found for this account.</Text>
                       )}
                     </View>
+
+                    {needsSupport && (
+                      <View style={styles.supportNotice}>
+                        <Text style={styles.supportText}>{supportMessage}</Text>
+                        <TouchableOpacity
+                          style={styles.whatsappButton}
+                          onPress={handleWhatsAppSupport}
+                          activeOpacity={0.8}
+                        >
+                          <Ionicons name="logo-whatsapp" size={18} color={Colors.textInverse} style={styles.whatsappIcon} />
+                          <Text style={styles.whatsappButtonText}>WhatsApp Support</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
 
                     {/* Password Input */}
                     <View style={styles.inputContainer}>
@@ -622,6 +748,7 @@ export default function LoginScreen({ navigation }: Props) {
                       variant="primary"
                       size="large"
                       style={styles.primaryButton}
+                      disabled={!canRegister}
                     />
                   )}
                 </View>
@@ -672,6 +799,18 @@ export default function LoginScreen({ navigation }: Props) {
         }}
         onCancel={() => setShowResetSentModal(false)}
         showCancel={false}
+      />
+
+      {/* Mismatch Confirmation Modal */}
+      <ConfirmationModal
+        visible={showMismatchModal}
+        type="confirm"
+        title="Verify Information"
+        message={`The ${mismatchType === 'both' ? 'email and phone number' : mismatchType} you entered does not match our records. Are you sure this information is correct?`}
+        confirmText="Yes, Continue"
+        cancelText="Let me correct it"
+        onConfirm={handleRegisterWithMismatch}
+        onCancel={handleMismatchRetry}
       />
     </SafeAreaView>
   );
@@ -793,6 +932,38 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.regular,
     color: Colors.text,
     paddingVertical: Spacing.sm,
+  },
+  supportHintText: {
+    fontSize: Typography.sm,
+    color: Colors.textSecondary,
+  },
+  supportNotice: {
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: Spacing.md,
+  },
+  supportText: {
+    fontSize: Typography.sm,
+    color: Colors.textSecondary,
+  },
+  whatsappButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#25D366',
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    marginTop: Spacing.sm,
+  },
+  whatsappIcon: {
+    marginRight: Spacing.xs,
+  },
+  whatsappButtonText: {
+    fontSize: Typography.sm,
+    fontWeight: Typography.weights.semibold,
+    color: Colors.textInverse,
   },
   passwordInput: {
     paddingRight: Spacing.sm,
