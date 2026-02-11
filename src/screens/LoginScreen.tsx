@@ -65,8 +65,6 @@ export default function LoginScreen({ navigation }: Props) {
   const [mismatchType, setMismatchType] = useState<'email' | 'phone' | 'both'>('email');
   const { login } = useAuth();
 
-  const supportWhatsAppUrl = 'https://wa.me/27769790642';
-
   // Modal states
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showResetSentModal, setShowResetSentModal] = useState(false);
@@ -183,14 +181,16 @@ export default function LoginScreen({ navigation }: Props) {
   };
 
   const handleWhatsAppSupport = async () => {
+    const whatsappUrl = 'https://wa.me/27769790642';
     try {
-      const supported = await Linking.canOpenURL(supportWhatsAppUrl);
+      const supported = await Linking.canOpenURL(whatsappUrl);
       if (supported) {
-        await Linking.openURL(supportWhatsAppUrl);
+        await Linking.openURL(whatsappUrl);
       } else {
         showToast.error('Error', 'Unable to open WhatsApp');
       }
     } catch (error) {
+      console.error('WhatsApp link error:', error);
       showToast.error('Error', 'Failed to open WhatsApp');
     }
   };
@@ -1016,21 +1016,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   footerLinkText: {
-    color: Colors.primary,
-    fontWeight: Typography.weights.semibold,
-  },
-  switchModeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: Spacing.md,
-  },
-  switchModeText: {
-    fontSize: Typography.sm,
-    color: Colors.textSecondary,
-  },
-  switchModeLink: {
-    fontSize: Typography.sm,
     color: Colors.primary,
     fontWeight: Typography.weights.semibold,
   },

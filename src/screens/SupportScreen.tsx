@@ -76,8 +76,6 @@ export default function SupportScreen() {
   const [issueQuota, setIssueQuota] = useState<SupportIssueQuota | null>(null);
   const [isQuotaLoading, setIsQuotaLoading] = useState(false);
 
-  const supportWhatsAppUrl = 'https://wa.me/27769790642';
-
   const handleSocialPress = async (url: string) => {
     try {
       const supported = await Linking.canOpenURL(url);
@@ -106,7 +104,7 @@ export default function SupportScreen() {
   };
 
   const handleChatSupport = () => {
-    handleSocialPress(supportWhatsAppUrl);
+    handleSocialPress('https://wa.me/27769790642');
   };
 
   useEffect(() => {

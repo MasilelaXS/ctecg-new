@@ -30,6 +30,13 @@
         "ITSAppUsesNonExemptEncryption": false,
         "UIBackgroundModes": [
           "remote-notification"
+        ],
+        "LSApplicationQueriesSchemes": [
+          "whatsapp",
+          "fb",
+          "instagram",
+          "twitter",
+          "tg"
         ]
       }
     },
