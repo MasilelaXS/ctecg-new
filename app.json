@@ -56,7 +56,7 @@
       ],
       "package": "com.dannel.ctecg",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 37,
+      "versionCode": 38,
       "intentFilters": [
         {
           "action": "VIEW",
@@ -66,7 +66,10 @@
               "host": "wa.me"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
