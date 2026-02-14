@@ -26,10 +26,25 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const TOKEN_KEY = 'auth_token';
-const USER_KEY = 'user_data';
-const LINKED_ACCOUNTS_KEY = 'linked_accounts';
-const CURRENT_ACCOUNT_KEY = 'current_account';
+// Get device-specific identifier to prevent iCloud/Google sync conflicts
+const getDeviceId = () => {
+  // Use osInternalBuildId or modelId as they're device-specific and won't sync
+  return Device.osInternalBuildId || Device.modelId || 'default';
+};
+
+// Device-specific keys to prevent cross-device token sync via iCloud Keychain or Google Backup
+const DEVICE_ID = getDeviceId();
+const TOKEN_KEY = `auth_token_${DEVICE_ID}`;
+const USER_KEY = `user_data_${DEVICE_ID}`;
+const LINKED_ACCOUNTS_KEY = `linked_accounts_${DEVICE_ID}`;
+const CURRENT_ACCOUNT_KEY = `current_account_${DEVICE_ID}`;
+
+console.log('🔐 Auth storage initialized for device:', {
+  deviceId: DEVICE_ID,
+  deviceName: Device.deviceName,
+  modelName: Device.modelName,
+  osName: Device.osName
+});
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
