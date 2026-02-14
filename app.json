@@ -33,12 +33,16 @@
         ],
         "LSApplicationQueriesSchemes": [
           "whatsapp",
+          "whatsapp-send",
           "fb",
           "instagram",
           "twitter",
-          "tg"
+          "tg",
+          "https",
+          "http"
         ]
-      }
+      },
+      "buildNumber": "1.0.10"
     },
     "android": {
       "adaptiveIcon": {
@@ -52,7 +56,19 @@
       ],
       "package": "com.dannel.ctecg",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 36
+      "versionCode": 37,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "wa.me"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",

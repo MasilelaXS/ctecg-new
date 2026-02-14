@@ -27,15 +27,15 @@ export default function ProfileScreen() {
 
   const handleSwitchAccount = async (account: any) => {
     try {
-      await switchToAccount(account.user_id);
-      showToast.success('Success', `Switched to ${account.invoicing_id}`);
+      await switchToAccount(account.account_id);
+      showToast.success('Success', `Switched to ${account.client_code}`);
     } catch (error: any) {
       showToast.error('Error', error.message || 'Failed to switch account');
     }
   };
 
   const isCurrentAccount = (account: any) => {
-    return user?.invoicingid === account.invoicing_id;
+    return account.is_current || user?.invoicingid === account.client_code;
   };
 
   return (
@@ -79,13 +79,13 @@ export default function ProfileScreen() {
                         styles.accountCardId,
                         isCurrentAccount(account) && styles.accountCardIdActive
                       ]}>
-                        {account.invoicing_id}
+                        {account.client_code}
                       </Text>
                       <Text style={[
                         styles.accountCardName,
                         isCurrentAccount(account) && styles.accountCardNameActive
                       ]} numberOfLines={1}>
-                        {account.name}
+                        {account.account_name || account.customer_name || 'Account'}
                       </Text>
                     </View>
                     {isCurrentAccount(account) && (

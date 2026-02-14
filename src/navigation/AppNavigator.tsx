@@ -18,6 +18,7 @@ import LoginScreen from '../screens/LoginScreen';
 import LinkAccountScreen from '../screens/LinkAccountScreen';
 import MakePaymentScreen from '../screens/MakePaymentScreen';
 import OutageDetailsScreen from '../screens/OutageDetailsScreen';
+import DebitOrderScreen from '../screens/DebitOrderScreen';
 import { Colors, Typography } from '../constants/Design';
 
 export type RootStackParamList = {
@@ -32,6 +33,7 @@ export type RootStackParamList = {
   LinkAccount: undefined;
   MakePayment: undefined;
   OutageDetails: { notification: any };
+  DebitOrder: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -131,6 +133,7 @@ export default function AppNavigator() {
           <Stack.Screen name="LinkAccount" component={LinkAccountScreen} />
           <Stack.Screen name="MakePayment" component={MakePaymentScreen} />
           <Stack.Screen name="OutageDetails" component={OutageDetailsScreen} />
+          <Stack.Screen name="DebitOrder" component={DebitOrderScreen} />
         </>
       )}
     </Stack.Navigator>

@@ -17,7 +17,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   loadLinkedAccounts: () => Promise<void>;
-  switchToAccount: (targetUserId: number) => Promise<void>;
+  switchToAccount: (accountId: number) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -264,17 +264,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await apiService.getLinkedAccounts();
       
       if (response.success && response.data) {
-        setLinkedAccounts(response.data.linked_accounts || []);
-        await AsyncStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(response.data.linked_accounts || []));
+        const accounts = response.data.accounts || [];
+        setLinkedAccounts(accounts);
+        await AsyncStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(accounts));
       }
     } catch (error) {
       console.error('Load linked accounts error:', error);
     }
   };
 
-  const switchToAccount = async (targetUserId: number) => {
+  const switchToAccount = async (accountId: number) => {
     try {
-      console.log('🔄 Switching account - clearing cached data for user:', targetUserId);
+      console.log('🔄 Switching account - clearing cached data for account:', accountId);
       
       // Clear all cached data before switching
       await Promise.all([
@@ -286,22 +287,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
         AsyncStorage.removeItem('cached_service_data').catch(() => {}),
       ]);
       
-      const response = await apiService.switchAccount(targetUserId);
+      const response = await apiService.switchAccount(accountId);
       
       if (response.success && response.data) {
+        const { token, user: userData, switched_to } = response.data;
+        
+        // CRITICAL: Store the new token for the switched account
+        // This ensures each account has its own isolated session
+        if (token) {
+          await SecureStore.setItemAsync(TOKEN_KEY, token);
+          apiService.setAuthToken(token);
+          console.log('✅ New token stored for switched account');
+        }
+        
         // Update user data with switched account
-        setUser(response.data.user);
-        setCurrentAccount(response.data.switched_to);
+        setUser(userData);
+        setCurrentAccount(switched_to);
         
         await Promise.all([
-          AsyncStorage.setItem(USER_KEY, JSON.stringify(response.data.user)),
-          AsyncStorage.setItem(CURRENT_ACCOUNT_KEY, JSON.stringify(response.data.switched_to))
+          AsyncStorage.setItem(USER_KEY, JSON.stringify(userData)),
+          AsyncStorage.setItem(CURRENT_ACCOUNT_KEY, JSON.stringify(switched_to))
         ]);
         
-        // Refresh linked accounts
+        // Refresh linked accounts with new token
         await loadLinkedAccounts();
         
-        console.log('✅ Account switched successfully - cache cleared');
+        console.log('✅ Account switched successfully:', {
+          userId: userData.id,
+          invoicingId: userData.invoicingid,
+          hasNewToken: !!token
+        });
       }
     } catch (error) {
       console.error('Switch account error:', error);

@@ -72,14 +72,14 @@ export default function TopNavigation({
   const handleSwitchAccount = async (account: any) => {
     setShowProfileDropdown(false);
     try {
-      await switchToAccount(account.user_id);
+      await switchToAccount(account.account_id);
     } catch (error: any) {
       console.error('Failed to switch account:', error);
     }
   };
 
   const otherAccounts = linkedAccounts.filter(
-    (account: any) => account.invoicingid !== user?.invoicingid
+    (account: any) => account.client_code !== user?.invoicingid
   );
 
   // Helper function to mask email
@@ -187,9 +187,9 @@ export default function TopNavigation({
                     onPress={() => handleSwitchAccount(account)}
                   >
                     <View style={styles.accountItemContent}>
-                      <Text style={styles.accountItemId}>{account.invoicingid}</Text>
+                      <Text style={styles.accountItemId}>{account.client_code}</Text>
                       <Text style={styles.accountItemName} numberOfLines={1}>
-                        {account.name}
+                        {account.account_name || account.customer_name}
                       </Text>
                     </View>
                     <Ionicons name="chevron-forward" size={16} color={Colors.textMuted} />

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
+import { uploadAsync, FileSystemUploadType } from 'expo-file-system/legacy';
 import { 
   ApiResponse, 
   User, 
@@ -773,10 +774,10 @@ class ApiService {
     return this.makeRequest<any>('/mobile-api.php?endpoint=linked-accounts');
   }
 
-  async switchAccount(targetUserId: number): Promise<ApiResponse<any>> {
+  async switchAccount(accountId: number): Promise<ApiResponse<any>> {
     return this.makeRequest<any>('/mobile-api.php?endpoint=account-switch', {
       method: 'POST',
-      body: JSON.stringify({ target_user_id: targetUserId }),
+      body: JSON.stringify({ account_id: accountId }),
     });
   }
 
@@ -896,6 +897,99 @@ class ApiService {
         invoicing_id: this.authToken ? 'authenticated' : null,
       }),
     });
+  }
+
+  // Debit Order APIs
+  async submitDebitOrder(data: {
+    account_holder: string;
+    bank_name: string;
+    account_number: string;
+    account_type: string;
+    branch_name: string;
+    branch_code: string;
+    deduction_date: string;
+    terms_accepted: boolean;
+    confirmation_file?: any;
+  }): Promise<boolean> {
+    try {
+      const url = `${API_BASE_URL}/mobile-api.php?endpoint=submit-debit-order`;
+      
+      console.log('Submitting debit order to:', url);
+      console.log('Has file:', !!data.confirmation_file);
+      
+      // Prepare form fields
+      const formFields: Record<string, string> = {
+        account_holder: data.account_holder,
+        bank_name: data.bank_name,
+        account_number: data.account_number,
+        account_type: data.account_type,
+        branch_name: data.branch_name,
+        branch_code: data.branch_code,
+        deduction_date: data.deduction_date,
+        terms_accepted: data.terms_accepted ? '1' : '0',
+      };
+
+      let result;
+      
+      if (data.confirmation_file) {
+        // Upload with file using legacy uploadAsync
+        console.log('Uploading with file from:', data.confirmation_file.uri);
+        
+        const uploadResult = await uploadAsync(url, data.confirmation_file.uri, {
+          httpMethod: 'POST',
+          uploadType: FileSystemUploadType.MULTIPART,
+          fieldName: 'confirmation_file',
+          parameters: formFields,
+          headers: this.authToken ? {
+            'Authorization': `Bearer ${this.authToken}`,
+          } : {},
+        });
+        
+        console.log('Upload response status:', uploadResult.status);
+        console.log('Upload response body:', uploadResult.body);
+        
+        if (uploadResult.status !== 200) {
+          throw new Error(`Server returned status ${uploadResult.status}`);
+        }
+        
+        result = JSON.parse(uploadResult.body);
+      } else {
+        // Submit without file using regular fetch
+        console.log('Submitting without file attachment');
+        const formData = new FormData();
+        Object.entries(formFields).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+        
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: this.authToken ? {
+            'Authorization': `Bearer ${this.authToken}`,
+          } : {},
+          body: formData,
+        });
+        
+        const responseText = await response.text();
+        console.log('Response:', responseText);
+        
+        if (!response.ok) {
+          throw new Error(`Server returned status ${response.status}`);
+        }
+        
+        result = JSON.parse(responseText);
+      }
+
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to submit debit order application');
+      }
+
+      console.log('✓ Debit order submitted successfully');
+      return true;
+      
+    } catch (error) {
+      console.error('Submit debit order error:', error);
+      throw error;
+    }
   }
 }
 

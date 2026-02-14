@@ -545,6 +545,24 @@ export default function BillingScreen() {
               </View>
             </Card>
 
+            {/* Debit Order Application */}
+            <TouchableOpacity 
+              style={styles.debitOrderButton}
+              onPress={() => navigation.navigate('DebitOrder')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.debitOrderContent}>
+                <View style={styles.debitOrderLeft}>
+                  <Ionicons name="repeat-outline" size={28} color={Colors.primary} />
+                  <View style={styles.debitOrderTextContainer}>
+                    <Text style={styles.debitOrderTitle}>Apply for Debit Order</Text>
+                    <Text style={styles.debitOrderSubtitle}>Set up automated monthly payments</Text>
+                  </View>
+                </View>
+                <Ionicons name="chevron-forward" size={24} color={Colors.primary} />
+              </View>
+            </TouchableOpacity>
+
             {/* Alerts */}
             {(alerts.has_overdue || alerts.has_unpaid_invoices || alerts.client_owes_money || alerts.we_owe_client || alerts.payment_due_soon || alerts.low_credit) && (
               <Card title="Alerts" variant="highlight">
@@ -1277,5 +1295,42 @@ const styles = StyleSheet.create({
     fontSize: Typography.md,
     color: Colors.textSecondary,
     fontWeight: Typography.weights.medium,
+  },
+  debitOrderButton: {
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    marginBottom: Spacing.lg,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  debitOrderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: Spacing.lg,
+  },
+  debitOrderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  debitOrderTextContainer: {
+    marginLeft: Spacing.md,
+    flex: 1,
+  },
+  debitOrderTitle: {
+    fontSize: Typography.md,
+    fontWeight: Typography.weights.semibold,
+    color: Colors.text,
+    marginBottom: 2,
+  },
+  debitOrderSubtitle: {
+    fontSize: Typography.sm,
+    color: Colors.textSecondary,
   },
 });

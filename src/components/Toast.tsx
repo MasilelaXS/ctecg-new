@@ -1,55 +1,137 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Toast, { BaseToast, ErrorToast, ToastConfig } from 'react-native-toast-message';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import Toast, { ToastConfig } from 'react-native-toast-message';
+import { BlurView } from 'expo-blur';
 import { Colors, Typography, Spacing } from '../constants/Design';
 import { Ionicons } from '@expo/vector-icons';
 
-// Custom toast configuration with CTECG brand styling
+type ToastType = 'success' | 'error' | 'info' | 'warning';
+
+const iconConfig: Record<ToastType, { name: keyof typeof Ionicons.glyphMap; color: string; bgColor: string }> = {
+  success: { name: 'checkmark-circle', color: '#10B981', bgColor: '#D1FAE5' },
+  error: { name: 'close-circle', color: Colors.error, bgColor: '#FEE2E2' },
+  warning: { name: 'warning', color: '#F59E0B', bgColor: '#FEF3C7' },
+  info: { name: 'information-circle', color: '#3B82F6', bgColor: '#DBEAFE' },
+};
+
+// Custom toast configuration with glass morphism design matching ConfirmationModal
 export const toastConfig: ToastConfig = {
   success: (props) => (
-    <View style={[styles.toastContainer, styles.successToast]}>
-      <View style={styles.iconContainer}>
-        <Ionicons name="checkmark-circle" size={24} color="#10B981" />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{props.text1}</Text>
-        {props.text2 && <Text style={styles.message}>{props.text2}</Text>}
+    <View style={styles.toastWrapper}>
+      <BlurView
+        intensity={Platform.OS === 'ios' ? 80 : 100}
+        tint="light"
+        style={styles.blurContainer}
+      />
+      <View style={styles.glassOverlay} />
+      
+      <View style={styles.toastContent}>
+        <View style={[styles.iconContainer, { backgroundColor: iconConfig.success.bgColor }]}>
+          <Ionicons name={iconConfig.success.name} size={24} color={iconConfig.success.color} />
+        </View>
+        
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{props.text1}</Text>
+          {props.text2 && <Text style={styles.message}>{props.text2}</Text>}
+        </View>
+        
+        <TouchableOpacity 
+          style={styles.dismissButton} 
+          onPress={() => Toast.hide()}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Ionicons name="close" size={20} color={Colors.textMuted} />
+        </TouchableOpacity>
       </View>
     </View>
   ),
 
   error: (props) => (
-    <View style={[styles.toastContainer, styles.errorToast]}>
-      <View style={styles.iconContainer}>
-        <Ionicons name="close-circle" size={24} color={Colors.error} />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{props.text1}</Text>
-        {props.text2 && <Text style={styles.message}>{props.text2}</Text>}
+    <View style={styles.toastWrapper}>
+      <BlurView
+        intensity={Platform.OS === 'ios' ? 80 : 100}
+        tint="light"
+        style={styles.blurContainer}
+      />
+      <View style={styles.glassOverlay} />
+      
+      <View style={styles.toastContent}>
+        <View style={[styles.iconContainer, { backgroundColor: iconConfig.error.bgColor }]}>
+          <Ionicons name={iconConfig.error.name} size={24} color={iconConfig.error.color} />
+        </View>
+        
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{props.text1}</Text>
+          {props.text2 && <Text style={styles.message}>{props.text2}</Text>}
+        </View>
+        
+        <TouchableOpacity 
+          style={styles.dismissButton} 
+          onPress={() => Toast.hide()}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Ionicons name="close" size={20} color={Colors.textMuted} />
+        </TouchableOpacity>
       </View>
     </View>
   ),
 
   info: (props) => (
-    <View style={[styles.toastContainer, styles.infoToast]}>
-      <View style={styles.iconContainer}>
-        <Ionicons name="information-circle" size={24} color={Colors.text} />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{props.text1}</Text>
-        {props.text2 && <Text style={styles.message}>{props.text2}</Text>}
+    <View style={styles.toastWrapper}>
+      <BlurView
+        intensity={Platform.OS === 'ios' ? 80 : 100}
+        tint="light"
+        style={styles.blurContainer}
+      />
+      <View style={styles.glassOverlay} />
+      
+      <View style={styles.toastContent}>
+        <View style={[styles.iconContainer, { backgroundColor: iconConfig.info.bgColor }]}>
+          <Ionicons name={iconConfig.info.name} size={24} color={iconConfig.info.color} />
+        </View>
+        
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{props.text1}</Text>
+          {props.text2 && <Text style={styles.message}>{props.text2}</Text>}
+        </View>
+        
+        <TouchableOpacity 
+          style={styles.dismissButton} 
+          onPress={() => Toast.hide()}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Ionicons name="close" size={20} color={Colors.textMuted} />
+        </TouchableOpacity>
       </View>
     </View>
   ),
 
   warning: (props) => (
-    <View style={[styles.toastContainer, styles.warningToast]}>
-      <View style={styles.iconContainer}>
-        <Ionicons name="warning" size={24} color="#F59E0B" />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{props.text1}</Text>
-        {props.text2 && <Text style={styles.message}>{props.text2}</Text>}
+    <View style={styles.toastWrapper}>
+      <BlurView
+        intensity={Platform.OS === 'ios' ? 80 : 100}
+        tint="light"
+        style={styles.blurContainer}
+      />
+      <View style={styles.glassOverlay} />
+      
+      <View style={styles.toastContent}>
+        <View style={[styles.iconContainer, { backgroundColor: iconConfig.warning.bgColor }]}>
+          <Ionicons name={iconConfig.warning.name} size={24} color={iconConfig.warning.color} />
+        </View>
+        
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{props.text1}</Text>
+          {props.text2 && <Text style={styles.message}>{props.text2}</Text>}
+        </View>
+        
+        <TouchableOpacity 
+          style={styles.dismissButton} 
+          onPress={() => Toast.hide()}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Ionicons name="close" size={20} color={Colors.textMuted} />
+        </TouchableOpacity>
       </View>
     </View>
   ),
@@ -63,7 +145,7 @@ export const showToast = {
       text1: title,
       text2: message,
       position: 'top',
-      visibilityTime: 3000,
+      visibilityTime: 4000,
       autoHide: true,
       topOffset: 60,
     });
@@ -75,7 +157,7 @@ export const showToast = {
       text1: title,
       text2: message,
       position: 'top',
-      visibilityTime: 4000,
+      visibilityTime: 5000,
       autoHide: true,
       topOffset: 60,
     });
@@ -87,7 +169,7 @@ export const showToast = {
       text1: title,
       text2: message,
       position: 'top',
-      visibilityTime: 3000,
+      visibilityTime: 4000,
       autoHide: true,
       topOffset: 60,
     });
@@ -99,7 +181,7 @@ export const showToast = {
       text1: title,
       text2: message,
       position: 'top',
-      visibilityTime: 3500,
+      visibilityTime: 4500,
       autoHide: true,
       topOffset: 60,
     });
@@ -107,34 +189,45 @@ export const showToast = {
 };
 
 const styles = StyleSheet.create({
-  toastContainer: {
+  toastWrapper: {
+    width: '90%',
+    maxWidth: 400,
+    marginHorizontal: Spacing.md,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 10,
+  },
+  blurContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  glassOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  },
+  toastContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '90%',
     paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    borderRadius: 12,
-    marginHorizontal: Spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  successToast: {
-    backgroundColor: '#ECFDF5',
-  },
-  errorToast: {
-    backgroundColor: '#FEF2F2',
-  },
-  infoToast: {
-    backgroundColor: Colors.surface,
-  },
-  warningToast: {
-    backgroundColor: '#FFFBEB',
+    paddingVertical: Spacing.sm + 4,
+    gap: Spacing.sm,
   },
   iconContainer: {
-    marginRight: Spacing.sm,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   textContainer: {
     flex: 1,
@@ -143,11 +236,17 @@ const styles = StyleSheet.create({
     fontSize: Typography.md,
     fontWeight: Typography.weights.semibold,
     color: Colors.text,
+    lineHeight: 20,
   },
   message: {
     fontSize: Typography.sm,
-    color: Colors.textMuted,
+    color: Colors.textSecondary,
     marginTop: 2,
+    lineHeight: 18,
+  },
+  dismissButton: {
+    padding: 4,
+    borderRadius: 8,
   },
 });
 

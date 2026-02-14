@@ -78,6 +78,31 @@ export default function SupportScreen() {
 
   const handleSocialPress = async (url: string) => {
     try {
+      // Special handling for WhatsApp with fallback URLs
+      if (url.includes('wa.me') || url.includes('whatsapp')) {
+        const phoneNumber = '27769790642';
+        const urls = [
+          `https://wa.me/${phoneNumber}`,
+          `whatsapp://send?phone=${phoneNumber}`,
+          `https://api.whatsapp.com/send?phone=${phoneNumber}`
+        ];
+        
+        for (const whatsappUrl of urls) {
+          try {
+            const supported = await Linking.canOpenURL(whatsappUrl);
+            if (supported) {
+              await Linking.openURL(whatsappUrl);
+              return;
+            }
+          } catch (e) {
+            continue;
+          }
+        }
+        showToast.error('Error', 'WhatsApp not installed');
+        return;
+      }
+      
+      // Regular URL handling for other social media
       const supported = await Linking.canOpenURL(url);
       if (supported) {
         await Linking.openURL(url);
@@ -85,6 +110,7 @@ export default function SupportScreen() {
         showToast.error('Error', 'Unable to open this link');
       }
     } catch (error) {
+      console.error('Link error:', error);
       showToast.error('Error', 'Failed to open link');
     }
   };
