@@ -87,13 +87,11 @@ export default function SupportScreen() {
           `https://api.whatsapp.com/send?phone=${phoneNumber}`
         ];
         
+        // Try each URL directly - canOpenURL can return false even when it works
         for (const whatsappUrl of urls) {
           try {
-            const supported = await Linking.canOpenURL(whatsappUrl);
-            if (supported) {
-              await Linking.openURL(whatsappUrl);
-              return;
-            }
+            await Linking.openURL(whatsappUrl);
+            return;
           } catch (e) {
             continue;
           }

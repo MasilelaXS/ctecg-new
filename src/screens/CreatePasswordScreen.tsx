@@ -170,7 +170,7 @@ export default function CreatePasswordScreen({ navigation, route }: Props) {
         {/* Title */}
         <Text style={styles.title}>Create Your Password</Text>
         <Text style={styles.subtitle}>
-          Your account email was recently updated. Please create a new password for{' '}
+          Your account exists but needs a password. This email is linked to an existing account. Please create a password for{' '}
           <Text style={styles.emailHighlight}>{maskEmail(email)}</Text>
         </Text>
 

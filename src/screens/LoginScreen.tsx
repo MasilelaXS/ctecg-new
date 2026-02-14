@@ -189,14 +189,11 @@ export default function LoginScreen({ navigation }: Props) {
     ];
     
     try {
-      // Try each URL until one works
+      // Try each URL directly - canOpenURL can return false even when it works
       for (const url of urls) {
         try {
-          const supported = await Linking.canOpenURL(url);
-          if (supported) {
-            await Linking.openURL(url);
-            return; // Success, exit
-          }
+          await Linking.openURL(url);
+          return; // Success, exit
         } catch (e) {
           console.log(`Failed to open ${url}:`, e);
           continue; // Try next URL

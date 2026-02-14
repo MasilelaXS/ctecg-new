@@ -318,7 +318,7 @@ export default function DebitOrderScreen() {
             style={styles.input}
             value={accountNumber}
             onChangeText={setAccountNumber}
-            placeholder="9-11 digits"
+            placeholder="Your bank account number"
             keyboardType="number-pad"
             maxLength={11}
           />
