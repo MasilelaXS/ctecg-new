@@ -84,10 +84,6 @@ export default function SupportScreen() {
       showToast.error('Error', 'Unable to open this link');
     }
   };
-      console.error('Link error:', error);
-      showToast.error('Error', 'Failed to open link');
-    }
-  };
 
   const loadIssueQuota = async () => {
     setIsQuotaLoading(true);
