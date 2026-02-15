@@ -8,7 +8,7 @@ interface CardProps {
   style?: ViewStyle;
   titleStyle?: TextStyle;
   subtitleStyle?: TextStyle;
-  variant?: 'default' | 'highlight' | 'minimal' | 'uncapped';
+  variant?: 'default' | 'highlight' | 'minimal' | 'uncapped' | 'secondary';
 }
 
 export default function Card({
@@ -64,6 +64,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF5F5',
     borderColor: '#cc0000',
     borderWidth: 2,
+  },
+  secondary: {
+    backgroundColor: '#F5F5F5',
+    borderColor: '#E0E0E0',
   },
   header: {
     marginBottom: 12,

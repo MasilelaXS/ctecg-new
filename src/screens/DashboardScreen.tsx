@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '@react-navigation/native';
+import type { RootStackParamList } from '../navigation/AppNavigator';
 import { useAuth } from '../contexts/AuthContext';
 import Card from '../components/Card';
 import UncappedUsageCard from '../components/UncappedUsageCard';
@@ -45,7 +46,7 @@ const cleanSubscriptionName = (name: string): string => {
 
 export default function DashboardScreen() {
   const { user, logout } = useAuth();
-  const navigation = useNavigation<NavigationProp<any>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -86,7 +87,7 @@ export default function DashboardScreen() {
       console.log('📊 Dashboard API response received:', {
         success: response.success,
         customerName: response.data?.customer?.name,
-        invoicingId: response.data?.customer?.invoicing_id,
+        customerNumber: response.data?.customer?.customer_number,
         expectedUser: user?.invoicingid,
         timestamp: new Date().toISOString()
       });
@@ -128,7 +129,7 @@ export default function DashboardScreen() {
   };
 
   const handleViewOutageDetails = (notification: any) => {
-    navigation.navigate('OutageDetails' as never, { notification } as never);
+    navigation.navigate('OutageDetails', { notification });
   };
 
   const onRefresh = () => {

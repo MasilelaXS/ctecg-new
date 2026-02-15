@@ -11,6 +11,7 @@ export const Colors = {
   backgroundAlt: '#F5F5F5',
   surface: '#FAFAFA',
   card: '#FFFFFF',
+  white: '#FFFFFF',
   
   // Text Colors
   text: '#1A1A1A',
@@ -71,6 +72,24 @@ export const Typography = {
     wide: 0.5,
     wider: 0.8,
     widest: 1.2,
+  },
+  
+  // Helper text styles
+  bodySmall: {
+    fontSize: 12,
+    fontWeight: '400' as const,
+  },
+  bodySmallBold: {
+    fontSize: 12,
+    fontWeight: '700' as const,
+  },
+  bodyMedium: {
+    fontSize: 14,
+    fontWeight: '400' as const,
+  },
+  bodyLargeBold: {
+    fontSize: 16,
+    fontWeight: '700' as const,
   },
 };
 
