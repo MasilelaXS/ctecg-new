@@ -181,29 +181,11 @@ export default function LoginScreen({ navigation }: Props) {
   };
 
   const handleWhatsAppSupport = async () => {
-    const phoneNumber = '27769790642';
-    const urls = [
-      `https://wa.me/${phoneNumber}`,
-      `whatsapp://send?phone=${phoneNumber}`,
-      `https://api.whatsapp.com/send?phone=${phoneNumber}`
-    ];
-    
     try {
-      // Try each URL directly - canOpenURL can return false even when it works
-      for (const url of urls) {
-        try {
-          await Linking.openURL(url);
-          return; // Success, exit
-        } catch (e) {
-          console.log(`Failed to open ${url}:`, e);
-          continue; // Try next URL
-        }
-      }
-      // If all URLs fail
-      showToast.error('Error', 'WhatsApp not installed or cannot open link');
+      await Linking.openURL('https://wa.me/27769790642');
     } catch (error) {
       console.error('WhatsApp link error:', error);
-      showToast.error('Error', 'Failed to open WhatsApp');
+      showToast.error('Error', 'Unable to open WhatsApp');
     }
   };
 

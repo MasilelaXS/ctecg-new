@@ -74,14 +74,24 @@ export default function DashboardScreen() {
       if (isRefresh) setIsRefreshing(true);
       else setIsLoading(true);
 
-      console.log('Loading dashboard data...');
+      console.log('🔄 loadDashboardData called:', {
+        isRefresh,
+        currentUser: user?.invoicingid,
+        userId: user?.id,
+        timestamp: new Date().toISOString()
+      });
+      
       const response = await apiService.getDashboardData();
-      console.log('Dashboard API response:', response);
+      
+      console.log('📊 Dashboard API response received:', {
+        success: response.success,
+        customerName: response.data?.customer?.name,
+        invoicingId: response.data?.customer?.invoicing_id,
+        expectedUser: user?.invoicingid,
+        timestamp: new Date().toISOString()
+      });
       
       if (response.success && response.data) {
-        console.log('Setting dashboard data:', response.data);
-        console.log('Data type check:', typeof response.data);
-        console.log('Data keys:', Object.keys(response.data));
         setDashboardData(response.data as any);  // Temporary cast to bypass TypeScript error
       } else {
         console.error('Dashboard API error:', response.message);

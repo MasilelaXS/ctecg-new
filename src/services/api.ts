@@ -52,13 +52,14 @@ class ApiService {
 
     if (this.authToken) {
       headers['Authorization'] = `Bearer ${this.authToken}`;
-      console.log('API Request with token:', {
+      console.log('📡 API Request with token:', {
         endpoint,
         tokenLength: this.authToken.length,
+        tokenPrefix: this.authToken.substring(0, 20),
         hasToken: !!this.authToken
       });
     } else {
-      console.log('API Request without token:', endpoint);
+      console.log('📡 API Request without token:', endpoint);
     }
 
     try {
@@ -70,6 +71,7 @@ class ApiService {
         ...options,
         headers,
         signal: controller.signal,
+        cache: 'no-store', // CRITICAL: Disable HTTP caching to prevent user switching
       });
       
       clearTimeout(timeoutId);

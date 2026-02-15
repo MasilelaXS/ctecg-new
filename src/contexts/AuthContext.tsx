@@ -29,28 +29,35 @@ interface AuthProviderProps {
 
 // Get device-specific identifier to prevent iCloud/Google sync conflicts
 const getDeviceId = async (): Promise<string> => {
+  console.log('🔍 Getting device ID for platform:', Platform.OS);
+  
   // For Android, use androidId which is unique per device per app install
   // For iOS, use identifierForVendor which is unique per device per vendor
   if (Platform.OS === 'android') {
-    const androidId = Application.androidId;
+    const androidId = await Application.getAndroidId();
+    console.log('📱 Android ID:', androidId);
     if (androidId) {
       return androidId;
     }
   } else if (Platform.OS === 'ios') {
     const iosId = await Application.getIosIdForVendorAsync();
+    console.log('📱 iOS Vendor ID:', iosId);
     if (iosId) {
       return iosId;
     }
   }
   
   // Fallback: Generate a UUID and store it (will be unique for this app installation)
+  console.log('⚠️ Using UUID fallback');
   const storedUuid = await AsyncStorage.getItem('device_uuid_persistent');
   if (storedUuid) {
+    console.log('📱 Found stored UUID:', storedUuid);
     return storedUuid;
   }
   
   // Generate new UUID
   const newUuid = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+  console.log('📱 Generated new UUID:', newUuid);
   await AsyncStorage.setItem('device_uuid_persistent', newUuid);
   return newUuid;
 };
@@ -220,8 +227,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const loadStoredAuth = async () => {
-    trawait initializeStorageKeys();
-      y {
+    try {
+      await initializeStorageKeys();
       const [token, userData] = await Promise.all([
         SecureStore.getItemAsync(TOKEN_KEY),
         AsyncStorage.getItem(USER_KEY)
@@ -294,8 +301,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const login = async (identifier: string, password: string) => {
-    trawait initializeStorageKeys();
-      y {
+    try {
+      await initializeStorageKeys();
       // Gather device information
       const deviceInfo = {
         deviceName: Device.deviceName || undefined,
@@ -340,6 +347,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
           AsyncStorage.setItem(USER_KEY, JSON.stringify(userWithAccounts))
         ]);
         
+        console.log('💾 Token stored with key:', TOKEN_KEY);
+        console.log('💾 Device ID:', DEVICE_ID);
+        console.log('💾 Token prefix:', token.substring(0, 10) + '...');
+        
         setUser(userWithAccounts);
         apiService.setAuthToken(token);
         
@@ -366,12 +377,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  consawait initializeStorageKeys();
-      t refreshUser = async () => {
+  const refreshUser = async () => {
     try {
+      await initializeStorageKeys();
+      
+      // Log what token we're using BEFORE making the request
+      const currentToken = await SecureStore.getItemAsync(TOKEN_KEY);
+      console.log('🔄 refreshUser - About to call getCurrentUser with:', {
+        deviceId: DEVICE_ID,
+        tokenKey: TOKEN_KEY,
+        hasToken: !!currentToken,
+        tokenPrefix: currentToken?.substring(0, 15)
+      });
+      
       const response = await apiService.getCurrentUser();
       
       if (response.success && response.data) {
+        console.log('✅ refreshUser - Got user data:', {
+          userId: response.data.id,
+          invoicingId: response.data.invoicingid,
+          deviceId: DEVICE_ID
+        });
         setUser(response.data);
         await AsyncStorage.setItem(USER_KEY, JSON.stringify(response.data));
       }
@@ -382,9 +408,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  consawait initializeStorageKeys();
-      t loadLinkedAccounts = async () => {
+  const loadLinkedAccounts = async () => {
     try {
+      await initializeStorageKeys();
       const response = await apiService.getLinkedAccounts();
       
       if (response.success && response.data) {
