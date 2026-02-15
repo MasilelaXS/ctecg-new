@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import * as Device from 'expo-device';
+import * as Application from 'expo-application';
 import { Platform } from 'react-native';
 import { User } from '../types/api';
 import { apiService } from '../services/api';
@@ -27,24 +28,58 @@ interface AuthProviderProps {
 }
 
 // Get device-specific identifier to prevent iCloud/Google sync conflicts
-const getDeviceId = () => {
-  // Use osInternalBuildId or modelId as they're device-specific and won't sync
-  return Device.osInternalBuildId || Device.modelId || 'default';
+const getDeviceId = async (): Promise<string> => {
+  // For Android, use androidId which is unique per device per app install
+  // For iOS, use identifierForVendor which is unique per device per vendor
+  if (Platform.OS === 'android') {
+    const androidId = Application.androidId;
+    if (androidId) {
+      return androidId;
+    }
+  } else if (Platform.OS === 'ios') {
+    const iosId = await Application.getIosIdForVendorAsync();
+    if (iosId) {
+      return iosId;
+    }
+  }
+  
+  // Fallback: Generate a UUID and store it (will be unique for this app installation)
+  const storedUuid = await AsyncStorage.getItem('device_uuid_persistent');
+  if (storedUuid) {
+    return storedUuid;
+  }
+  
+  // Generate new UUID
+  const newUuid = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+  await AsyncStorage.setItem('device_uuid_persistent', newUuid);
+  return newUuid;
 };
 
-// Device-specific keys to prevent cross-device token sync via iCloud Keychain or Google Backup
-const DEVICE_ID = getDeviceId();
-const TOKEN_KEY = `auth_token_${DEVICE_ID}`;
-const USER_KEY = `user_data_${DEVICE_ID}`;
-const LINKED_ACCOUNTS_KEY = `linked_accounts_${DEVICE_ID}`;
-const CURRENT_ACCOUNT_KEY = `current_account_${DEVICE_ID}`;
+// Storage keys will be initialized with device-specific ID
+let TOKEN_KEY: string;
+let USER_KEY: string;
+let LINKED_ACCOUNTS_KEY: string;
+let CURRENT_ACCOUNT_KEY: string;
+let DEVICE_ID: string;
 
-console.log('🔐 Auth storage initialized for device:', {
-  deviceId: DEVICE_ID,
-  deviceName: Device.deviceName,
-  modelName: Device.modelName,
-  osName: Device.osName
-});
+// Initialize device-specific storage keys
+const initializeStorageKeys = async () => {
+  if (!DEVICE_ID) {
+    DEVICE_ID = await getDeviceId();
+    TOKEN_KEY = `auth_token_${DEVICE_ID}`;
+    USER_KEY = `user_data_${DEVICE_ID}`;
+    LINKED_ACCOUNTS_KEY = `linked_accounts_${DEVICE_ID}`;
+    CURRENT_ACCOUNT_KEY = `current_account_${DEVICE_ID}`;
+    
+    console.log('🔐 Auth storage initialized for device:', {
+      deviceId: DEVICE_ID,
+      deviceName: Device.deviceName,
+      modelName: Device.modelName,
+      osName: Device.osName,
+      platform: Platform.OS
+    });
+  }
+};
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
@@ -56,6 +91,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const clearStoredAuth = async () => {
     try {
+      await initializeStorageKeys();
       await Promise.all([
         SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => {}), // Ignore errors if keys don't exist
         AsyncStorage.removeItem(USER_KEY).catch(() => {}),
@@ -69,6 +105,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = async () => {
     try {
+      await initializeStorageKeys();
       console.log('🔴 Logging out - clearing all cached data');
       
       // Clear stored authentication data
@@ -99,9 +136,76 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  // Migrate old storage to device-specific storage (one-time migration)
+  const migrateOldStorage = async () => {
+    try {
+      await initializeStorageKeys();
+      console.log('🔄 Checking for old storage to migrate...');
+      
+      // Check if old storage exists (without device ID)
+      const [oldToken, oldUserData, oldLinkedAccounts, oldCurrentAccount] = await Promise.all([
+        SecureStore.getItemAsync('auth_token').catch(() => null),
+        AsyncStorage.getItem('user_data').catch(() => null),
+        AsyncStorage.getItem('linked_accounts').catch(() => null),
+        AsyncStorage.getItem('current_account').catch(() => null)
+      ]);
+
+      // If old storage exists, migrate to device-specific keys
+      if (oldToken || oldUserData || oldLinkedAccounts || oldCurrentAccount) {
+        console.log('📦 Migrating old storage to device-specific keys...');
+        
+        // Check if device-specific storage already exists
+        const [newToken, newUserData] = await Promise.all([
+          SecureStore.getItemAsync(TOKEN_KEY).catch(() => null),
+          AsyncStorage.getItem(USER_KEY).catch(() => null)
+        ]);
+
+        // Only migrate if device-specific storage is empty (first launch after update)
+        if (!newToken && !newUserData) {
+          const migrationPromises = [];
+          
+          if (oldToken) {
+            migrationPromises.push(SecureStore.setItemAsync(TOKEN_KEY, oldToken));
+          }
+          if (oldUserData) {
+            migrationPromises.push(AsyncStorage.setItem(USER_KEY, oldUserData));
+          }
+          if (oldLinkedAccounts) {
+            migrationPromises.push(AsyncStorage.setItem(LINKED_ACCOUNTS_KEY, oldLinkedAccounts));
+          }
+          if (oldCurrentAccount) {
+            migrationPromises.push(AsyncStorage.setItem(CURRENT_ACCOUNT_KEY, oldCurrentAccount));
+          }
+          
+          await Promise.all(migrationPromises);
+          console.log('✅ Migration complete - data copied to device-specific storage');
+        } else {
+          console.log('⏭️ Device-specific storage already exists, skipping migration');
+        }
+
+        // CRITICAL: Delete old storage to prevent cloud sync conflicts
+        console.log('🧹 Cleaning up old non-device-specific storage...');
+        await Promise.all([
+          SecureStore.deleteItemAsync('auth_token').catch(() => {}),
+          AsyncStorage.removeItem('user_data').catch(() => {}),
+          AsyncStorage.removeItem('linked_accounts').catch(() => {}),
+          AsyncStorage.removeItem('current_account').catch(() => {})
+        ]);
+        console.log('✅ Old storage cleaned up');
+      } else {
+        console.log('✅ No old storage found - using device-specific storage');
+      }
+    } catch (error) {
+      console.error('⚠️ Migration error (will use device-specific storage):', error);
+    }
+  };
+
   // Load stored authentication data on app start
   useEffect(() => {
-    loadStoredAuth();
+    // First migrate old storage, then load auth
+    migrateOldStorage().then(() => {
+      loadStoredAuth();
+    });
     
     // Set up auth failure callback for automatic logout on token expiration
     apiService.setAuthFailureCallback(() => {
@@ -116,7 +220,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const loadStoredAuth = async () => {
-    try {
+    trawait initializeStorageKeys();
+      y {
       const [token, userData] = await Promise.all([
         SecureStore.getItemAsync(TOKEN_KEY),
         AsyncStorage.getItem(USER_KEY)
@@ -125,7 +230,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.log('Loading stored auth:', {
         hasToken: !!token,
         tokenLength: token?.length,
-        hasUserData: !!userData
+        hasUserData: !!userData,
+        deviceId: DEVICE_ID
       });
 
       if (token && userData) {
@@ -188,7 +294,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const login = async (identifier: string, password: string) => {
-    try {
+    trawait initializeStorageKeys();
+      y {
       // Gather device information
       const deviceInfo = {
         deviceName: Device.deviceName || undefined,
@@ -259,7 +366,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const refreshUser = async () => {
+  consawait initializeStorageKeys();
+      t refreshUser = async () => {
     try {
       const response = await apiService.getCurrentUser();
       
@@ -274,7 +382,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const loadLinkedAccounts = async () => {
+  consawait initializeStorageKeys();
+      t loadLinkedAccounts = async () => {
     try {
       const response = await apiService.getLinkedAccounts();
       
@@ -290,6 +399,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const switchToAccount = async (accountId: number) => {
     try {
+      await initializeStorageKeys();
       console.log('🔄 Switching account - clearing cached data for account:', accountId);
       
       // Clear all cached data before switching
