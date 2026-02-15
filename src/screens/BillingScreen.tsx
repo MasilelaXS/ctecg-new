@@ -704,7 +704,10 @@ export default function BillingScreen() {
               </TouchableOpacity>
             </View>
             
-            <ScrollView style={styles.modalScroll}>
+            <ScrollView 
+              style={styles.modalScroll}
+              contentContainerStyle={styles.modalScrollContent}
+            >
               {/* Company Details */}
               <View style={styles.infoSection}>
                 <Text style={styles.sectionTitle}>Company Details</Text>
@@ -779,7 +782,7 @@ export default function BillingScreen() {
               </View>
 
               <View style={styles.modalNote}>
-                <Ionicons name="information-circle" size={16} color={Colors.info} />
+                <Ionicons name="information-circle" size={20} color={Colors.textSecondary} />
                 <Text style={styles.noteText}>
                   Please use your invoicing ID as reference when making payments.
                 </Text>
@@ -793,7 +796,7 @@ export default function BillingScreen() {
       <ConfirmationModal
         visible={showPaymentSuccessModal}
         type="success"
-        title="Payment Successful! 🎉"
+        title="Payment Successful!"
         message={`Your payment of R${paymentSuccessData?.amount || '0'} has been processed successfully.\n\nPayment ID: ${paymentSuccessData?.id || ''}\n\nYour account will be updated within a few minutes.`}
         confirmText="Done"
         cancelText="View Receipt"
@@ -1125,11 +1128,8 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.md,
     marginVertical: Spacing.sm,
     gap: 12,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   makePaymentButtonText: {
     color: '#FFFFFF',
@@ -1187,6 +1187,9 @@ const styles = StyleSheet.create({
   modalScroll: {
     padding: Spacing.lg,
   },
+  modalScrollContent: {
+    paddingBottom: Spacing.xl * 2,
+  },
   infoSection: {
     marginBottom: Spacing.lg,
     backgroundColor: Colors.card,
@@ -1233,17 +1236,19 @@ const styles = StyleSheet.create({
   modalNote: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: Spacing.xs,
-    backgroundColor: Colors.backgroundAlt,
+    gap: Spacing.sm,
+    backgroundColor: Colors.surface,
     padding: Spacing.md,
     borderRadius: 8,
     marginTop: Spacing.md,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   noteText: {
     flex: 1,
-    fontSize: Typography.xs,
-    color: Colors.info,
-    lineHeight: 18,
+    fontSize: Typography.sm,
+    color: Colors.textSecondary,
+    lineHeight: 20,
   },
   emailModalOverlay: {
     flex: 1,
@@ -1300,11 +1305,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderRadius: 12,
     marginBottom: Spacing.lg,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     borderWidth: 1,
     borderColor: Colors.border,
   },

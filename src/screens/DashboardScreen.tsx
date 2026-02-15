@@ -251,9 +251,14 @@ export default function DashboardScreen() {
     setShowPaymentModal(true);
   };
 
-  const handleOnlineBanking = () => {
+  const handleEFTPayment = () => {
     setShowPaymentModal(false);
     setShowBankingModal(true);
+  };
+
+  const handlePayInApp = () => {
+    setShowPaymentModal(false);
+    navigation.navigate('MakePayment' as never);
   };
 
   const handleSupport = () => {
@@ -560,13 +565,13 @@ export default function DashboardScreen() {
         visible={showPaymentModal}
         type="info"
         title="Payment Options"
-        message="Choose how you would like to pay your bill:"
-        confirmText="Online Banking"
-        cancelText="Contact Support"
-        onConfirm={handleOnlineBanking}
+        message="Pay in App - Fast & secure card payment via Yoco\n\nEFT Transfer - Transfer using online banking"
+        confirmText="Pay in App"
+        cancelText="EFT Transfer"
+        onConfirm={handlePayInApp}
         onCancel={() => {
           setShowPaymentModal(false);
-          handleSupport();
+          handleEFTPayment();
         }}
       />
 
@@ -574,8 +579,8 @@ export default function DashboardScreen() {
       <ConfirmationModal
         visible={showBankingModal}
         type="info"
-        title="Online Banking Details"
-        message="Bank: FNB\nAccount Name: CTECG\nAccount Number: 123456789\nBranch Code: 250655\n\nReference: Your account number"
+        title="EFT Payment Details"
+        message={`Bank: FNB\nAccount Name: CTECG\nAccount Number: 123456789\nBranch Code: 250655\n\nReference: ${dashboardData?.customer.customer_number || 'Your account number'}\n\nPlease use your account number as the payment reference.`}
         confirmText="OK"
         onConfirm={() => setShowBankingModal(false)}
         onCancel={() => setShowBankingModal(false)}

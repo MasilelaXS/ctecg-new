@@ -123,15 +123,6 @@ export default function YocoPaymentWebView({
           sharedCookiesEnabled={true}
         />
 
-        {/* Current URL Display (Debug - Remove in production) */}
-        {__DEV__ && currentUrl && (
-          <View style={styles.debugBar}>
-            <Text style={styles.debugText} numberOfLines={1}>
-              {currentUrl}
-            </Text>
-          </View>
-        )}
-
         {/* Payment Cancelled Modal */}
         <ConfirmationModal
           visible={showCancelledModal}
@@ -245,18 +236,5 @@ const styles = StyleSheet.create({
   webview: {
     flex: 1,
     backgroundColor: Colors.background,
-  },
-  debugBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    padding: Spacing.xs,
-  },
-  debugText: {
-    fontSize: Typography.sm,
-    color: Colors.textInverse,
-    fontFamily: 'monospace',
   },
 });

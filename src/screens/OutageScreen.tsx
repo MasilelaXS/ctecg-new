@@ -203,7 +203,7 @@ export default function OutageScreen() {
                           <Text style={styles.commenterName}>Technical Team</Text>
                           <Text style={styles.commentText}>{update.message}</Text>
                           {update.eta_update && (
-                            <Text style={styles.commentEta}>🕐 ETA: {update.eta_update}</Text>
+                            <Text style={styles.commentEta}>ETA: {update.eta_update}</Text>
                           )}
                         </View>
                         <View style={styles.commentMeta}>
@@ -265,11 +265,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderRadius: 12,
     marginBottom: Spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   // Post header (like Facebook profile section)
   postHeader: {

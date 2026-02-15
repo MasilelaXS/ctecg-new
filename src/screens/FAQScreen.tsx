@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: Spacing.md,
+    paddingBottom: Spacing.xl * 2,
   },
   headerControls: {
     marginBottom: Spacing.lg,

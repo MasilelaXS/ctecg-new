@@ -134,11 +134,8 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   shadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
   },
   content: {
     flexDirection: 'row',

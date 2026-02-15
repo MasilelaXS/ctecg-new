@@ -77,11 +77,8 @@ function TabNavigator() {
           paddingBottom: Math.max(insets.bottom, 8),
           paddingTop: 8,
           height: 60 + Math.max(insets.bottom, 0),
-          elevation: 8,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
+          borderTopWidth: 1,
+          borderTopColor: '#E0E0E0',
         },
         tabBarLabelStyle: {
           fontSize: Typography.xs,

@@ -279,7 +279,7 @@ export default function DebitOrderScreen() {
       
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <View style={styles.infoCard}>
-          <Ionicons name="information-circle" size={24} color={Colors.primary} />
+          <Ionicons name="information-circle" size={24} color={Colors.textSecondary} />
           <Text style={styles.infoText}>
             Set up automatic monthly deductions from your bank account. Processing may take 3-5 business days.
           </Text>
@@ -460,7 +460,10 @@ export default function DebitOrderScreen() {
                 <Ionicons name="close" size={24} color={Colors.text} />
               </TouchableOpacity>
             </View>
-            <ScrollView style={styles.termsContent}>
+            <ScrollView 
+              style={styles.termsContent}
+              contentContainerStyle={styles.termsContentContainer}
+            >
               <Text style={styles.termsHeading}>Debit Order Authorization</Text>
               <Text style={styles.termsParagraph}>
                 By accepting these terms, you authorize CTECG to debit your nominated bank account for the monthly subscription fee on the selected deduction date.
@@ -533,7 +536,10 @@ export default function DebitOrderScreen() {
                 <Ionicons name="close" size={24} color={Colors.text} />
               </TouchableOpacity>
             </View>
-            <ScrollView style={styles.pickerList}>
+            <ScrollView 
+              style={styles.pickerList}
+              contentContainerStyle={styles.pickerListContent}
+            >
               {SA_BANKS.map((bank, index) => (
                 <TouchableOpacity
                   key={index}
@@ -561,7 +567,10 @@ export default function DebitOrderScreen() {
                 <Ionicons name="close" size={24} color={Colors.text} />
               </TouchableOpacity>
             </View>
-            <ScrollView style={styles.pickerList}>
+            <ScrollView 
+              style={styles.pickerList}
+              contentContainerStyle={styles.pickerListContent}
+            >
               {ACCOUNT_TYPES.map((type, index) => (
                 <TouchableOpacity
                   key={index}
@@ -592,7 +601,10 @@ export default function DebitOrderScreen() {
                 <Ionicons name="close" size={24} color={Colors.text} />
               </TouchableOpacity>
             </View>
-            <ScrollView style={styles.pickerList}>
+            <ScrollView 
+              style={styles.pickerList}
+              contentContainerStyle={styles.pickerListContent}
+            >
               {DEDUCTION_DATES.map((date, index) => (
                 <TouchableOpacity
                   key={index}
@@ -648,6 +660,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: Spacing.lg,
+    paddingBottom: Spacing.xl * 2,
   },
   loadingContainer: {
     flex: 1,
@@ -662,17 +675,19 @@ const styles = StyleSheet.create({
   },
   infoCard: {
     flexDirection: 'row',
-    backgroundColor: '#E3F2FD',
+    backgroundColor: Colors.surface,
     padding: Spacing.md,
     borderRadius: 8,
     marginBottom: Spacing.lg,
     alignItems: 'flex-start',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   infoText: {
     flex: 1,
     marginLeft: Spacing.sm,
     fontSize: Typography.sm,
-    color: Colors.primary,
+    color: Colors.textSecondary,
     lineHeight: 20,
   },
   formGroup: {
@@ -796,6 +811,9 @@ const styles = StyleSheet.create({
   pickerList: {
     maxHeight: 400,
   },
+  pickerListContent: {
+    paddingBottom: Spacing.xl * 2,
+  },
   pickerItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -851,6 +869,9 @@ const styles = StyleSheet.create({
   termsContent: {
     padding: Spacing.lg,
     maxHeight: 500,
+  },
+  termsContentContainer: {
+    paddingBottom: Spacing.xl * 2,
   },
   termsHeading: {
     fontSize: Typography.md,

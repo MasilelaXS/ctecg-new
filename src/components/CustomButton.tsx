@@ -81,8 +81,6 @@ const styles = StyleSheet.create({
   },
   disabled: {
     backgroundColor: Colors.border,
-    shadowOpacity: 0,
-    elevation: 0,
   },
   text: {
     fontSize: Typography.md,

@@ -168,7 +168,10 @@ export default function SupportScreen() {
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <TopNavigation title="Customer Care" subtitle="Get help & contact us" />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+      >
         {/* Social Media Section */}
         <View style={styles.socialSection}>
           <Text style={styles.socialTitle}>Connect With Us</Text>
@@ -369,6 +372,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: Spacing.md,
   },
+  scrollViewContent: {
+    paddingBottom: Spacing.xl * 2,
+  },
   socialSection: {
     marginBottom: Spacing.lg,
   },
@@ -398,11 +404,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: Spacing.xs,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   socialLabel: {
     fontSize: Typography.xs,

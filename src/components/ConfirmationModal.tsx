@@ -131,13 +131,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     // Glass border effect
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    // Shadow for depth
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 20 },
-    shadowOpacity: 0.3,
-    shadowRadius: 30,
-    elevation: 20,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   blurContainer: {
     ...StyleSheet.absoluteFillObject,
@@ -157,12 +151,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacing.md,
-    // Subtle shadow on icon
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
   },
   title: {
     fontSize: Typography.lg,
@@ -202,12 +190,6 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     backgroundColor: Colors.primary,
-    // Subtle glow effect
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
   },
   confirmButtonText: {
     fontSize: Typography.md,
@@ -216,7 +198,6 @@ const styles = StyleSheet.create({
   },
   destructiveButton: {
     backgroundColor: Colors.error,
-    shadowColor: Colors.error,
   },
   destructiveButtonText: {
     color: Colors.textInverse,

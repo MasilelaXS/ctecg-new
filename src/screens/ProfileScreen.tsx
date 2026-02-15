@@ -42,7 +42,10 @@ export default function ProfileScreen() {
     <SafeAreaView style={styles.container}>
       <Header title="Profile" subtitle="Manage your account" variant="primary" />
       
-      <ScrollView style={styles.content}>
+      <ScrollView 
+        style={styles.content}
+        contentContainerStyle={styles.contentContainer}
+      >
         <View style={styles.userInfo}>
           <Text style={styles.userName}>
             {user?.firstName} {user?.lastName}
@@ -128,6 +131,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: Spacing.md,
+  },
+  contentContainer: {
+    paddingBottom: Spacing.xl * 2,
   },
   userInfo: {
     alignItems: 'center',

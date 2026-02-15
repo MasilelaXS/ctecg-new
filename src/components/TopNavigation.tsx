@@ -295,11 +295,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 4,
   },
   header: {
     flexDirection: 'row',
@@ -361,14 +356,8 @@ const styles = StyleSheet.create({
     padding: Spacing.md,
     minWidth: 250,
     maxWidth: Dimensions.get('window').width - 32,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   userInfo: {
     flexDirection: 'row',

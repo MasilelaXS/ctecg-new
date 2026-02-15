@@ -129,7 +129,10 @@ export default function ComprehensiveDataScreen() {
     const maintenanceCount = customerData.maintenance.length;
 
     return (
-      <ScrollView style={styles.tabContent}>
+      <ScrollView 
+        style={styles.tabContent}
+        contentContainerStyle={styles.tabContentContainer}
+      >
         <Card style={styles.overviewCard}>
           <Text style={styles.sectionTitle}>Customer Information</Text>
           <View style={styles.infoRow}>
@@ -329,6 +332,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  tabContentContainer: {
+    paddingBottom: Spacing.xl * 2,
+  },
   tabHeader: {
     fontSize: 18,
     fontWeight: '600',
@@ -402,11 +408,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   itemHeader: {
     flexDirection: 'row',

@@ -45,8 +45,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    elevation: 2,
   },
   default: {
     // Default card style with no additional borders
@@ -55,8 +53,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF5F5',
   },
   minimal: {
-    shadowOpacity: 0.04,
-    elevation: 2,
     borderWidth: 1,
     borderColor: '#F0F0F0',
   },
