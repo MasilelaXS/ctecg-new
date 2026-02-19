@@ -56,22 +56,7 @@
       ],
       "package": "com.dannel.ctecg",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 45,
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "https",
-              "host": "wa.me"
-            }
-          ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
-        }
-      ]
+      "versionCode": 45
     },
     "web": {
       "bundler": "metro",
