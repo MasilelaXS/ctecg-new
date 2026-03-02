@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { Colors, Typography, Spacing } from '../constants/Design';
 import { apiService } from '../services/api';
 
@@ -8,17 +7,16 @@ interface OnlineStatusIndicatorProps {
   size?: 'small' | 'medium' | 'large';
   showText?: boolean;
   autoRefresh?: boolean;
-  refreshInterval?: number; // in milliseconds
+  refreshInterval?: number;
 }
 
 export default function OnlineStatusIndicator({
   size = 'medium',
   showText = true,
   autoRefresh = true,
-  refreshInterval = 60000, // 1 minute default
+  refreshInterval = 60000,
 }: OnlineStatusIndicatorProps) {
   const [isOnline, setIsOnline] = useState<boolean>(false);
-  const [lastSeen, setLastSeen] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchOnlineStatus = async () => {
@@ -26,7 +24,6 @@ export default function OnlineStatusIndicator({
       const response = await apiService.getOnlineStatus();
       if (response.success && response.data) {
         setIsOnline(response.data.is_online);
-        setLastSeen(response.data.last_seen);
       }
     } catch (error) {
       console.error('Error fetching online status:', error);
@@ -51,25 +48,7 @@ export default function OnlineStatusIndicator({
 
   const getStatusText = () => {
     if (loading) return 'Checking...';
-    if (isOnline) return 'Online';
-    
-    if (lastSeen) {
-      const lastSeenDate = new Date(lastSeen);
-      const now = new Date();
-      const diffMs = now.getTime() - lastSeenDate.getTime();
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffHours = Math.floor(diffMins / 60);
-      const diffDays = Math.floor(diffHours / 24);
-
-      if (diffMins < 1) return 'Just now';
-      if (diffMins < 60) return `${diffMins}m ago`;
-      if (diffHours < 24) return `${diffHours}h ago`;
-      if (diffDays === 1) return 'Yesterday';
-      if (diffDays < 7) return `${diffDays}d ago`;
-      return 'Offline';
-    }
-    
-    return 'Offline';
+    return isOnline ? 'Online' : 'Offline';
   };
 
   const getDotSize = () => {
@@ -96,25 +75,29 @@ export default function OnlineStatusIndicator({
 
   return (
     <View style={styles.container}>
-      <View style={[
-        styles.statusDot,
-        {
-          width: getDotSize(),
-          height: getDotSize(),
-          backgroundColor: getStatusColor(),
-          opacity: isOnline ? 1 : 0.5
-        }
-      ]}>
+      <View
+        style={[
+          styles.statusDot,
+          {
+            width: getDotSize(),
+            height: getDotSize(),
+            backgroundColor: getStatusColor(),
+            opacity: isOnline ? 1 : 0.5,
+          },
+        ]}
+      >
         {isOnline && <View style={styles.pulse} />}
       </View>
       {showText && (
-        <Text style={[
-          styles.statusText,
-          {
-            fontSize: getTextSize(),
-            color: getStatusColor()
-          }
-        ]}>
+        <Text
+          style={[
+            styles.statusText,
+            {
+              fontSize: getTextSize(),
+              color: getStatusColor(),
+            },
+          ]}
+        >
           {getStatusText()}
         </Text>
       )}

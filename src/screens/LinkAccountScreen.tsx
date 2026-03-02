@@ -53,7 +53,7 @@ export default function LinkAccountScreen() {
     setSelectedEmail(email);
     
     try {
-      const response = await apiService.sendAccountLinkOTP(accountId.trim().toUpperCase(), email);
+      const response = await apiService.sendAccountLinkOTP(accountId.trim().toUpperCase(), email, targetAccount);
       
       if (response.success) {
         setStep('otp');

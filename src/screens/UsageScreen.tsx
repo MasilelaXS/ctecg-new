@@ -97,13 +97,17 @@ export default function UsageScreen() {
     return '#059669';
   };
 
-  const formatBytes = (bytes: number, decimals = 2) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  const getDayLabel = (dateString: string) => {
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleDateString('en-US', { weekday: 'short' });
+  };
+
+  const formatUsageValue = (mb: number) => {
+    if (mb >= 1024) {
+      return `${(mb / 1024).toFixed(1)} GB`;
+    }
+    return `${Math.round(mb)} MB`;
   };
 
   if (isLoading) {
@@ -122,6 +126,8 @@ export default function UsageScreen() {
   }
 
   const { summary, daily_breakdown, usage_trends, alerts } = usageData;
+  const sevenDayData = [...daily_breakdown].slice(0, 7).reverse();
+  const maxDailyUsage = Math.max(100, ...sevenDayData.map((day) => day.total_mb));
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -256,80 +262,100 @@ export default function UsageScreen() {
           </View>
         </Card>
 
-        {/* Usage Breakdown */}
-        <Card title="Usage Breakdown" subtitle="Different time periods">
-          <View style={styles.dailyUsage}>
-            {/* Today (d1) */}
-            <View style={styles.dailyItem}>
-              <Text style={styles.dailyDate}>Today</Text>
-              <View style={styles.dailyBar}>
-                <View style={styles.dailyBarBackground}>
-                  <View 
-                    style={[
-                      styles.dailyBarFill,
-                      { 
-                        width: usageData.raw_data?.usage_object?.d1down ? 
-                          `${Math.min(((usageData.raw_data.usage_object.d1down + usageData.raw_data.usage_object.d1up) / (1024 * 1024 * 1024)) * 5, 100)}%` : '2%',
-                        backgroundColor: Colors.primary
-                      }
-                    ]} 
-                  />
-                </View>
+        {/* Usage Breakdown - 7 Day Chart */}
+        <Card title="7-Day Usage" subtitle="Stacked daily usage (download + upload)">
+          <View style={styles.chartContainer}>
+            <View style={styles.chartLegend}>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: Colors.primary }]} />
+                <Text style={styles.legendText}>Download</Text>
               </View>
-              <Text style={styles.dailyAmount}>
-                {((usageData.raw_data?.usage_object?.d1down || 0) + (usageData.raw_data?.usage_object?.d1up || 0)) > 1024 * 1024 * 1024 ? 
-                  `${(((usageData.raw_data?.usage_object?.d1down || 0) + (usageData.raw_data?.usage_object?.d1up || 0)) / (1024 * 1024 * 1024)).toFixed(1)} GB` : 
-                  `${(((usageData.raw_data?.usage_object?.d1down || 0) + (usageData.raw_data?.usage_object?.d1up || 0)) / (1024 * 1024)).toFixed(0)} MB`}
-              </Text>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: Colors.success }]} />
+                <Text style={styles.legendText}>Upload</Text>
+              </View>
             </View>
 
-            {/* Yesterday (d2) */}
-            <View style={styles.dailyItem}>
-              <Text style={styles.dailyDate}>Yesterday</Text>
-              <View style={styles.dailyBar}>
-                <View style={styles.dailyBarBackground}>
-                  <View 
-                    style={[
-                      styles.dailyBarFill,
-                      { 
-                        width: usageData.raw_data?.usage_object?.d2down ? 
-                          `${Math.min(((usageData.raw_data.usage_object.d2down + usageData.raw_data.usage_object.d2up) / (1024 * 1024 * 1024)) * 5, 100)}%` : '2%',
-                        backgroundColor: Colors.primary
-                      }
-                    ]} 
-                  />
-                </View>
-              </View>
-              <Text style={styles.dailyAmount}>
-                {((usageData.raw_data?.usage_object?.d2down || 0) + (usageData.raw_data?.usage_object?.d2up || 0)) > 1024 * 1024 * 1024 ? 
-                  `${(((usageData.raw_data?.usage_object?.d2down || 0) + (usageData.raw_data?.usage_object?.d2up || 0)) / (1024 * 1024 * 1024)).toFixed(1)} GB` : 
-                  `${(((usageData.raw_data?.usage_object?.d2down || 0) + (usageData.raw_data?.usage_object?.d2up || 0)) / (1024 * 1024)).toFixed(0)} MB`}
-              </Text>
-            </View>
+            <View style={styles.barChartWrapper}>
+              {sevenDayData.map((day) => {
+                const totalHeight =
+                  maxDailyUsage > 0 ? Math.max((day.total_mb / maxDailyUsage) * 100, 2) : 2;
+                const downloadRatio = day.total_mb > 0 ? day.download_mb / day.total_mb : 0;
+                const uploadRatio = day.total_mb > 0 ? day.upload_mb / day.total_mb : 0;
+                const downloadHeight = totalHeight * downloadRatio;
+                const uploadHeight = totalHeight * uploadRatio;
 
-            {/* This Week */}
-            <View style={styles.dailyItem}>
-              <Text style={styles.dailyDate}>This Week</Text>
-              <View style={styles.dailyBar}>
-                <View style={styles.dailyBarBackground}>
-                  <View 
-                    style={[
-                      styles.dailyBarFill,
-                      { 
-                        width: usageData.raw_data?.usage_object?.weekdown ? 
-                          `${Math.min(((usageData.raw_data.usage_object.weekdown + usageData.raw_data.usage_object.weekup) / (1024 * 1024 * 1024)) * 2, 100)}%` : '2%',
-                        backgroundColor: Colors.primary
-                      }
-                    ]} 
-                  />
+                return (
+                  <View key={day.date} style={styles.barColumn}>
+                    <View style={styles.barValue}>
+                      <Text style={styles.barValueText}>
+                        {formatUsageValue(day.total_mb)}
+                      </Text>
+                    </View>
+                    <View style={styles.barContainer}>
+                      <View
+                        style={[
+                          styles.barSegment,
+                          {
+                            height: `${Math.min(downloadHeight, 100)}%`,
+                            backgroundColor: Colors.primary,
+                          },
+                        ]}
+                      />
+                      <View
+                        style={[
+                          styles.barSegment,
+                          {
+                            height: `${Math.min(uploadHeight, 100)}%`,
+                            backgroundColor: Colors.success,
+                          },
+                        ]}
+                      />
+                    </View>
+                    <Text style={styles.barLabel}>
+                      {getDayLabel(day.date)}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+
+          {/* Detailed Day List */}
+          <View style={styles.detailedList}>
+            {sevenDayData.map((day) => (
+              <View key={day.date} style={styles.detailedRow}>
+                <View>
+                  <Text style={styles.detailedDate}>{day.label}</Text>
+                  <Text style={styles.detailedDateFull}>{day.date}</Text>
+                </View>
+                <View style={styles.detailedValues}>
+                  <View style={styles.detailedValueItem}>
+                    <Text style={styles.detailedValueLabel}>↓ Down</Text>
+                    <Text style={styles.detailedValue}>
+                      {formatUsageValue(day.download_mb)}
+                    </Text>
+                  </View>
+                  <View style={styles.detailedValueItem}>
+                    <Text style={styles.detailedValueLabel}>↑ Up</Text>
+                    <Text style={styles.detailedValue}>
+                      {formatUsageValue(day.upload_mb)}
+                    </Text>
+                  </View>
+                  <View style={[styles.detailedValueItem, styles.totalValueItem]}>
+                    <Text style={styles.detailedValueLabel}>Total</Text>
+                    <Text
+                      style={[
+                        styles.detailedValue,
+                        styles.totalValue,
+                      ]}
+                    >
+                      {formatUsageValue(day.total_mb)}
+                    </Text>
+                  </View>
                 </View>
               </View>
-              <Text style={styles.dailyAmount}>
-                {((usageData.raw_data?.usage_object?.weekdown || 0) + (usageData.raw_data?.usage_object?.weekup || 0)) > 1024 * 1024 * 1024 ? 
-                  `${(((usageData.raw_data?.usage_object?.weekdown || 0) + (usageData.raw_data?.usage_object?.weekup || 0)) / (1024 * 1024 * 1024)).toFixed(1)} GB` : 
-                  `${(((usageData.raw_data?.usage_object?.weekdown || 0) + (usageData.raw_data?.usage_object?.weekup || 0)) / (1024 * 1024)).toFixed(0)} MB`}
-              </Text>
-            </View>
+            ))}
           </View>
         </Card>
 
@@ -531,38 +557,148 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
     marginTop: Spacing.sm,
   },
-  dailyUsage: {
+  graphContainer: {
     marginTop: Spacing.sm,
+    alignItems: 'center',
+    marginBottom: Spacing.md,
   },
-  dailyItem: {
+  chartContainer: {
+    width: '100%',
+    paddingVertical: Spacing.md,
+  },
+  chartLegend: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: Spacing.sm,
+    justifyContent: 'center',
+    gap: Spacing.md,
+    marginBottom: Spacing.md,
   },
-  dailyDate: {
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
+  },
+  legendDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  legendText: {
     fontSize: Typography.xs,
     color: Colors.textSecondary,
-    width: 80,
+    fontWeight: Typography.weights.medium,
   },
-  dailyBar: {
+  barChartWrapper: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-around',
+    height: 180,
+    marginBottom: Spacing.md,
+    paddingHorizontal: Spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  barColumn: {
+    alignItems: 'center',
     flex: 1,
-    marginHorizontal: Spacing.sm,
+    marginHorizontal: Spacing.xs,
   },
-  dailyBarBackground: {
-    height: 8,
+  barValue: {
+    height: 24,
+    justifyContent: 'flex-start',
+    marginBottom: Spacing.xs,
+  },
+  barValueText: {
+    fontSize: Typography.xs,
+    color: Colors.textSecondary,
+    fontWeight: Typography.weights.medium,
+  },
+  barContainer: {
+    flex: 1,
+    width: '100%',
     backgroundColor: Colors.surface,
     borderRadius: 4,
     overflow: 'hidden',
+    minHeight: 8,
+    justifyContent: 'flex-end',
   },
-  dailyBarFill: {
-    height: '100%',
-    borderRadius: 4,
+  barSegment: {
+    width: '100%',
+  },
+  barLabel: {
+    fontSize: Typography.xs,
+    color: Colors.textSecondary,
+    marginTop: Spacing.xs,
+    fontWeight: Typography.weights.semibold,
+  },
+  detailedList: {
+    marginTop: Spacing.md,
+    gap: Spacing.sm,
+  },
+  detailedRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: Spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  detailedDate: {
+    fontSize: Typography.sm,
+    fontWeight: Typography.weights.semibold,
+    color: Colors.text,
+    marginBottom: Spacing.xs,
+  },
+  detailedDateFull: {
+    fontSize: Typography.xs,
+    color: Colors.textSecondary,
+  },
+  detailedValues: {
+    flexDirection: 'row',
+    gap: Spacing.md,
+  },
+  detailedValueItem: {
+    alignItems: 'center',
+  },
+  totalValueItem: {
+    paddingLeft: Spacing.sm,
+    borderLeftWidth: 1,
+    borderLeftColor: Colors.border,
+  },
+  detailedValueLabel: {
+    fontSize: Typography.xs,
+    color: Colors.textSecondary,
+    marginBottom: Spacing.xs,
+  },
+  detailedValue: {
+    fontSize: Typography.sm,
+    fontWeight: Typography.weights.bold,
+    color: Colors.text,
+  },
+  totalValue: {
+    color: Colors.primary,
+  },
+  chartAxisText: {
+    fontSize: Typography.xs,
+    color: Colors.textSecondary,
+  },
+  dailyUsageList: {
+    marginTop: Spacing.md,
+    gap: Spacing.xs,
+  },
+  dailyItemRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dailyDate: {
+    fontSize: Typography.sm,
+    color: Colors.textSecondary,
   },
   dailyAmount: {
-    fontSize: Typography.xs,
+    fontSize: Typography.sm,
     color: Colors.text,
-    width: 60,
-    textAlign: 'right',
+    fontWeight: Typography.weights.semibold,
   },
   trendsContainer: {
     flexDirection: 'row',

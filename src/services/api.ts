@@ -26,6 +26,8 @@ import {
 
 // const API_BASE_URL = 'http://192.168.1.128:8500/api'; // Local development
 const API_BASE_URL = 'https://app.ctecg.co.za/api'; // Production
+const DEBUG_STORAGE_KEY = 'debug_api_logs';
+let debugApi = __DEV__;
 
 class ApiService {
   private authToken: string | null = null;
@@ -37,6 +39,36 @@ class ApiService {
 
   setAuthFailureCallback(callback: (() => void) | null) {
     this.onAuthFailure = callback;
+  }
+
+  getDebugApiLogging() {
+    return debugApi;
+  }
+
+  setDebugApiLogging(value: boolean) {
+    debugApi = value;
+    AsyncStorage.setItem(DEBUG_STORAGE_KEY, value ? '1' : '0');
+  }
+
+  async loadDebugApiLogging() {
+    const stored = await AsyncStorage.getItem(DEBUG_STORAGE_KEY);
+    if (stored !== null) {
+      debugApi = stored === '1';
+    }
+    await this.refreshDebugApiLogging();
+  }
+
+  async refreshDebugApiLogging() {
+    try {
+      const response = await this.makeRequest<{ debug_api: boolean }>('/mobile-api.php?endpoint=app-config', {
+        method: 'GET'
+      });
+      if (response.success && response.data) {
+        this.setDebugApiLogging(!!response.data.debug_api);
+      }
+    } catch {
+      // Ignore config fetch errors to avoid blocking UI
+    }
   }
 
   private async makeRequest<T>(
@@ -52,14 +84,6 @@ class ApiService {
 
     if (this.authToken) {
       headers['Authorization'] = `Bearer ${this.authToken}`;
-      console.log('📡 API Request with token:', {
-        endpoint,
-        tokenLength: this.authToken.length,
-        tokenPrefix: this.authToken.substring(0, 20),
-        hasToken: !!this.authToken
-      });
-    } else {
-      console.log('📡 API Request without token:', endpoint);
     }
 
     try {
@@ -67,6 +91,10 @@ class ApiService {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
       
+      if (debugApi) {
+        console.log('API Request:', { endpoint, method: options.method || 'GET' });
+      }
+
       const response = await fetch(url, {
         ...options,
         headers,
@@ -76,10 +104,11 @@ class ApiService {
       
       clearTimeout(timeoutId);
 
-      console.log('API Response status:', response.status, endpoint);
+      if (debugApi) {
+        console.log('API Response status:', response.status, endpoint);
+      }
       
       const responseText = await response.text();
-      console.log('Raw response:', responseText.substring(0, 500)); // Log first 500 chars
       
       let data;
       try {
@@ -752,12 +781,14 @@ class ApiService {
     });
   }
 
-  async sendAccountLinkOTP(targetInvoicingId: string, selectedEmail: string): Promise<ApiResponse<any>> {
+  async sendAccountLinkOTP(targetInvoicingId: string, selectedEmail: string, targetAccount?: { name?: string; customer_id?: string | number }): Promise<ApiResponse<any>> {
     return this.makeRequest<any>('/mobile-api.php?endpoint=account-link-send-otp', {
       method: 'POST',
       body: JSON.stringify({ 
         target_invoicing_id: targetInvoicingId,
-        selected_email: selectedEmail 
+        selected_email: selectedEmail,
+        customer_name: targetAccount?.name ?? '',
+        customer_id: targetAccount?.customer_id ?? ''
       }),
     });
   }
