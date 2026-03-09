@@ -23,6 +23,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.myctecg.dannel",
       "googleServicesFile": "./GoogleService-Info.plist",
+      "deploymentTarget": "14.0",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
@@ -40,9 +41,11 @@
           "tg",
           "https",
           "http"
-        ]
+        ],
+        "UIViewControllerBasedStatusBarAppearance": true,
+        "UIStatusBarStyle": "UIStatusBarStyleDefault"
       },
-      "buildNumber": "1.0.10"
+      "buildNumber": "46"
     },
     "android": {
       "adaptiveIcon": {
@@ -70,7 +73,13 @@
           "android": {
             "compileSdkVersion": 35,
             "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0"
+            "buildToolsVersion": "35.0.0",
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
+          },
+          "ios": {
+            "deploymentTarget": "14.0",
+            "useFrameworks": "static"
           }
         }
       ],

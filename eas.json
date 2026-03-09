@@ -37,7 +37,9 @@
         "disabled": true
       },
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "image": "latest",
+        "credentialsSource": "remote"
       },
       "android": {
         "buildType": "app-bundle",
