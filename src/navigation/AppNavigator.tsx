@@ -8,7 +8,8 @@ import { useAuth } from '../contexts/AuthContext';
 import DashboardScreen from '../screens/DashboardScreen';
 import UsageScreen from '../screens/UsageScreen';
 import BillingScreen from '../screens/BillingScreen';
-import SupportScreen from '../screens/SupportScreen';
+import SupportTabScreen from '../screens/SupportTabScreen';
+import ChatScreen from '../screens/ChatScreen';
 import FAQScreen from '../screens/FAQScreen';
 import VerifyOTPScreen from '../screens/VerifyOTPScreen';
 import ResetPasswordScreen from '../screens/ResetPasswordScreen';
@@ -34,6 +35,7 @@ export type RootStackParamList = {
   MakePayment: undefined;
   OutageDetails: { notification: any };
   DebitOrder: undefined;
+  Chat: { ticketId: number; ticketNumber: string; subject: string };
 };
 
 const Tab = createBottomTabNavigator();
@@ -98,7 +100,7 @@ function TabNavigator() {
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Usage" component={UsageScreen} />
       <Tab.Screen name="Billing" component={BillingScreen} />
-      <Tab.Screen name="Support" component={SupportScreen} />
+      <Tab.Screen name="Support" component={SupportTabScreen} />
     </Tab.Navigator>
   );
 }
@@ -127,6 +129,7 @@ export default function AppNavigator() {
         <>
           <Stack.Screen name="MainTabs" component={TabNavigator} />
           <Stack.Screen name="FAQ" component={FAQScreen} />
+          <Stack.Screen name="Chat" component={ChatScreen} />
           <Stack.Screen name="LinkAccount" component={LinkAccountScreen} />
           <Stack.Screen name="MakePayment" component={MakePaymentScreen} />
           <Stack.Screen name="OutageDetails" component={OutageDetailsScreen} />

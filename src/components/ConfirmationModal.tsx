@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Platform,
+  type ReactNode,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Colors, Typography, Spacing } from '../constants/Design';
@@ -25,6 +26,8 @@ interface ConfirmationModalProps {
   onCancel: () => void;
   showCancel?: boolean;
   destructive?: boolean;
+  confirmDisabled?: boolean;
+  children?: ReactNode;
 }
 
 const iconConfig: Record<ModalType, { name: keyof typeof Ionicons.glyphMap; color: string; bgColor: string }> = {
@@ -46,6 +49,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onCancel,
   showCancel = true,
   destructive = false,
+  confirmDisabled = false,
+  children,
 }) => {
   const icon = iconConfig[type];
 
@@ -81,6 +86,12 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                 <Text style={styles.title}>{title}</Text>
                 <Text style={styles.message}>{message}</Text>
 
+                {children ? (
+                  <View style={styles.childrenContainer}>
+                    {children}
+                  </View>
+                ) : null}
+
                 {/* Buttons */}
                 <View style={styles.buttonContainer}>
                   {showCancel && (
@@ -98,9 +109,11 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                       styles.confirmButton,
                       destructive && styles.destructiveButton,
                       !showCancel && styles.fullWidthButton,
+                      confirmDisabled && styles.disabledButton,
                     ]}
                     onPress={onConfirm}
                     activeOpacity={0.7}
+                    disabled={confirmDisabled}
                   >
                     <Text style={[styles.confirmButtonText, destructive && styles.destructiveButtonText]}>
                       {confirmText}
@@ -171,6 +184,10 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: Spacing.sm,
   },
+  childrenContainer: {
+    width: '100%',
+    marginBottom: Spacing.lg,
+  },
   button: {
     flex: 1,
     paddingVertical: Spacing.sm + 4,
@@ -204,6 +221,9 @@ const styles = StyleSheet.create({
   },
   fullWidthButton: {
     flex: 1,
+  },
+  disabledButton: {
+    opacity: 0.6,
   },
 });
 

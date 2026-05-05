@@ -404,7 +404,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: Spacing.xs,
-    borderWidth: 1,
     borderColor: Colors.border,
   },
   socialLabel: {
@@ -554,5 +553,16 @@ const styles = StyleSheet.create({
     fontSize: Typography.sm,
     color: Colors.textMuted,
     lineHeight: 18,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Spacing.xl,
+  },
+  loadingText: {
+    fontSize: Typography.md,
+    color: Colors.textMuted,
+    marginTop: Spacing.md,
   },
 });

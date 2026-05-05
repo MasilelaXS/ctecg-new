@@ -126,8 +126,28 @@ export default function UsageScreen() {
   }
 
   const { summary, daily_breakdown, usage_trends, alerts } = usageData;
-  const sevenDayData = [...daily_breakdown].slice(0, 7).reverse();
-  const maxDailyUsage = Math.max(100, ...sevenDayData.map((day) => day.total_mb));
+  const dailyCards = [...daily_breakdown].reverse();
+  const periodTotals = [
+    {
+      key: 'this_week',
+      label: 'This Week',
+      valueGb: usage_trends.weekly_total.total_mb / 1024,
+      color: Colors.primary,
+    },
+    {
+      key: 'last_week',
+      label: 'Last Week',
+      valueGb: usage_trends.previous_week?.total_gb ?? 0,
+      color: Colors.success,
+    },
+    {
+      key: 'current_month',
+      label: 'This Month',
+      valueGb: summary.total_usage.total_gb,
+      color: '#F59E0B',
+    },
+  ];
+  const maxPeriodGb = Math.max(1, ...periodTotals.map((period) => period.valueGb));
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -262,116 +282,55 @@ export default function UsageScreen() {
           </View>
         </Card>
 
-        {/* Usage Breakdown - 7 Day Chart */}
-        <Card title="7-Day Usage" subtitle="Stacked daily usage (download + upload)">
-          <View style={styles.chartContainer}>
-            <View style={styles.chartLegend}>
-              <View style={styles.legendItem}>
-                <View style={[styles.legendDot, { backgroundColor: Colors.primary }]} />
-                <Text style={styles.legendText}>Download</Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View style={[styles.legendDot, { backgroundColor: Colors.success }]} />
-                <Text style={styles.legendText}>Upload</Text>
-              </View>
-            </View>
-
-            <View style={styles.barChartWrapper}>
-              {sevenDayData.map((day) => {
-                const totalHeight =
-                  maxDailyUsage > 0 ? Math.max((day.total_mb / maxDailyUsage) * 100, 2) : 2;
-                const downloadRatio = day.total_mb > 0 ? day.download_mb / day.total_mb : 0;
-                const uploadRatio = day.total_mb > 0 ? day.upload_mb / day.total_mb : 0;
-                const downloadHeight = totalHeight * downloadRatio;
-                const uploadHeight = totalHeight * uploadRatio;
-
-                return (
-                  <View key={day.date} style={styles.barColumn}>
-                    <View style={styles.barValue}>
-                      <Text style={styles.barValueText}>
-                        {formatUsageValue(day.total_mb)}
-                      </Text>
-                    </View>
-                    <View style={styles.barContainer}>
-                      <View
-                        style={[
-                          styles.barSegment,
-                          {
-                            height: `${Math.min(downloadHeight, 100)}%`,
-                            backgroundColor: Colors.primary,
-                          },
-                        ]}
-                      />
-                      <View
-                        style={[
-                          styles.barSegment,
-                          {
-                            height: `${Math.min(uploadHeight, 100)}%`,
-                            backgroundColor: Colors.success,
-                          },
-                        ]}
-                      />
-                    </View>
-                    <Text style={styles.barLabel}>
-                      {getDayLabel(day.date)}
-                    </Text>
-                  </View>
-                );
-              })}
-            </View>
-          </View>
-
-          {/* Detailed Day List */}
-          <View style={styles.detailedList}>
-            {sevenDayData.map((day) => (
-              <View key={day.date} style={styles.detailedRow}>
-                <View>
-                  <Text style={styles.detailedDate}>{day.label}</Text>
-                  <Text style={styles.detailedDateFull}>{day.date}</Text>
+        {/* Daily Activity */}
+        <Card title="2 Days Summary" subtitle="">
+          <View style={styles.dailyCardsRow}>
+            {dailyCards.map((day) => (
+              <View key={day.date} style={styles.dayCard}>
+                <View style={styles.dayCardHeader}>
+                  <Text style={styles.dayCardLabel}>{day.label}</Text>
+                  <Text style={styles.dayCardDate}>{day.date}</Text>
                 </View>
-                <View style={styles.detailedValues}>
-                  <View style={styles.detailedValueItem}>
-                    <Text style={styles.detailedValueLabel}>↓ Down</Text>
-                    <Text style={styles.detailedValue}>
-                      {formatUsageValue(day.download_mb)}
-                    </Text>
-                  </View>
-                  <View style={styles.detailedValueItem}>
-                    <Text style={styles.detailedValueLabel}>↑ Up</Text>
-                    <Text style={styles.detailedValue}>
-                      {formatUsageValue(day.upload_mb)}
-                    </Text>
-                  </View>
-                  <View style={[styles.detailedValueItem, styles.totalValueItem]}>
-                    <Text style={styles.detailedValueLabel}>Total</Text>
-                    <Text
-                      style={[
-                        styles.detailedValue,
-                        styles.totalValue,
-                      ]}
-                    >
-                      {formatUsageValue(day.total_mb)}
-                    </Text>
-                  </View>
+                <Text style={styles.dayCardTotal}>{formatUsageValue(day.total_mb)}</Text>
+                <View style={styles.dayCardSplit}>
+                  <Text style={styles.dayCardSplitText}>Down {formatUsageValue(day.download_mb)}</Text>
+                  <Text style={styles.dayCardSplitText}>Up {formatUsageValue(day.upload_mb)}</Text>
                 </View>
               </View>
             ))}
           </View>
         </Card>
 
-        {/* Usage Trends */}
-        <Card title="Usage Trends">
+        {/* Period Comparison */}
+        <Card title="Period Comparison" subtitle="Weekly and monthly totals from Azotel">
           <View style={styles.trendsContainer}>
-            <View style={styles.trendItem}>
-              <Text style={styles.trendLabel}>Weekly Total</Text>
-              <Text style={styles.trendValue}>
-                {(usage_trends.weekly_total.total_mb / 1024).toFixed(1)} GB
-              </Text>
-            </View>
-            <View style={styles.trendItem}>
-              <Text style={styles.trendLabel}>Daily Average</Text>
-              <Text style={styles.trendValue}>
-                {(usage_trends.average_daily.total_mb).toFixed(0)} MB
+            {periodTotals.map((period) => {
+              const widthPercent = Math.max((period.valueGb / maxPeriodGb) * 100, 6);
+              return (
+                <View key={period.key} style={styles.periodRow}>
+                  <View style={styles.periodHeader}>
+                    <Text style={styles.trendLabel}>{period.label}</Text>
+                    <Text style={styles.trendValue}>{period.valueGb.toFixed(1)} GB</Text>
+                  </View>
+                  <View style={styles.periodTrack}>
+                    <View
+                      style={[
+                        styles.periodFill,
+                        {
+                          width: `${Math.min(widthPercent, 100)}%`,
+                          backgroundColor: period.color,
+                        },
+                      ]}
+                    />
+                  </View>
+                </View>
+              );
+            })}
+
+            <View style={styles.dailyAverageBanner}>
+              <Ionicons name="stats-chart" size={18} color={Colors.primary} />
+              <Text style={styles.dailyAverageText}>
+                Avg per day this week: {usage_trends.average_daily.total_mb.toFixed(0)} MB
               </Text>
             </View>
           </View>
@@ -661,9 +620,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   totalValueItem: {
-    paddingLeft: Spacing.sm,
-    borderLeftWidth: 1,
-    borderLeftColor: Colors.border,
+    paddingHorizontal: Spacing.sm,
+    borderRadius: 8,
+    backgroundColor: Colors.backgroundAlt,
   },
   detailedValueLabel: {
     fontSize: Typography.xs,
@@ -700,23 +659,93 @@ const styles = StyleSheet.create({
     color: Colors.text,
     fontWeight: Typography.weights.semibold,
   },
-  trendsContainer: {
+  dailyCardsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: Spacing.sm,
+    gap: Spacing.sm,
   },
-  trendItem: {
+  dayCard: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 12,
+    padding: Spacing.md,
+    backgroundColor: Colors.surface,
+  },
+  dayCardHeader: {
+    marginBottom: Spacing.sm,
+  },
+  dayCardLabel: {
+    fontSize: Typography.md,
+    fontWeight: Typography.weights.bold,
+    color: Colors.text,
+  },
+  dayCardDate: {
+    fontSize: Typography.xs,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+  dayCardTotal: {
+    fontSize: Typography.xl,
+    fontWeight: Typography.weights.bold,
+    color: Colors.primary,
+    marginBottom: Spacing.sm,
+  },
+  dayCardSplit: {
+    gap: Spacing.xs,
+  },
+  dayCardSplitText: {
+    fontSize: Typography.xs,
+    color: Colors.textSecondary,
+    fontWeight: Typography.weights.medium,
+  },
+  trendsContainer: {
+    marginTop: Spacing.sm,
+    gap: Spacing.md,
+  },
+  periodRow: {
+    gap: Spacing.xs,
+  },
+  periodHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  periodTrack: {
+    width: '100%',
+    height: 10,
+    borderRadius: 999,
+    backgroundColor: Colors.surface,
+    overflow: 'hidden',
+  },
+  periodFill: {
+    height: '100%',
+    borderRadius: 999,
   },
   trendLabel: {
     fontSize: Typography.sm,
     color: Colors.textSecondary,
-    marginBottom: Spacing.xs,
   },
   trendValue: {
-    fontSize: Typography.lg,
+    fontSize: Typography.md,
     fontWeight: Typography.weights.bold,
-    color: Colors.primary,
+    color: Colors.text,
+  },
+  dailyAverageBanner: {
+    marginTop: Spacing.sm,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.surface,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+  },
+  dailyAverageText: {
+    fontSize: Typography.sm,
+    color: Colors.text,
+    fontWeight: Typography.weights.semibold,
   },
   alertItem: {
     flexDirection: 'row',

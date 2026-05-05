@@ -9,8 +9,6 @@ import {
   UsageSummary, 
   DetailedUsageData,
   DetailedBillingData,
-  SupportTicket, 
-  TicketMessage, 
   OutageReport, 
   Payment, 
   Invoice, 
@@ -21,11 +19,18 @@ import {
   OutagesResponse,
   ReportIssueRequest,
   ReportIssueResponse,
-  SupportIssueQuota
+  SupportIssueQuota,
+  SupportTicket,
+  TicketMessage,
+  TicketConversation,
+  CreateChatTicketRequest,
+  SendMessageRequest,
+  ChatSettings,
+  TicketAttachment
 } from '../types/api';
 
 // const API_BASE_URL = 'http://192.168.1.128:8500/api'; // Local development
-const API_BASE_URL = 'https://app.ctecg.co.za/api'; // Production
+export const API_BASE_URL = 'https://app.ctecg.co.za/api'; // Production
 const DEBUG_STORAGE_KEY = 'debug_api_logs';
 let debugApi = __DEV__;
 
@@ -35,6 +40,10 @@ class ApiService {
 
   setAuthToken(token: string | null) {
     this.authToken = token;
+  }
+
+  getAuthToken() {
+    return this.authToken;
   }
 
   setAuthFailureCallback(callback: (() => void) | null) {
@@ -562,6 +571,15 @@ class ApiService {
   }
 
   formatUsageForDisplay(usage: any) {
+    if (!usage) {
+      return {
+        download: '0.00 GB',
+        upload: '0.00 GB',
+        total: '0.00 GB',
+        formattedTotal: '0.00 GB'
+      };
+    }
+
     return {
       download: `${usage.download_gb?.toFixed(2) || '0.00'} GB`,
       upload: `${usage.upload_gb?.toFixed(2) || '0.00'} GB`,
@@ -571,6 +589,10 @@ class ApiService {
   }
 
   formatSpeedForDisplay(packageDetails: any) {
+    if (!packageDetails) {
+      return 'N/A';
+    }
+
     if (packageDetails.download_speed_mbps && packageDetails.upload_speed_mbps) {
       return `${packageDetails.download_speed_mbps}/${packageDetails.upload_speed_mbps}MBPS`;
     }
@@ -578,6 +600,10 @@ class ApiService {
   }
 
   formatSubscriptionLimit(packageDetails: any) {
+    if (!packageDetails) {
+      return 'N/A';
+    }
+
     if (packageDetails.is_uncapped) {
       return 'Unlimited';
     }
@@ -771,6 +797,183 @@ class ApiService {
     return this.makeRequest<SupportIssueQuota>('/mobile-api.php?endpoint=support-issue-quota', {
       method: 'GET',
     });
+  }
+
+  // =====================================================
+  // CHAT SUPPORT METHODS (NEW)
+  // =====================================================
+  
+  /**
+   * Get chat support settings
+   */
+  async getChatSettings(): Promise<ApiResponse<ChatSettings>> {
+    return this.makeRequest<ChatSettings>('/mobile-api.php?endpoint=chat-settings', {
+      method: 'GET',
+    });
+  }
+
+  /**
+   * Get all user tickets (conversations)
+   */
+  async getChatTickets(): Promise<ApiResponse<{ tickets: SupportTicket[] }>> {
+    return this.makeRequest<{ tickets: SupportTicket[] }>('/mobile-api.php?endpoint=chat-tickets', {
+      method: 'GET',
+    });
+  }
+
+  /**
+   * Create new support ticket (start conversation)
+   */
+  async createChatTicket(data: CreateChatTicketRequest): Promise<ApiResponse<{ ticket: SupportTicket }>> {
+    return this.makeRequest<{ ticket: SupportTicket }>('/mobile-api.php?endpoint=chat-create-ticket', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * Get ticket conversation (all messages)
+   */
+  async getChatTicketMessages(ticketId: number, options?: { limit?: number; beforeMessageId?: number | null }): Promise<ApiResponse<TicketConversation>> {
+    const safeLimit = Math.max(10, Math.min(200, Math.floor(options?.limit ?? 25)));
+    const beforeMessageId = options?.beforeMessageId && options.beforeMessageId > 0
+      ? `&before_message_id=${Math.floor(options.beforeMessageId)}`
+      : '';
+    return this.makeRequest<TicketConversation>(`/mobile-api.php?endpoint=chat-messages&ticket_id=${ticketId}&limit=${safeLimit}${beforeMessageId}`, {
+      method: 'GET',
+    });
+  }
+
+  /**
+   * Send message to ticket
+   */
+  async sendChatMessage(data: SendMessageRequest): Promise<ApiResponse<{ message_id: number; created_at: string }>> {
+    return this.makeRequest<{ message_id: number; created_at: string }>('/mobile-api.php?endpoint=chat-send-message', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * Edit authored message within allowed window
+   */
+  async updateChatMessage(ticketId: number, messageId: number, message: string): Promise<ApiResponse<{ message_id: number; message: string }>> {
+    return this.makeRequest<{ message_id: number; message: string }>('/mobile-api.php?endpoint=chat-edit-message', {
+      method: 'POST',
+      body: JSON.stringify({
+        ticket_id: ticketId,
+        message_id: messageId,
+        message,
+      }),
+    });
+  }
+
+  /**
+   * Delete an authored message from ticket
+   */
+  async deleteChatMessage(ticketId: number, messageId: number): Promise<ApiResponse<{ message_id: number }>> {
+    return this.makeRequest<{ message_id: number }>('/mobile-api.php?endpoint=chat-delete-message', {
+      method: 'POST',
+      body: JSON.stringify({
+        ticket_id: ticketId,
+        message_id: messageId,
+      }),
+    });
+  }
+
+  /**
+   * Add or remove reaction on a ticket message
+   */
+  async reactChatMessage(ticketId: number, messageId: number, reaction: string): Promise<ApiResponse<{ message_id: number; reaction: string | null }>> {
+    return this.makeRequest<{ message_id: number; reaction: string | null }>('/mobile-api.php?endpoint=chat-react-message', {
+      method: 'POST',
+      body: JSON.stringify({
+        ticket_id: ticketId,
+        message_id: messageId,
+        reaction,
+      }),
+    });
+  }
+
+  /**
+   * Upload file attachment to ticket
+   */
+  async uploadChatAttachment(ticketId: number, fileUri: string, fileName: string, messageText?: string): Promise<ApiResponse<{ attachment: TicketAttachment; message_id?: number }>> {
+    try {
+      const extension = fileName.split('.').pop()?.toLowerCase() || '';
+      let mimeType = 'application/octet-stream';
+      if (extension === 'pdf') {
+        mimeType = 'application/pdf';
+      } else if (extension === 'png') {
+        mimeType = 'image/png';
+      } else if (extension === 'jpg' || extension === 'jpeg') {
+        mimeType = 'image/jpeg';
+      }
+
+      const uploadResponse = await uploadAsync(`${API_BASE_URL}/mobile-api.php?endpoint=chat-upload`, fileUri, {
+        httpMethod: 'POST',
+        uploadType: FileSystemUploadType.MULTIPART,
+        fieldName: 'file',
+        mimeType,
+        parameters: {
+          ticket_id: ticketId.toString(),
+          message: (messageText || '').trim(),
+        },
+        headers: {
+          ...(this.authToken ? { Authorization: `Bearer ${this.authToken}` } : {}),
+        },
+      });
+
+      const data = JSON.parse(uploadResponse.body) as ApiResponse<{ attachment: TicketAttachment; message_id?: number }>;
+      return data;
+    } catch (error) {
+      console.error('Upload failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Close/resolve ticket
+   */
+  async closeChatTicket(ticketId: number): Promise<ApiResponse<null>> {
+    return this.makeRequest<null>('/mobile-api.php?endpoint=chat-close-ticket', {
+      method: 'POST',
+      body: JSON.stringify({ ticket_id: ticketId }),
+    });
+  }
+
+  /**
+   * Update typing indicator
+   */
+  async updateTypingIndicator(data: { ticket_id: number; user_type: string; user_id: number; user_name: string }): Promise<ApiResponse<{ success: boolean }>> {
+    return this.makeRequest<{ success: boolean }>('/support-chat-api.php?action=update_typing', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * Get typing indicators for a ticket
+   */
+  async getTypingIndicator(ticketId: number, userType: string): Promise<ApiResponse<{ typing: any[] }>> {
+    return this.makeRequest<{ typing: any[] }>(`/support-chat-api.php?action=get_typing&ticket_id=${ticketId}&user_type=${userType}`);
+  }
+
+  /**
+   * Submit ticket rating
+   */
+  async submitTicketRating(data: { ticket_id: number; customer_id: number; rating: number; feedback: string | null }): Promise<ApiResponse<{ rating_id: number; rating: number }>> {
+    return this.makeRequest<{ rating_id: number; rating: number }>('/support-chat-api.php?action=submit_rating', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * Get ticket rating
+   */
+  async getTicketRating(ticketId: number): Promise<ApiResponse<{ rating: any | null }>> {
+    return this.makeRequest<{ rating: any | null }>(`/support-chat-api.php?action=get_rating&ticket_id=${ticketId}`);
   }
 
   // Account Linking Methods

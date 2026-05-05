@@ -864,8 +864,8 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.lg,
     padding: Spacing.md,
     marginBottom: Spacing.lg,
-    borderLeftWidth: 4,
-    borderLeftColor: Colors.primary,
+    borderWidth: 1,
+    borderColor: Colors.primary,
   },
   customerInfoHeader: {
     flexDirection: 'row',

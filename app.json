@@ -23,7 +23,6 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.myctecg.dannel",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "deploymentTarget": "14.0",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
@@ -52,6 +51,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "softwareKeyboardLayoutMode": "resize",
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
@@ -78,7 +78,7 @@
             "enableShrinkResourcesInReleaseBuilds": true
           },
           "ios": {
-            "deploymentTarget": "14.0",
+            "deploymentTarget": "15.1",
             "useFrameworks": "static"
           }
         }

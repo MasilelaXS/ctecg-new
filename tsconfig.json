@@ -19,7 +19,12 @@
       "@/components/*": [
         "./components/*"
       ],
-      
+      "@/screens/*": [
+        "./screens/*"
+      ],
+      "@/utils/*": [
+        "./utils/*"
+      ]
     }
   },
   "include": [

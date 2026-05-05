@@ -294,24 +294,8 @@ export default function BillingScreen() {
     }
   };
 
-  const getBalanceDisplayText = (balance: number) => {
-    if (balance < 0) {
-      return 'Credit Balance'; // Negative = Client has credit (prepaid/overpaid)
-    } else if (balance > 0) {
-      return 'Amount Due'; // Positive = Client owes money
-    } else {
-      return 'Current Balance'; // Zero = Account is current
-    }
-  };
-
-  const getBalanceColor = (balance: number) => {
-    if (balance < 0) {
-      return Colors.success; // Client has credit
-    } else if (balance > 0) {
-      return Colors.warning; // Client owes money (debt)
-    } else {
-      return Colors.success; // Account is current
-    }
+  const getAmountDueColor = (amountDue: number) => {
+    return amountDue > 0 ? Colors.error : Colors.success;
   };
 
   const formatCurrency = (amount: number) => {
@@ -382,6 +366,7 @@ export default function BillingScreen() {
   }
 
   const { account_summary, invoices, billing_info, payment_history, alerts } = billingData;
+  const displayAccountStatus = account_summary.client_owes_amount > 0 ? 'Outstanding' : 'Current';
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -436,60 +421,19 @@ export default function BillingScreen() {
             <Card title="Account Summary">
               <View style={styles.summaryGrid}>
                 <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>{getBalanceDisplayText(account_summary.current_balance)}</Text>
+                  <Text style={styles.summaryLabel}>Amount Due</Text>
                   <Text style={[styles.summaryValue, { 
-                    color: getBalanceColor(account_summary.current_balance)
+                    color: getAmountDueColor(account_summary.client_owes_amount)
                   }]}>
-                    {formatCurrency(Math.abs(account_summary.current_balance))}
+                    {formatCurrency(account_summary.client_owes_amount)}
                   </Text>
                 </View>
                 <View style={styles.summaryItem}>
                   <Text style={styles.summaryLabel}>Status</Text>
-                  <View style={[styles.statusBadge, { backgroundColor: getAccountStatusColor(account_summary.account_status) }]}>
-                    <Text style={styles.statusText}>{account_summary.account_status.toUpperCase()}</Text>
+                  <View style={[styles.statusBadge, { backgroundColor: getAccountStatusColor(displayAccountStatus) }]}>
+                    <Text style={styles.statusText}>{displayAccountStatus.toUpperCase()}</Text>
                   </View>
                 </View>
-                {/* Only show debt-related info when client owes money */}
-                {account_summary.current_balance > 0 && account_summary.client_owes_amount > 0 && 
-                 account_summary.client_owes_amount !== Math.abs(account_summary.current_balance) && (
-                  <View style={styles.summaryItem}>
-                    <Text style={styles.summaryLabel}>Total Amount Due</Text>
-                    <Text style={[styles.summaryValue, { color: Colors.warning }]}>
-                      {formatCurrency(account_summary.client_owes_amount)}
-                    </Text>
-                  </View>
-                )}
-                {/* Only show credit info if account actually has credit (negative balance) */}
-                {account_summary.current_balance < 0 && (
-                  <>
-                    {account_summary.we_owe_client_amount > 0 && 
-                     account_summary.we_owe_client_amount !== account_summary.current_balance && (
-                      <View style={styles.summaryItem}>
-                        <Text style={styles.summaryLabel}>Additional Credit</Text>
-                        <Text style={[styles.summaryValue, { color: Colors.success }]}>
-                          {formatCurrency(account_summary.we_owe_client_amount)}
-                        </Text>
-                      </View>
-                    )}
-                    {account_summary.credit_remaining > 0 && (
-                      <View style={styles.summaryItem}>
-                        <Text style={styles.summaryLabel}>Credit Remaining</Text>
-                        <Text style={[styles.summaryValue, { color: Colors.success }]}>
-                          {formatCurrency(account_summary.credit_remaining)}
-                        </Text>
-                      </View>
-                    )}
-                  </>
-                )}
-                {/* Show credit remaining only for zero balance accounts */}
-                {account_summary.current_balance === 0 && account_summary.credit_remaining > 0 && (
-                  <View style={styles.summaryItem}>
-                    <Text style={styles.summaryLabel}>Credit Remaining</Text>
-                    <Text style={[styles.summaryValue, { color: Colors.success }]}>
-                      {formatCurrency(account_summary.credit_remaining)}
-                    </Text>
-                  </View>
-                )}
               </View>
             </Card>
 

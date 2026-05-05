@@ -412,6 +412,16 @@ export interface DetailedUsageData {
       upload_mb: number;
       total_mb: number;
     };
+    previous_week?: {
+      download_gb: number;
+      upload_gb: number;
+      total_gb: number;
+    };
+    previous_month?: {
+      download_gb: number;
+      upload_gb: number;
+      total_gb: number;
+    };
   };
   alerts: {
     high_usage: boolean;
@@ -524,26 +534,83 @@ export interface MonthlyBilling {
   invoice_count: number;
 }
 
-// Support Ticket Types
+// Support Ticket Types (Chat System)
 export interface SupportTicket {
-  id: string;
-  title: string;
-  description: string;
-  status: 'open' | 'in-progress' | 'resolved' | 'closed';
+  id: number;
+  ticket_number: string;
+  subject: string;
+  status: 'open' | 'in_progress' | 'waiting_customer' | 'waiting_technician' | 'resolved' | 'closed';
   priority: 'low' | 'medium' | 'high' | 'urgent';
-  createdAt: string;
-  updatedAt: string;
-  messages: TicketMessage[];
+  category: string;
+  created_at: string;
+  updated_at: string;
+  last_message_at: string | null;
+  last_message_preview: string | null;
+  unread_count: number;
+  message_count: number;
+  attachment_count: number;
 }
 
 export interface TicketMessage {
-  id: string;
-  ticketId: string;
-  sender: 'customer' | 'support';
+  id: number;
   message: string;
-  timestamp: string;
+  sender_type: 'customer' | 'admin' | 'system';
+  sender_id?: number | null;
+  sender_name: string;
+  is_internal: boolean;
+  created_at: string;
+  attachment_count: number;
+  attachments: TicketAttachment[];
+  reaction?: string | null;
+  is_own_message: boolean;
 }
 
+export interface TicketAttachment {
+  id: number;
+  file_name: string;
+  file_type: string;
+  file_size: number;
+  attachment_type: 'image' | 'audio' | 'pdf' | 'other';
+  file_url: string;
+}
+
+export interface CreateChatTicketRequest {
+  subject: string;
+  message: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  category: string;
+}
+
+export interface SendMessageRequest {
+  ticket_id: number;
+  message: string;
+}
+
+export interface TicketConversation {
+  ticket: {
+    id: number;
+    ticket_number: string;
+    subject: string;
+    status: string;
+    priority: string;
+    created_at: string;
+  };
+  messages: TicketMessage[];
+  has_more?: boolean;
+  loaded_count?: number;
+  total_count?: number;
+}
+
+export interface ChatSettings {
+  support_chat_enabled: boolean;
+  support_email_enabled: boolean;
+  max_attachment_size_mb: number;
+  allowed_file_types: string[];
+  daily_ticket_limit: number;
+  auto_close_ticket_days: number;
+}
+
+// Old ticket interface (deprecated)
 export interface CreateTicketRequest {
   title: string;
   description: string;
@@ -688,4 +755,34 @@ export interface Advertisement {
   image_url: string;
   link_url: string;
   placement: AdPlacement;
+}
+// Typing Indicator Types
+export interface TypingIndicator {
+  user_type: 'customer' | 'admin';
+  user_id: number;
+  user_name: string;
+  last_typing_at: string;
+}
+
+export interface UpdateTypingRequest {
+  ticket_id: number;
+  user_type: 'customer' | 'admin';
+  user_id: number;
+  user_name: string;
+}
+
+// Rating Types
+export interface TicketRating {
+  id: number;
+  rating: number;
+  feedback: string | null;
+  created_at: string;
+  technician_name?: string;
+}
+
+export interface SubmitRatingRequest {
+  ticket_id: number;
+  customer_id: number;
+  rating: number;
+  feedback: string | null;
 }

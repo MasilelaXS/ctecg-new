@@ -1,0 +1,31 @@
+Security
+
+Hard-coded secrets and production credentials are committed in code (AUTH_SECRET, Azotel creds, Yoco keys, DB user/pass). This is a high‑risk leak surface and blocks key rotation. See api/config/database.php and api/config/database.php, plus duplicated Azotel creds in api/proxy/azotel.php.
+Azotel proxy is publicly callable with no auth and exposes a raw passthrough; combined with open CORS this makes it an unauthenticated gateway to the upstream API. See api/proxy/azotel.php and api/proxy/azotel.php.
+TLS verification is disabled for Azotel proxy requests, enabling MITM risk. See api/proxy/azotel.php.
+Auth/session tokens are accepted via query string, which can leak via logs/referrers. See api/helpers/utils.php.
+Token/OTP generation uses rand() and deterministic inputs; this is not cryptographically secure. See api/helpers/utils.php and api/helpers/AuthHelper.php.
+Broad Access-Control-Allow-Origin: * on auth/admin/mobile/proxy endpoints allows any origin to call sensitive APIs. See api/auth.php, api/admin-api.php, api/mobile-api.php, api/proxy/azotel.php.
+Client apps log auth tokens/headers to console, which can expose secrets on shared devices or in crash logs. See app_admin/src/lib/api.ts and ctecg-new-main/src/services/api.ts.
+Admin JWT validation does not re-check is_active in the database, so disabled admins can continue using existing tokens until expiry. See api/admin-api.php.
+Logical
+
+Admin password setup flow is not surfaced in the UI. The backend returns requires_password_setup, but the login form ignores the response and provides no OTP/new‑password screen. See app_admin/src/contexts/AuthContext.tsx and app_admin/src/screens/LoginScreen.tsx.
+Technical
+
+Auth logging uses action types not present in the auth_logs.action_type enum (otp_verify_failed, password_created), causing inserts to fail and losing audit visibility. See api/auth.php and api/auth.php versus the enum in api/database/migrations/001_enhanced_auth_migration.sql.
+fetchCustomerData() references $cacheTTL without definition; this will emit notices and makes caching logic inconsistent. See api/mobile-api.php.
+Performance
+
+Because $cacheTTL is undefined, the intended Azotel caching path never reliably activates, increasing repeated upstream calls per request. See api/mobile-api.php.
+Syntax
+
+No syntax errors found in the reviewed files.
+UI/UX improvements
+
+Add a dedicated “Set Password” flow in the admin login that appears when requires_password_setup is returned, with OTP entry and password creation.
+Align copy to the actual reset mechanism (OTP-based), including clear “Enter OTP” steps and a timer for expiry.
+Provide visible “selected account” context and a one-tap account switcher in the mobile app to avoid confusion in multi‑account scenarios.
+Add a consistent empty‑state pattern for outages, ads, and logs, with explicit next actions (create, refresh, or filter).
+Introduce a unified “connection status” badge on dashboard and account details (online/offline + last seen).
+Add a lightweight global “network status” banner for degraded connectivity and “retry” actions.

@@ -7,11 +7,10 @@ import {
   Modal,
   Pressable,
   Dimensions,
-  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
+import SpeedTestModal from './SpeedTestModal';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
 import { Colors, Typography, Spacing } from '../constants/Design';
@@ -35,7 +34,6 @@ export default function TopNavigation({
   const navigation = useNavigation();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showSpeedTest, setShowSpeedTest] = useState(false);
-  const [speedTestLoading, setSpeedTestLoading] = useState(true);
   const insets = useSafeAreaInsets();
 
   React.useEffect(() => {
@@ -239,53 +237,11 @@ export default function TopNavigation({
         </Pressable>
       </Modal>
 
-      {/* Speed Test WebView Modal */}
-      <Modal
+      {/* Native Speedtest Modal (Cloudflare-powered) */}
+      <SpeedTestModal
         visible={showSpeedTest}
-        animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={() => setShowSpeedTest(false)}
-      >
-        <View style={styles.speedTestContainer}>
-          {/* Header */}
-          <View style={styles.speedTestHeader}>
-            <TouchableOpacity
-              style={styles.speedTestCloseButton}
-              onPress={() => setShowSpeedTest(false)}
-            >
-              <Ionicons name="close" size={28} color={Colors.text} />
-            </TouchableOpacity>
-            <Text style={styles.speedTestTitle}>Speed Test</Text>
-            <View style={{ width: 40 }} />
-          </View>
-
-          {/* Info Banner */}
-          <View style={styles.speedTestBanner}>
-            <Ionicons name="speedometer" size={20} color={Colors.primary} />
-            <Text style={styles.speedTestBannerText}>
-              Testing your CTECG line? Connect to your Wi‑Fi first.
-            </Text>
-          </View>
-
-          {/* Loading Indicator */}
-          {speedTestLoading && (
-            <View style={styles.speedTestLoadingOverlay}>
-              <ActivityIndicator size="large" color={Colors.primary} />
-              <Text style={styles.speedTestLoadingText}>Loading speed test...</Text>
-            </View>
-          )}
-
-          {/* WebView */}
-          <WebView
-            source={{ uri: 'https://wifiman.com/' }}
-            style={styles.webView}
-            onLoadStart={() => setSpeedTestLoading(true)}
-            onLoadEnd={() => setSpeedTestLoading(false)}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-          />
-        </View>
-      </Modal>
+        onClose={() => setShowSpeedTest(false)}
+      />
     </>
   );
 }
@@ -459,62 +415,5 @@ const styles = StyleSheet.create({
   },
   titleWithBack: {
     flex: 1,
-  },
-  speedTestContainer: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  speedTestHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: Spacing.md,
-    paddingTop: Spacing.xl,
-    paddingBottom: Spacing.md,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  speedTestCloseButton: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  speedTestTitle: {
-    fontSize: Typography.lg,
-    fontWeight: Typography.weights.bold,
-    color: Colors.text,
-  },
-  speedTestBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: Spacing.sm,
-    backgroundColor: '#FFF0F0',
-    gap: Spacing.xs,
-  },
-  speedTestBannerText: {
-    fontSize: Typography.sm,
-    color: Colors.primary,
-    fontWeight: '600',
-  },
-  speedTestLoadingOverlay: {
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10,
-    gap: Spacing.md,
-  },
-  speedTestLoadingText: {
-    fontSize: Typography.sm,
-    color: Colors.textSecondary,
-  },
-  webView: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
   },
 });

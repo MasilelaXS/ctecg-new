@@ -356,8 +356,8 @@ const styles = StyleSheet.create({
   infoBox: {
     flexDirection: 'row',
     backgroundColor: '#FFF8E1',
-    borderLeftWidth: 4,
-    borderLeftColor: Colors.warning,
+    borderWidth: 1,
+    borderColor: Colors.warning,
     borderRadius: 8,
     padding: Spacing.md,
     marginBottom: Spacing.xl,
