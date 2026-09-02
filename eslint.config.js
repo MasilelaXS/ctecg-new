@@ -8,6 +8,12 @@ module.exports = defineConfig([
     rules: {
       'no-console': 'warn',
       'react/no-unescaped-entities': 'off',
+      // React Compiler is not enabled. Keep its stricter migration checks visible
+      // without turning an SDK upgrade into a high-risk cross-screen refactor.
+      'react-hooks/immutability': 'warn',
+      'react-hooks/purity': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
     },
   },
 ]);

@@ -199,10 +199,10 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0, 0, 0, 0.05)',
   },
   blurContainer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   glassOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
   toastContent: {

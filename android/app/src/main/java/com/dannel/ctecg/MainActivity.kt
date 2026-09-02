@@ -1,4 +1,4 @@
-package com.myctecg.dannel
+package com.dannel.ctecg
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

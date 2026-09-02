@@ -10,12 +10,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "ctecg",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/logo-clean.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FFFFFF"
-    },
+    "userInterfaceStyle": "light",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -64,6 +59,7 @@
       "blockedPermissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
       "package": "com.dannel.ctecg",
@@ -77,6 +73,14 @@
     "plugins": [
       "expo-secure-store",
       [
+        "expo-splash-screen",
+        {
+          "image": "./assets/logo-clean.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#FFFFFF"
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "android": {
@@ -87,7 +91,7 @@
             "enableShrinkResourcesInReleaseBuilds": true
           },
           "ios": {
-            "deploymentTarget": "15.1",
+            "deploymentTarget": "16.4",
             "useFrameworks": "static"
           }
         }

@@ -340,7 +340,7 @@ function formatOptional(value: number | null): string {
 
 const styles = StyleSheet.create({
   overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.55)' },
-  backdrop: { ...StyleSheet.absoluteFillObject },
+  backdrop: { ...StyleSheet.absoluteFill },
   sheet: { minHeight: '78%', maxHeight: '94%', backgroundColor: Colors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, overflow: 'hidden' },
   sheetCompact: { height: '64%', minHeight: 0, maxHeight: '70%' },
   handle: { width: 42, height: 4, borderRadius: 2, backgroundColor: Colors.border, alignSelf: 'center', marginTop: 9 },

@@ -70,7 +70,7 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
   const [isSending, setIsSending] = useState(false);
   const [ticketStatus, setTicketStatus] = useState('open');
   const [isTyping, setIsTyping] = useState(false);
-  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [typingTimeout, setTypingTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [ratingFeedback, setRatingFeedback] = useState('');
