@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Modal,
   Linking,
-  Dimensions,
+  useWindowDimensions,
   ActivityIndicator,
   Pressable,
   FlatList,
@@ -16,10 +16,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiService } from '../services/api';
 import { Colors } from '../constants/Design';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const MODAL_AD_KEY = 'last_modal_ad_shown';
 const MODAL_AD_COOLDOWN = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-const MODAL_WIDTH = screenWidth * 0.85;
 const CAROUSEL_INTERVAL = 4000; // 4 seconds per slide
 
 interface AdImage {
@@ -42,6 +40,9 @@ interface AdModalProps {
 }
 
 export default function AdModal({ onClose }: AdModalProps) {
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const modalWidth = Math.min(screenWidth * 0.85, 720);
+  const modalHeight = Math.min(modalWidth * (4 / 3), screenHeight * 0.75);
   const [ad, setAd] = useState<AdData | null>(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -146,7 +147,7 @@ export default function AdModal({ onClose }: AdModalProps) {
   const renderImage = ({ item }: { item: AdImage }) => (
     <Image
       source={{ uri: item.image_url }}
-      style={styles.image}
+      style={[styles.image, { width: modalWidth, height: modalHeight }]}
       resizeMode="contain"
       onError={() => setImageError(true)}
     />
@@ -169,7 +170,7 @@ export default function AdModal({ onClose }: AdModalProps) {
       onRequestClose={handleClose}
     >
       <Pressable style={styles.overlay} onPress={handleClose}>
-        <View style={styles.container}>
+        <View style={[styles.container, { width: modalWidth, height: modalHeight }]}>
           {/* Close button */}
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Ionicons name="close-circle" size={32} color={Colors.textInverse} />
@@ -177,7 +178,7 @@ export default function AdModal({ onClose }: AdModalProps) {
           
           {/* Ad Image(s) */}
           <TouchableOpacity
-            style={styles.imageContainer}
+            style={[styles.imageContainer, { height: modalHeight }]}
             onPress={handleAdPress}
             activeOpacity={0.95}
           >
@@ -185,6 +186,7 @@ export default function AdModal({ onClose }: AdModalProps) {
               <ActivityIndicator size="large" color={Colors.primary} />
             ) : images.length > 1 ? (
               <FlatList
+                key={`ad-modal-${modalWidth}`}
                 ref={flatListRef}
                 data={images}
                 renderItem={renderImage}
@@ -195,15 +197,15 @@ export default function AdModal({ onClose }: AdModalProps) {
                 onViewableItemsChanged={onViewableItemsChanged}
                 viewabilityConfig={viewabilityConfig}
                 getItemLayout={(_, index) => ({
-                  length: MODAL_WIDTH,
-                  offset: MODAL_WIDTH * index,
+                  length: modalWidth,
+                  offset: modalWidth * index,
                   index,
                 })}
               />
             ) : (
               <Image
                 source={{ uri: images[0].image_url }}
-                style={styles.image}
+                style={[styles.image, { width: modalWidth, height: modalHeight }]}
                 resizeMode="contain"
                 onError={() => setImageError(true)}
               />
@@ -223,8 +225,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    width: MODAL_WIDTH,
-    maxHeight: screenHeight * 0.75,
     backgroundColor: Colors.surface,
     borderRadius: 16,
     overflow: 'hidden',
@@ -239,13 +239,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    aspectRatio: 3 / 4, // 600x800 ratio
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.surface,
   },
   image: {
-    width: MODAL_WIDTH,
-    height: MODAL_WIDTH * (4 / 3), // Match aspect ratio
+    backgroundColor: Colors.surface,
   },
 });

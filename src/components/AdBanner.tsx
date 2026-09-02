@@ -5,15 +5,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Linking,
-  Dimensions,
+  useWindowDimensions,
   ActivityIndicator,
   FlatList,
 } from 'react-native';
 import { apiService } from '../services/api';
 import { Colors, Spacing } from '../constants/Design';
 
-const { width: screenWidth } = Dimensions.get('window');
-const BANNER_WIDTH = screenWidth - (Spacing.md * 2);
 const CAROUSEL_INTERVAL = 5000; // 5 seconds per slide
 
 interface AdBannerProps {
@@ -37,6 +35,9 @@ interface AdData {
 }
 
 export default function AdBanner({ placement, style }: AdBannerProps) {
+  const { width: screenWidth } = useWindowDimensions();
+  const bannerWidth = Math.min(Math.max(screenWidth - (Spacing.md * 2), 0), 960);
+  const bannerHeight = bannerWidth * 0.25;
   const [ad, setAd] = useState<AdData | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
@@ -127,7 +128,7 @@ export default function AdBanner({ placement, style }: AdBannerProps) {
   const renderImage = ({ item }: { item: AdImage }) => (
     <Image
       source={{ uri: item.image_url }}
-      style={styles.image}
+      style={[styles.image, { width: bannerWidth, height: bannerHeight }]}
       resizeMode="cover"
       onError={() => setImageError(true)}
     />
@@ -136,7 +137,7 @@ export default function AdBanner({ placement, style }: AdBannerProps) {
   // Don't render anything while loading or if no ad
   if (loading) {
     return (
-      <View style={[styles.container, styles.loadingContainer, style]}>
+      <View style={[styles.container, { width: bannerWidth, height: bannerHeight }, styles.loadingContainer, style]}>
         <ActivityIndicator size="small" color={Colors.primary} />
       </View>
     );
@@ -153,13 +154,14 @@ export default function AdBanner({ placement, style }: AdBannerProps) {
 
   return (
     <TouchableOpacity
-      style={[styles.container, style]}
+      style={[styles.container, { width: bannerWidth, height: bannerHeight }, style]}
       onPress={handleAdPress}
       activeOpacity={0.9}
     >
       {images.length > 1 ? (
         <>
           <FlatList
+            key={`ad-banner-${bannerWidth}`}
             ref={flatListRef}
             data={images}
             renderItem={renderImage}
@@ -170,8 +172,8 @@ export default function AdBanner({ placement, style }: AdBannerProps) {
             onViewableItemsChanged={onViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
             getItemLayout={(_, index) => ({
-              length: BANNER_WIDTH,
-              offset: BANNER_WIDTH * index,
+              length: bannerWidth,
+              offset: bannerWidth * index,
               index,
             })}
           />
@@ -179,7 +181,7 @@ export default function AdBanner({ placement, style }: AdBannerProps) {
       ) : (
         <Image
           source={{ uri: images[0].image_url }}
-          style={styles.image}
+          style={[styles.image, { width: bannerWidth, height: bannerHeight }]}
           resizeMode="cover"
           onError={() => setImageError(true)}
         />
@@ -190,8 +192,6 @@ export default function AdBanner({ placement, style }: AdBannerProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: BANNER_WIDTH,
-    height: BANNER_WIDTH * 0.25, // 4:1 ratio
     borderRadius: 12,
     overflow: 'hidden',
     alignSelf: 'center',
@@ -203,7 +203,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: BANNER_WIDTH,
-    height: BANNER_WIDTH * 0.25,
+    backgroundColor: Colors.surface,
   },
 });

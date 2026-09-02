@@ -12,7 +12,7 @@ import {
   Modal,
   ScrollView,
   Animated,
-  Dimensions,
+  useWindowDimensions,
   Keyboard,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -60,6 +60,7 @@ type DisplayItem =
   | { type: 'message'; key: string; message: TicketMessage };
 
 export default function ChatScreen({ route, navigation }: ChatScreenProps) {
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const { ticketId, ticketNumber, subject } = route.params;
   const { user } = useAuth();
   const insets = useSafeAreaInsets();
@@ -1505,7 +1506,7 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
                   uri: viewerImageUrl,
                   headers: attachmentImageHeaders,
                 }}
-                style={styles.imageViewerImage}
+                style={[styles.imageViewerImage, { width: windowWidth, height: windowHeight }]}
                 resizeMode="contain"
               />
             </ScrollView>
@@ -2288,7 +2289,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageViewerImage: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    backgroundColor: '#000',
   },
 });

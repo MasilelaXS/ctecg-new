@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
-  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,8 +23,6 @@ import { apiService } from "../services/api";
 import { DetailedUsageData } from "../types/api";
 import { Colors, Typography, Spacing, CommonStyles } from "../constants/Design";
 import { calculateUsageRingPercentages } from "../utils/usageRings";
-
-const { width } = Dimensions.get("window");
 
 const cleanSubscriptionName = (name: string): string => {
   if (!name) return name;

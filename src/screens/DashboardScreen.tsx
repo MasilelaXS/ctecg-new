@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
-  Dimensions,
   TouchableOpacity,
   Linking,
 } from "react-native";
@@ -36,8 +35,6 @@ import { apiService } from "../services/api";
 import { DashboardData, TowerNotification } from "../types/api";
 import { Colors, Typography, Spacing, CommonStyles } from "../constants/Design";
 import { calculateUsageRingPercentages } from "../utils/usageRings";
-
-const { width } = Dimensions.get("window");
 
 const cleanSubscriptionName = (name: string): string => {
   if (!name) return name;
