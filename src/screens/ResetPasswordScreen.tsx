@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
@@ -17,6 +16,8 @@ import { Colors, Typography, Spacing } from '../constants/Design';
 import { apiService } from '../services/api';
 import { showToast } from '../components/Toast';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { OtpCodeField, PasswordField } from '../components/AuthFields';
+import { PASSWORD_MIN_LENGTH, validatePassword as validatePasswordPolicy } from '../utils/helpers-new';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ResetPassword'>;
 
@@ -24,8 +25,6 @@ export default function ResetPasswordScreen({ navigation, route }: Props) {
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errors, setErrors] = useState({
@@ -35,19 +34,7 @@ export default function ResetPasswordScreen({ navigation, route }: Props) {
   });
 
   const validatePassword = (password: string): string => {
-    if (password.length < 8) {
-      return 'Password must be at least 8 characters';
-    }
-    if (!/(?=.*[a-z])/.test(password)) {
-      return 'Password must contain at least one lowercase letter';
-    }
-    if (!/(?=.*[A-Z])/.test(password)) {
-      return 'Password must contain at least one uppercase letter';
-    }
-    if (!/(?=.*\d)/.test(password)) {
-      return 'Password must contain at least one number';
-    }
-    return '';
+    return validatePasswordPolicy(password).errors[0] || '';
   };
 
   const handleCodeChange = (text: string) => {
@@ -90,7 +77,7 @@ export default function ResetPasswordScreen({ navigation, route }: Props) {
     setLoading(true);
 
     try {
-      const response = await apiService.resetPassword(code, newPassword);
+      const response = await apiService.resetPassword(code, newPassword, route.params.identifier);
 
       if (response.success) {
         setShowSuccessModal(true);
@@ -110,14 +97,14 @@ export default function ResetPasswordScreen({ navigation, route }: Props) {
 
   const getPasswordStrength = (): string => {
     if (newPassword.length === 0) return '';
-    if (newPassword.length < 8) return 'Weak';
+    if (newPassword.length < PASSWORD_MIN_LENGTH) return 'Weak';
     
     let strength = 0;
     if (/(?=.*[a-z])/.test(newPassword)) strength++;
     if (/(?=.*[A-Z])/.test(newPassword)) strength++;
     if (/(?=.*\d)/.test(newPassword)) strength++;
     if (/(?=.*[@$!%*?&])/.test(newPassword)) strength++;
-    if (newPassword.length >= 12) strength++;
+    if (newPassword.length >= PASSWORD_MIN_LENGTH) strength++;
 
     if (strength <= 2) return 'Weak';
     if (strength <= 3) return 'Medium';
@@ -167,124 +154,56 @@ export default function ResetPasswordScreen({ navigation, route }: Props) {
           We sent a 6-digit code to your email. Enter it below along with your new password.
         </Text>
 
-        {/* Code Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Reset Code</Text>
-          <View style={[styles.inputWrapper, errors.code ? styles.inputError : null]}>
-            <Ionicons
-              name="mail-outline"
-              size={20}
-              color={errors.code ? Colors.error : Colors.textMuted}
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              value={code}
-              onChangeText={handleCodeChange}
-              placeholder="000000"
-              placeholderTextColor={Colors.textMuted}
-              keyboardType="number-pad"
-              maxLength={6}
-              autoFocus={true}
-              editable={!loading}
-            />
-          </View>
-          {errors.code ? <Text style={styles.errorText}>{errors.code}</Text> : null}
-          {!errors.code && code.length > 0 && code.length < 6 ? (
-            <Text style={styles.hintText}>{6 - code.length} digits remaining</Text>
-          ) : null}
-        </View>
+        <OtpCodeField
+          label="Verification Code"
+          value={code}
+          onChangeText={handleCodeChange}
+          error={errors.code}
+          helperText={code.length > 0 && code.length < 6 ? `${6 - code.length} digits remaining` : undefined}
+          autoFocus
+          disabled={loading}
+        />
 
-        {/* New Password Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>New Password</Text>
-          <View style={[styles.inputWrapper, errors.newPassword ? styles.inputError : null]}>
-            <Ionicons
-              name="lock-closed-outline"
-              size={20}
-              color={errors.newPassword ? Colors.error : Colors.textMuted}
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              value={newPassword}
-              onChangeText={handlePasswordChange}
-              placeholder="Enter new password"
-              placeholderTextColor={Colors.textMuted}
-              secureTextEntry={!showPassword}
-              autoCapitalize="none"
-              editable={!loading}
-            />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.eyeIcon}
-            >
-              <Ionicons
-                name={showPassword ? 'eye-outline' : 'eye-off-outline'}
-                size={20}
-                color={Colors.textMuted}
-              />
-            </TouchableOpacity>
-          </View>
-          {errors.newPassword ? (
-            <Text style={styles.errorText}>{errors.newPassword}</Text>
-          ) : null}
-          {!errors.newPassword && newPassword.length > 0 ? (
+        <PasswordField
+          label="New Password"
+          value={newPassword}
+          onChangeText={handlePasswordChange}
+          placeholder="Enter new password"
+          error={errors.newPassword}
+          disabled={loading}
+          autoComplete="new-password"
+          textContentType="newPassword"
+          helperContent={!errors.newPassword && newPassword.length > 0 ? (
             <View style={styles.strengthContainer}>
               <Text style={styles.strengthLabel}>Strength: </Text>
               <Text style={[styles.strengthValue, { color: getPasswordStrengthColor() }]}>
                 {getPasswordStrength()}
               </Text>
             </View>
-          ) : null}
-        </View>
+          ) : undefined}
+        />
 
-        {/* Confirm Password Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Confirm Password</Text>
-          <View style={[styles.inputWrapper, errors.confirmPassword ? styles.inputError : null]}>
-            <Ionicons
-              name="lock-closed-outline"
-              size={20}
-              color={errors.confirmPassword ? Colors.error : Colors.textMuted}
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              value={confirmPassword}
-              onChangeText={handleConfirmPasswordChange}
-              placeholder="Re-enter new password"
-              placeholderTextColor={Colors.textMuted}
-              secureTextEntry={!showConfirmPassword}
-              autoCapitalize="none"
-              editable={!loading}
-            />
-            <TouchableOpacity
-              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-              style={styles.eyeIcon}
-            >
-              <Ionicons
-                name={showConfirmPassword ? 'eye-outline' : 'eye-off-outline'}
-                size={20}
-                color={Colors.textMuted}
-              />
-            </TouchableOpacity>
-          </View>
-          {errors.confirmPassword ? (
-            <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-          ) : null}
-        </View>
+        <PasswordField
+          label="Confirm Password"
+          value={confirmPassword}
+          onChangeText={handleConfirmPasswordChange}
+          placeholder="Re-enter new password"
+          error={errors.confirmPassword}
+          disabled={loading}
+          autoComplete="new-password"
+          textContentType="newPassword"
+        />
 
         {/* Password Requirements */}
         <View style={styles.requirementsContainer}>
           <Text style={styles.requirementsTitle}>Password must contain:</Text>
           <View style={styles.requirementRow}>
             <Ionicons
-              name={newPassword.length >= 8 ? 'checkmark-circle' : 'ellipse-outline'}
+              name={newPassword.length >= PASSWORD_MIN_LENGTH ? 'checkmark-circle' : 'ellipse-outline'}
               size={16}
-              color={newPassword.length >= 8 ? '#00CC44' : Colors.textMuted}
+              color={newPassword.length >= PASSWORD_MIN_LENGTH ? '#00CC44' : Colors.textMuted}
             />
-            <Text style={styles.requirementText}>At least 8 characters</Text>
+            <Text style={styles.requirementText}>At least {PASSWORD_MIN_LENGTH} characters</Text>
           </View>
           <View style={styles.requirementRow}>
             <Ionicons
@@ -408,50 +327,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: Spacing.xl,
     lineHeight: Typography.md * Typography.lineHeights.relaxed,
-  },
-  inputContainer: {
-    marginBottom: Spacing.lg,
-  },
-  label: {
-    fontSize: Typography.sm,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.text,
-    marginBottom: Spacing.xs,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.backgroundAlt,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    paddingHorizontal: Spacing.md,
-    height: 52,
-  },
-  inputError: {
-    borderColor: Colors.error,
-  },
-  inputIcon: {
-    marginRight: Spacing.sm,
-  },
-  input: {
-    flex: 1,
-    fontSize: Typography.md,
-    color: Colors.text,
-    padding: 0,
-  },
-  eyeIcon: {
-    padding: Spacing.xs,
-  },
-  errorText: {
-    fontSize: Typography.xs,
-    color: Colors.error,
-    marginTop: Spacing.xs,
-  },
-  hintText: {
-    fontSize: Typography.xs,
-    color: Colors.textMuted,
-    marginTop: Spacing.xs,
   },
   strengthContainer: {
     flexDirection: 'row',

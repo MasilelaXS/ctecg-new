@@ -103,7 +103,6 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
   const attachmentImageHeaders = attachmentAuthToken
     ? {
       Authorization: `Bearer ${attachmentAuthToken}`,
-      'X-Auth-Token': attachmentAuthToken,
     }
     : undefined;
 
@@ -477,12 +476,7 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
 
   const sendTypingIndicator = async () => {
     try {
-      await apiService.updateTypingIndicator({
-        ticket_id: ticketId,
-        user_type: 'customer',
-        user_id: user?.id || 0,
-        user_name: user?.invoicingid || 'Customer',
-      });
+      await apiService.updateTypingIndicator(ticketId);
     } catch (error) {
       // Silently fail
       console.error('Send typing error:', error);
@@ -512,7 +506,6 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
     try {
       const response = await apiService.submitTicketRating({
         ticket_id: ticketId,
-        customer_id: user?.id || 0,
         rating,
         feedback: ratingFeedback.trim() || null,
       });
@@ -1186,13 +1179,28 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
             )}
           </TouchableOpacity>
 
-          {/* Timestamp */}
-          <Text style={[
-            styles.messageTime,
-            isOwnMessage ? styles.ownMessageTime : styles.otherMessageTime,
+          {/* Timestamp and persisted Freshdesk delivery state */}
+          <View style={[
+            styles.messageMeta,
+            isOwnMessage ? styles.ownMessageMeta : styles.otherMessageMeta,
           ]}>
-            {new Date(messageItem.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </Text>
+            <Text style={[
+              styles.messageTime,
+              isOwnMessage ? styles.ownMessageTime : styles.otherMessageTime,
+            ]}>
+              {new Date(messageItem.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </Text>
+            {isOwnMessage && !isDeletedMessage && (
+              <Ionicons
+                name={messageItem.delivery_status === 'delivered' ? 'checkmark-done' : 'checkmark'}
+                size={15}
+                color={messageItem.delivery_status === 'delivered' ? Colors.primary : Colors.textMuted}
+                accessibilityLabel={messageItem.delivery_status === 'delivered'
+                  ? 'Delivered to Freshdesk'
+                  : 'Saved locally, waiting to send'}
+              />
+            )}
+          </View>
         </View>
 
         {/* Avatar for own messages */}
@@ -1750,8 +1758,19 @@ const styles = StyleSheet.create({
   },
   messageTime: {
     fontSize: Typography.xs,
-    marginTop: 4,
     paddingHorizontal: 4,
+  },
+  messageMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    marginTop: 4,
+  },
+  ownMessageMeta: {
+    justifyContent: 'flex-end',
+  },
+  otherMessageMeta: {
+    justifyContent: 'flex-start',
   },
   ownMessageTime: {
     color: Colors.textSecondary,

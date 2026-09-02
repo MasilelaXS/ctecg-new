@@ -25,7 +25,7 @@ import { Colors, Typography } from '../constants/Design';
 export type RootStackParamList = {
   Login: undefined;
   VerifyOTP: { email: string; password: string };
-  ResetPassword: undefined;
+  ResetPassword: { identifier: string };
   ForgotEmail: undefined;
   CreatePassword: { userId: number; email: string };
   MainTabs: undefined;
@@ -79,8 +79,6 @@ function TabNavigator() {
           paddingBottom: Math.max(insets.bottom, 8),
           paddingTop: 8,
           height: 60 + Math.max(insets.bottom, 0),
-          borderTopWidth: 1,
-          borderTopColor: '#E0E0E0',
         },
         tabBarLabelStyle: {
           fontSize: Typography.xs,
@@ -106,10 +104,11 @@ function TabNavigator() {
 }
 
 export default function AppNavigator() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   return (
-    <Stack.Navigator 
+    <Stack.Navigator
+      key={isAuthenticated ? 'authenticated' : 'guest'}
       screenOptions={{ 
         headerShown: false,
         animation: 'slide_from_right'

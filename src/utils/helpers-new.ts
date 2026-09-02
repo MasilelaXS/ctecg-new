@@ -50,14 +50,16 @@ export const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
+export const PASSWORD_MIN_LENGTH = 8;
+
 export const validatePassword = (password: string): {
   isValid: boolean;
   errors: string[];
 } => {
   const errors: string[] = [];
   
-  if (password.length < 8) {
-    errors.push('Password must be at least 8 characters long');
+  if (password.length < PASSWORD_MIN_LENGTH) {
+    errors.push(`Password must be at least ${PASSWORD_MIN_LENGTH} characters long`);
   }
   
   if (!/[A-Z]/.test(password)) {

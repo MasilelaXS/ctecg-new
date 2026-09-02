@@ -15,6 +15,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useAuth } from '../contexts/AuthContext';
 import TopNavigation from '../components/TopNavigation';
 import Card from '../components/Card';
+import StevieMascot from '../components/StevieMascot';
 import { showToast } from '../components/Toast';
 import { Colors, Typography, CommonStyles, Spacing } from '../constants/Design';
 import { apiService } from '../services/api';
@@ -42,11 +43,12 @@ const PRIORITY_OPTIONS: PriorityOption[] = [
 
 const CATEGORY_OPTIONS: CategoryOption[] = [
   { value: 'Technical Support', label: 'Technical Support', icon: 'build' },
-  { value: 'Billing Inquiry', label: 'Billing Inquiry', icon: 'card' },
   { value: 'Service Outage', label: 'Service Outage', icon: 'wifi' },
   { value: 'Account Issues', label: 'Account Issues', icon: 'person-circle' },
+  { value: 'Sales Enquiry', label: 'Sales Enquiry', icon: 'cart' },
+  { value: 'Web Design', label: 'Web Design', icon: 'desktop' },
+  { value: 'Domain Hosting', label: 'Domain Hosting', icon: 'globe' },
   { value: 'General Inquiry', label: 'General Inquiry', icon: 'help-circle' },
-  { value: 'Feature Request', label: 'Feature Request', icon: 'bulb' },
 ];
 
 interface SocialMediaItem {
@@ -62,6 +64,8 @@ const SOCIAL_MEDIA: SocialMediaItem[] = [
   { id: 'instagram', name: 'Instagram', icon: 'instagram', color: '#E4405F', url: 'https://www.instagram.com/ctecg_internet/' },
   { id: 'telegram', name: 'Telegram', icon: 'telegram-plane', color: '#0088CC', url: 'https://t.me/joinchat/AAAAAFk4fEjDkzEDZmezUQ' },
   { id: 'twitter', name: 'X', icon: 'twitter', color: '#000000', url: 'https://x.com/CTECG1' },
+  { id: 'tiktok', name: 'TikTok', icon: 'tiktok', color: '#000000', url: 'https://www.tiktok.com/@ctecg0' },
+  { id: 'linkedin', name: 'LinkedIn', icon: 'linkedin', color: '#0A66C2', url: 'https://za.linkedin.com/in/ctecg-groblersdal-976794127' },
   { id: 'whatsapp', name: 'WhatsApp', icon: 'whatsapp', color: '#25D366', url: 'https://wa.me/27769790642' },
   { id: 'website', name: 'Website', icon: 'globe', color: Colors.primary, url: 'http://www.ctecg.co.za' },
 ];
@@ -172,6 +176,16 @@ export default function SupportScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
       >
+        <View style={styles.stevieWelcome}>
+          <View style={styles.stevieWelcomeText}>
+            <Text style={styles.stevieTitle}>Hi, I&apos;m Stevie</Text>
+            <Text style={styles.stevieMessage}>
+              Welcome to Customer Care. Choose an option below or report an issue and our team will assist you.
+            </Text>
+          </View>
+          <StevieMascot width={82} style={styles.stevieImage} />
+        </View>
+
         {/* Social Media Section */}
         <View style={styles.socialSection}>
           <Text style={styles.socialTitle}>Connect With Us</Text>
@@ -186,6 +200,8 @@ export default function SupportScreen() {
                 style={styles.socialItem}
                 onPress={() => handleSocialPress(item.url)}
                 activeOpacity={0.7}
+                accessibilityRole="link"
+                accessibilityLabel={`Open CTECG on ${item.name}`}
               >
                 <View style={[styles.socialIconContainer, { borderColor: item.color }]}>
                   <FontAwesome5 name={item.icon} size={24} color={item.color} />
@@ -374,6 +390,38 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingBottom: Spacing.xl * 2,
+  },
+  stevieWelcome: {
+    minHeight: 132,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 12,
+    paddingLeft: Spacing.md,
+    marginBottom: Spacing.lg,
+    overflow: 'hidden',
+  },
+  stevieWelcomeText: {
+    flex: 1,
+    paddingVertical: Spacing.md,
+    paddingRight: Spacing.sm,
+  },
+  stevieTitle: {
+    fontSize: Typography.lg,
+    fontWeight: Typography.weights.bold,
+    color: Colors.text,
+    marginBottom: Spacing.xs,
+  },
+  stevieMessage: {
+    fontSize: Typography.sm,
+    color: Colors.textSecondary,
+    lineHeight: 20,
+  },
+  stevieImage: {
+    alignSelf: 'flex-end',
+    marginRight: Spacing.sm,
   },
   socialSection: {
     marginBottom: Spacing.lg,

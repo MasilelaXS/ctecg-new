@@ -1,6 +1,10 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Card from './Card';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+
+import { Colors, Spacing, Typography } from "../constants/Design";
+import { calculateUsageRingPercentages } from "../utils/usageRings";
+import Card from "./Card";
+import DataUsageGauge, { USAGE_RING_COLORS } from "./DataUsageGauge";
 
 interface UncappedUsageCardProps {
   downloadGb: number;
@@ -15,121 +19,156 @@ export default function UncappedUsageCard({
   totalGb,
   packageName,
 }: UncappedUsageCardProps) {
-  return (
-    <Card>
-      <View style={styles.container}>
-        {/* Unlimited Header */}
-        <View style={styles.unlimitedSection}>
-          <View style={styles.unlimitedHeader}>
-            <View style={styles.infinityIcon}>
-              <Text style={styles.infinitySymbol}>∞</Text>
-            </View>
-            <View style={styles.unlimitedTextContainer}>
-              <Text style={styles.unlimitedLabel}>Unlimited Data</Text>
-              <Text style={styles.packageLabel}>{packageName}</Text>
-            </View>
-          </View>
-        </View>
+  const rings = calculateUsageRingPercentages(
+    downloadGb,
+    uploadGb,
+    totalGb,
+    null,
+    true,
+  );
 
-        {/* Usage Details */}
-        <View style={styles.usageSection}>
-          <View style={styles.usageRow}>
-            <Text style={styles.usageLabel}>Downloaded</Text>
-            <Text style={styles.usageValue}>{downloadGb.toFixed(1)} GB</Text>
+  return (
+    <Card title="Data Usage" subtitle="Current Month">
+      <View style={styles.overview}>
+        <DataUsageGauge
+          percentage={null}
+          downloadPercentage={rings.download}
+          uploadPercentage={rings.upload}
+          isUnlimited
+        />
+
+        <View style={styles.details}>
+          <MetricRow
+            label="Downloaded"
+            value={`${downloadGb.toFixed(1)} GB`}
+            percentage={`${Math.round(rings.download)}% of traffic`}
+            color={USAGE_RING_COLORS.download}
+          />
+          <MetricRow
+            label="Uploaded"
+            value={`${uploadGb.toFixed(1)} GB`}
+            percentage={`${Math.round(rings.upload)}% of traffic`}
+            color={USAGE_RING_COLORS.upload}
+          />
+          <View style={styles.row}>
+            <Text style={styles.label}>Total Used</Text>
+            <Text style={[styles.value, styles.totalValue]}>
+              {totalGb.toFixed(1)} GB
+            </Text>
           </View>
-          
-          <View style={styles.usageRow}>
-            <Text style={styles.usageLabel}>Uploaded</Text>
-            <Text style={styles.usageValue}>{uploadGb.toFixed(1)} GB</Text>
-          </View>
-          
-          <View style={[styles.usageRow, styles.totalRow]}>
-            <Text style={[styles.usageLabel, styles.totalLabel]}>Total Used</Text>
-            <Text style={[styles.usageValue, styles.totalValue]}>{totalGb.toFixed(1)} GB</Text>
+          <View style={[styles.row, styles.lastRow]}>
+            <Text style={styles.label}>Plan Type</Text>
+            <Text style={styles.value}>Unlimited</Text>
           </View>
         </View>
+      </View>
+
+      <View style={styles.packageRow}>
+        <Text style={styles.packageLabel}>Package</Text>
+        <Text style={styles.packageValue} numberOfLines={2}>
+          {packageName}
+        </Text>
       </View>
     </Card>
   );
 }
 
+function MetricRow({
+  label,
+  value,
+  percentage,
+  color,
+}: {
+  label: string;
+  value: string;
+  percentage: string;
+  color: string;
+}) {
+  return (
+    <View style={styles.row}>
+      <View style={styles.labelGroup}>
+        <View style={[styles.dot, { backgroundColor: color }]} />
+        <Text style={styles.label}>{label}</Text>
+      </View>
+      <View style={styles.valueGroup}>
+        <Text style={styles.value}>{value}</Text>
+        <Text style={styles.percentage}>{percentage}</Text>
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
+  overview: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  details: {
     flex: 1,
+    marginLeft: Spacing.lg,
   },
-  unlimitedSection: {
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    marginBottom: 16,
+  row: {
+    minHeight: 36,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: Spacing.xs,
   },
-  unlimitedHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+  lastRow: {
+    marginBottom: 0,
   },
-  infinityIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#cc0000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
+  labelGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexShrink: 1,
   },
-  infinitySymbol: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: Spacing.xs,
   },
-  unlimitedTextContainer: {
-    alignItems: 'flex-start',
+  label: {
+    fontSize: Typography.sm,
+    color: Colors.textSecondary,
   },
-  unlimitedLabel: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginBottom: 4,
+  valueGroup: {
+    alignItems: "flex-end",
+    marginLeft: Spacing.sm,
   },
-  packageLabel: {
-    fontSize: 14,
-    color: '#666666',
-    fontWeight: '500',
+  value: {
+    fontSize: Typography.sm,
+    fontWeight: Typography.weights.semibold,
+    color: Colors.text,
   },
-  usageSection: {
-    // No additional margin needed
-  },
-  usageRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  totalRow: {
-    borderBottomWidth: 0,
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
-    paddingTop: 12,
-    marginTop: 4,
-  },
-  usageLabel: {
-    fontSize: 14,
-    color: '#666666',
-  },
-  totalLabel: {
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-  usageValue: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1A1A1A',
+  percentage: {
+    marginTop: 2,
+    fontSize: 10,
+    color: Colors.textSecondary,
   },
   totalValue: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.primary,
+    fontWeight: Typography.weights.bold,
+  },
+  packageRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    marginTop: Spacing.md,
+    paddingTop: Spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+  },
+  packageLabel: {
+    fontSize: Typography.sm,
+    color: Colors.textSecondary,
+  },
+  packageValue: {
+    flex: 1,
+    marginLeft: Spacing.md,
+    fontSize: Typography.sm,
+    fontWeight: Typography.weights.semibold,
+    color: Colors.text,
+    textAlign: "right",
   },
 });

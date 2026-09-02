@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
@@ -18,6 +17,7 @@ import { Colors } from '../constants/Design';
 import CustomButton from '../components/CustomButton';
 import { showToast } from '../components/Toast';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { OtpCodeField } from '../components/AuthFields';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VerifyOTP'>;
 
@@ -91,19 +91,13 @@ const VerifyOTPScreen: React.FC<Props> = ({ route, navigation }) => {
             <Text style={styles.email}>{email}</Text>
           </Text>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter 6-digit code"
-              placeholderTextColor="#999"
-              value={otpCode}
-              onChangeText={setOtpCode}
-              keyboardType="number-pad"
-              maxLength={6}
-              autoFocus
-              editable={!isLoading}
-            />
-          </View>
+          <OtpCodeField
+            label="Verification Code"
+            value={otpCode}
+            onChangeText={setOtpCode}
+            autoFocus
+            disabled={isLoading}
+          />
 
           <CustomButton
             title={isLoading ? 'Verifying...' : 'Verify Email'}
@@ -172,19 +166,6 @@ const styles = StyleSheet.create({
   email: {
     fontWeight: '600',
     color: Colors.primary,
-  },
-  inputContainer: {
-    marginBottom: 30,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 15,
-    fontSize: 24,
-    textAlign: 'center',
-    letterSpacing: 8,
-    fontWeight: '600',
   },
   resendButton: {
     marginTop: 20,

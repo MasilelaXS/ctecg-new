@@ -120,23 +120,25 @@ export default function TopNavigation({
             {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
           </View>
           
-          <TouchableOpacity 
-            style={styles.profileButton}
-            onPress={() => setShowProfileDropdown(true)}
-          >
-            <View style={styles.profileIcon}>
-              <Text style={styles.profileInitial}>
-                {user?.firstName?.charAt(0) || user?.invoicingid?.charAt(0) || 'U'}
-              </Text>
-            </View>
-            <Ionicons name="chevron-down" size={16} color={Colors.textMuted} />
-          </TouchableOpacity>
+          {externalShowProfile && (
+            <TouchableOpacity
+              style={styles.profileButton}
+              onPress={() => setShowProfileDropdown(true)}
+            >
+              <View style={styles.profileIcon}>
+                <Text style={styles.profileInitial}>
+                  {user?.firstName?.charAt(0) || user?.invoicingid?.charAt(0) || 'U'}
+                </Text>
+              </View>
+              <Ionicons name="chevron-down" size={16} color={Colors.textMuted} />
+            </TouchableOpacity>
+          )}
         </View>
       </SafeAreaView>
 
       {/* Profile Dropdown Modal */}
       <Modal
-        visible={showProfileDropdown}
+        visible={externalShowProfile && showProfileDropdown}
         transparent={true}
         animationType="fade"
         onRequestClose={() => setShowProfileDropdown(false)}

@@ -1,23 +1,25 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   Modal,
   ScrollView,
-  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Typography, Spacing } from '../constants/Design';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
+import { BorderRadius, Colors, Spacing, Typography } from '../constants/Design';
+import { apiService } from '../services/api';
 import {
-  runSpeedtest,
   parsePlanSpeed,
+  runSpeedtest,
   SpeedTestController,
   SpeedTestProgress,
   SpeedTestResult,
 } from '../services/cloudflareSpeedtest';
-import { apiService } from '../services/api';
 
 interface Props {
   visible: boolean;
@@ -26,1022 +28,369 @@ interface Props {
 
 type Phase = SpeedTestProgress['phase'];
 
-const PHASE_LABEL: Record<Phase, string> = {
-  idle: 'Ready',
-  meta: 'Connecting…',
-  latency: 'Measuring latency',
-  download: 'Testing download',
-  upload: 'Testing upload',
-  done: 'Test complete',
-  error: 'Test failed',
-};
-
 interface PlanInfo {
   downloadMbps: number;
   uploadMbps: number;
   label?: string;
 }
 
-interface Sample {
-  mbps: number;
-}
-
-const SCREEN_W = Dimensions.get('window').width;
-const CHART_W = Math.min(SCREEN_W - 32 - 24, 520);
-const CHART_H = 130;
-const MAX_SAMPLES = 60;
-
-function gaugeMaxFor(value: number, planMax?: number): number {
-  const target = Math.max(value * 1.25, planMax ? planMax * 1.25 : 0, 25);
-  const tiers = [25, 50, 100, 200, 500, 1000, 2000, 5000];
-  return tiers.find((t) => t >= target) ?? Math.ceil(target / 100) * 100;
-}
+const RUNNING_PHASES: Phase[] = ['meta', 'latency', 'download', 'upload'];
+const DOWNLOAD_COLOR = Colors.primary;
+const UPLOAD_COLOR = '#9146D8';
+const GRAPH_POINTS = 48;
 
 export default function SpeedTestModal({ visible, onClose }: Props) {
+  const { width } = useWindowDimensions();
+  const compact = width < 370;
   const [phase, setPhase] = useState<Phase>('idle');
   const [liveMbps, setLiveMbps] = useState(0);
-  const [phaseProgress, setPhaseProgress] = useState(0);
-  const [bytesNow, setBytesNow] = useState(0);
+  const [latency, setLatency] = useState<number | null>(null);
+  const [jitter, setJitter] = useState<number | null>(null);
+  const [packetLoss, setPacketLoss] = useState<number | null>(null);
   const [result, setResult] = useState<SpeedTestResult | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [plan, setPlan] = useState<PlanInfo | null>(null);
-  const [planLoading, setPlanLoading] = useState(true);
-
-  const [downSamples, setDownSamples] = useState<Sample[]>([]);
-  const [upSamples, setUpSamples] = useState<Sample[]>([]);
+  const [planLoading, setPlanLoading] = useState(false);
+  const [samples, setSamples] = useState<number[]>([]);
 
   const controllerRef = useRef<SpeedTestController | null>(null);
-  // Throttle chart sample appends — onProgress fires very frequently now
-  // (every XHR progress event) and unthrottled the bars would race past.
-  const lastSampleAtRef = useRef<{ download: number; upload: number }>({
-    download: 0,
-    upload: 0,
-  });
-  const SAMPLE_INTERVAL_MS = 300;
+  const runIdRef = useRef(0);
+  const samplePhaseRef = useRef<Phase>('idle');
+  const targetMbpsRef = useRef(0);
+  const displayedMbpsRef = useRef(0);
 
-  // ---- Plan lookup ------------------------------------------------------
-  // Source of truth is getDetailedUsageData() -> data.summary.package_info.
-  // The shorter getUsageData() does NOT carry plan speeds.
-  useEffect(() => {
-    if (!visible) return;
-    let alive = true;
-    (async () => {
-      setPlanLoading(true);
-      try {
-        const res = await apiService.getDetailedUsageData();
-        if (!alive) return;
-        const info = (res?.data as any)?.summary?.package_info;
-        if (info) {
-          const dlNum = Number(info.download_speed_mbps);
-          const upNum = Number(info.upload_speed_mbps);
-          if (Number.isFinite(dlNum) && dlNum > 0) {
-            setPlan({
-              downloadMbps: dlNum,
-              uploadMbps:
-                Number.isFinite(upNum) && upNum > 0 ? upNum : dlNum,
-              label: info.speed_description || info.name,
-            });
-            return;
-          }
-          const parsed = parsePlanSpeed(info.speed_description);
-          if (parsed) {
-            setPlan({
-              ...parsed,
-              label: info.speed_description || info.name,
-            });
-            return;
-          }
-        }
-      } catch {
-        /* plan info is optional */
-      } finally {
-        if (alive) setPlanLoading(false);
-      }
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [visible]);
-
-  // ---- Test lifecycle ---------------------------------------------------
   const reset = () => {
     setPhase('idle');
     setLiveMbps(0);
-    setPhaseProgress(0);
-    setBytesNow(0);
+    setLatency(null);
+    setJitter(null);
+    setPacketLoss(null);
     setResult(null);
-    setErrorMsg(null);
-    setDownSamples([]);
-    setUpSamples([]);
-    lastSampleAtRef.current = { download: 0, upload: 0 };
+    setError(null);
+    setSamples([]);
+    samplePhaseRef.current = 'idle';
+    targetMbpsRef.current = 0;
+    displayedMbpsRef.current = 0;
+  };
+
+  const stop = () => {
+    runIdRef.current += 1;
+    controllerRef.current?.cancel();
+    controllerRef.current = null;
   };
 
   const start = () => {
+    stop();
     reset();
+    const runId = runIdRef.current;
     const { controller, result: pending } = runSpeedtest({
-      onProgress: (p) => {
-        setPhase(p.phase);
-        setLiveMbps(p.mbps);
-        setPhaseProgress(p.progress);
-        setBytesNow(p.bytes || 0);
-        if (p.phase === 'error') setErrorMsg(p.error || 'Test failed');
+      latencySamples: 10,
+      downloadDurationSec: 15,
+      uploadDurationSec: 12,
+      parallelStreams: 6,
+      onProgress: (update) => {
+        if (runId !== runIdRef.current) return;
+        setPhase(update.phase);
+        if (update.latencyMs != null) setLatency(update.latencyMs);
+        if (update.jitterMs != null) setJitter(update.jitterMs);
+        if (update.packetLossPercent != null) setPacketLoss(update.packetLossPercent);
+        if (update.phase === 'error') setError(update.error || 'Please check your connection and try again.');
 
-        const now = Date.now();
-        if (p.phase === 'download' && p.mbps > 0) {
-          if (now - lastSampleAtRef.current.download >= SAMPLE_INTERVAL_MS) {
-            lastSampleAtRef.current.download = now;
-            setDownSamples((prev) => {
-              const next =
-                prev.length >= MAX_SAMPLES ? prev.slice(1) : prev.slice();
-              next.push({ mbps: p.mbps });
-              return next;
-            });
-          }
-        } else if (p.phase === 'upload' && p.mbps > 0) {
-          if (now - lastSampleAtRef.current.upload >= SAMPLE_INTERVAL_MS) {
-            lastSampleAtRef.current.upload = now;
-            setUpSamples((prev) => {
-              const next =
-                prev.length >= MAX_SAMPLES ? prev.slice(1) : prev.slice();
-              next.push({ mbps: p.mbps });
-              return next;
-            });
-          }
+        if (samplePhaseRef.current !== update.phase) {
+          samplePhaseRef.current = update.phase;
+          targetMbpsRef.current = 0;
+          displayedMbpsRef.current = 0;
+          setLiveMbps(0);
+          setSamples([]);
+        }
+        if (update.phase === 'download' || update.phase === 'upload') {
+          const measured = Math.max(0, update.mbps);
+          const previousTarget = targetMbpsRef.current;
+          targetMbpsRef.current = previousTarget <= 0
+            ? measured
+            : previousTarget * 0.62 + measured * 0.38;
         }
       },
     });
     controllerRef.current = controller;
-    pending
-      .then((r) => {
-        setResult(r);
-        setPhase('done');
-        setPhaseProgress(1);
-      })
-      .catch(() => {
-        /* surfaced via onProgress */
-      });
+    pending.then((completed) => {
+      if (runId !== runIdRef.current) return;
+      controllerRef.current = null;
+      setResult(completed);
+      setLatency(completed.latencyMs);
+      setJitter(completed.jitterMs);
+      setPacketLoss(completed.packetLossPercent);
+      setPhase('done');
+    }).catch(() => {
+      // Errors are presented through onProgress.
+    });
   };
 
   const cancel = () => {
-    controllerRef.current?.cancel();
-    controllerRef.current = null;
-    setPhase('idle');
-    setLiveMbps(0);
-    setPhaseProgress(0);
+    stop();
+    reset();
   };
 
-  const handleClose = () => {
-    controllerRef.current?.cancel();
-    controllerRef.current = null;
+  const close = () => {
+    stop();
     reset();
     onClose();
   };
 
   useEffect(() => {
-    if (visible) start();
-    else {
-      controllerRef.current?.cancel();
-      controllerRef.current = null;
-    }
+    if (!visible) return undefined;
+    let active = true;
+    reset();
+    setPlanLoading(true);
+    apiService.getDetailedUsageData().then((response) => {
+      if (!active) return;
+      const info = (response?.data as any)?.summary?.package_info;
+      if (!info) return;
+      const download = Number(info.download_speed_mbps);
+      const upload = Number(info.upload_speed_mbps);
+      if (Number.isFinite(download) && download > 0) {
+        setPlan({ downloadMbps: download, uploadMbps: Number.isFinite(upload) && upload > 0 ? upload : download, label: info.speed_description || info.name });
+      } else {
+        const parsed = parsePlanSpeed(info.speed_description || info.name);
+        if (parsed) setPlan({ ...parsed, label: info.speed_description || info.name });
+      }
+    }).catch(() => {
+      // Package comparison is optional.
+    }).finally(() => {
+      if (active) setPlanLoading(false);
+    });
     return () => {
-      controllerRef.current?.cancel();
-      controllerRef.current = null;
+      active = false;
+      stop();
     };
+    // Modal visibility owns the lifecycle.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  // ---- Derived ---------------------------------------------------------
-  const isRunning =
-    phase === 'meta' ||
-    phase === 'latency' ||
-    phase === 'download' ||
-    phase === 'upload';
+  // Network progress callbacks arrive in bursts, especially for uploads.
+  // Render on a steady clock and ease toward the latest measured value so
+  // the number and graph remain fluid without changing the final result.
+  useEffect(() => {
+    if (phase !== 'download' && phase !== 'upload') return undefined;
 
-  const isUpload = phase === 'upload';
-  const activeSamples = isUpload ? upSamples : downSamples;
-  const planForPhase = isUpload ? plan?.uploadMbps : plan?.downloadMbps;
+    const timer = setInterval(() => {
+      const current = displayedMbpsRef.current;
+      const target = targetMbpsRef.current;
+      const difference = target - current;
+      const next = Math.abs(difference) < 0.01
+        ? target
+        : current + difference * 0.24;
 
-  const headlineMbps = (() => {
-    if (phase === 'done' && result) return result.downloadMbps;
-    if (phase === 'upload' || phase === 'download') return liveMbps;
-    return 0;
-  })();
+      displayedMbpsRef.current = next;
+      setLiveMbps(next);
+      if (next > 0) {
+        setSamples((existing) => [
+          ...existing.slice(-(GRAPH_POINTS - 1)),
+          next,
+        ]);
+      }
+    }, 100);
 
-  const peakInPhase = useMemo(() => {
-    if (!activeSamples.length) return 0;
-    return activeSamples.reduce((m, s) => (s.mbps > m ? s.mbps : m), 0);
-  }, [activeSamples]);
+    return () => clearInterval(timer);
+  }, [phase]);
 
-  const chartMax = useMemo(
-    () => gaugeMaxFor(Math.max(headlineMbps, peakInPhase), planForPhase),
-    [headlineMbps, peakInPhase, planForPhase],
-  );
-
-  const accent =
-    phase === 'error'
-      ? Colors.error
-      : isUpload
-      ? '#3B82F6'
-      : phase === 'done'
-      ? Colors.success
-      : Colors.primary;
-
-  const planComparison = (() => {
-    if (!plan || !result) return null;
-    const dlPct = Math.round((result.downloadMbps / plan.downloadMbps) * 100);
-    const upPct = Math.round((result.uploadMbps / plan.uploadMbps) * 100);
-    return { dlPct, upPct };
-  })();
+  const running = RUNNING_PHASES.includes(phase);
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      presentationStyle="pageSheet"
-      onRequestClose={handleClose}
-    >
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.headerBtn} onPress={handleClose}>
-            <Ionicons name="close" size={24} color={Colors.text} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.headerTitle}>Speed Test</Text>
-            <Text style={styles.headerSubtitle}>Live network performance</Text>
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={close}>
+      <View style={styles.overlay}>
+        <TouchableOpacity style={styles.backdrop} onPress={close} accessibilityLabel="Close speed test" />
+        <SafeAreaView style={[styles.sheet, (phase === 'idle' || phase === 'error') && styles.sheetCompact]} edges={['bottom']}>
+          <View style={styles.handle} />
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.close} onPress={close} accessibilityRole="button" accessibilityLabel="Close speed test"><Ionicons name="close" size={25} color={Colors.text} /></TouchableOpacity>
+            <View style={styles.headerCopy}><Text style={styles.headerTitle}>Speed test</Text><Text style={styles.headerSubtitle}>CTECG connection check</Text></View>
+            {running ? <TouchableOpacity onPress={cancel} accessibilityRole="button"><Text style={styles.stopText}>Stop test</Text></TouchableOpacity> : <View style={styles.headerEnd} />}
           </View>
-          <View style={{ width: 40 }} />
-        </View>
 
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Plan card — always visible, prominent */}
-          <View style={styles.planCard}>
-            <Text style={styles.planCardLabel}>YOUR SUBSCRIPTION</Text>
-            {planLoading ? (
-              <Text style={styles.planCardLoading}>
-                Looking up your plan…
-              </Text>
-            ) : plan ? (
-              <>
-                {plan.label && (
-                  <Text style={styles.planCardName} numberOfLines={1}>
-                    {plan.label}
-                  </Text>
-                )}
-                <View style={styles.planCardSpeedsRow}>
-                  <View style={styles.planCardSpeedBlock}>
-                    <Text style={styles.planCardSpeedNum}>
-                      {plan.downloadMbps}
-                    </Text>
-                    <Text style={styles.planCardSpeedUnit}>Mbps</Text>
-                    <Text style={styles.planCardSpeedDir}>DOWNLOAD</Text>
-                  </View>
-                  <View style={styles.planCardDivider} />
-                  <View style={styles.planCardSpeedBlock}>
-                    <Text style={styles.planCardSpeedNum}>
-                      {plan.uploadMbps}
-                    </Text>
-                    <Text style={styles.planCardSpeedUnit}>Mbps</Text>
-                    <Text style={styles.planCardSpeedDir}>UPLOAD</Text>
-                  </View>
-                </View>
-              </>
-            ) : (
-              <Text style={styles.planCardLoading}>
-                Plan info unavailable
-              </Text>
+          <ScrollView contentContainerStyle={[styles.content, (phase === 'idle' || phase === 'error') && styles.contentCompact]} showsVerticalScrollIndicator={false}>
+            {phase === 'idle' && <ReadyState onStart={start} plan={plan} loading={planLoading} />}
+            {running && <LiveState phase={phase} value={liveMbps} samples={samples} compact={compact} />}
+            {phase === 'done' && result && <ResultState result={result} plan={plan} />}
+            {phase === 'error' && <ErrorState message={error} onRetry={start} />}
+
+            {phase !== 'idle' && phase !== 'error' && (
+              <ConnectionLine phase={phase} latency={latency} jitter={jitter} packetLoss={packetLoss} server={result?.server} />
             )}
-          </View>
 
-          {/* Live chart card */}
-          <View style={[styles.chartCard, { borderColor: accent + '40' }]}>
-            <View style={styles.chartHeaderRow}>
-              <Text style={[styles.chartPhase, { color: accent }]}>
-                {isUpload ? 'UPLOAD' : 'DOWNLOAD'}
-              </Text>
-              <Text style={styles.chartPhaseLabel}>{PHASE_LABEL[phase]}</Text>
-            </View>
-
-            <View style={styles.chartNumberRow}>
-              <Text
-                style={styles.chartNumber}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-              >
-                {headlineMbps.toFixed(headlineMbps >= 100 ? 0 : 1)}
-              </Text>
-              <View style={styles.chartUnitWrap}>
-                <Text style={styles.chartUnit}>Mbps</Text>
-                {peakInPhase > 0 && phase !== 'done' && (
-                  <Text style={styles.chartPeak}>
-                    peak {peakInPhase.toFixed(peakInPhase >= 100 ? 0 : 1)}
-                  </Text>
-                )}
-              </View>
-            </View>
-
-            <BarChart
-              samples={activeSamples}
-              max={chartMax}
-              color={accent}
-              planMbps={planForPhase}
-            />
-
-            <View style={styles.phaseProgressTrack}>
-              <View
-                style={[
-                  styles.phaseProgressFill,
-                  {
-                    backgroundColor: accent,
-                    width: `${phaseProgress * 100}%`,
-                  },
-                ]}
-              />
-            </View>
-
-            {(phase === 'download' || phase === 'upload') && bytesNow > 0 && (
-              <Text style={styles.bytesText}>
-                {formatBytes(bytesNow)} transferred
-              </Text>
-            )}
-          </View>
-
-          {/* Stats grid */}
-          <View style={styles.statsGrid}>
-            <Stat
-              label="Download"
-              value={
-                result
-                  ? formatMbps(result.downloadMbps)
-                  : phase === 'download'
-                  ? formatMbps(liveMbps)
-                  : '—'
-              }
-              unit="Mbps"
-              tint={Colors.primary}
-              active={phase === 'download'}
-              planMbps={plan?.downloadMbps}
-              actualMbps={
-                result?.downloadMbps ??
-                (phase === 'download' ? liveMbps : null)
-              }
-            />
-            <Stat
-              label="Upload"
-              value={
-                result
-                  ? formatMbps(result.uploadMbps)
-                  : phase === 'upload'
-                  ? formatMbps(liveMbps)
-                  : '—'
-              }
-              unit="Mbps"
-              tint="#3B82F6"
-              active={phase === 'upload'}
-              planMbps={plan?.uploadMbps}
-              actualMbps={
-                result?.uploadMbps ?? (phase === 'upload' ? liveMbps : null)
-              }
-            />
-            <Stat
-              label="Ping"
-              value={result ? `${result.latencyMs}` : '—'}
-              unit="ms"
-              tint={Colors.success}
-              active={phase === 'latency'}
-            />
-            <Stat
-              label="Jitter"
-              value={result ? result.jitterMs.toFixed(1) : '—'}
-              unit="ms"
-              tint={Colors.warning}
-            />
-          </View>
-
-          {/* Verdict */}
-          {planComparison && (
-            <View
-              style={[
-                styles.verdictCard,
-                {
-                  backgroundColor:
-                    (planComparison.dlPct >= 90
-                      ? Colors.success
-                      : planComparison.dlPct >= 70
-                      ? Colors.warning
-                      : Colors.error) + '12',
-                  borderColor:
-                    (planComparison.dlPct >= 90
-                      ? Colors.success
-                      : planComparison.dlPct >= 70
-                      ? Colors.warning
-                      : Colors.error) + '40',
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.verdictTitle,
-                  {
-                    color:
-                      planComparison.dlPct >= 90
-                        ? Colors.success
-                        : planComparison.dlPct >= 70
-                        ? Colors.warning
-                        : Colors.error,
-                  },
-                ]}
-              >
-                {planComparison.dlPct >= 100
-                  ? 'Excellent connection'
-                  : planComparison.dlPct >= 90
-                  ? 'Good connection'
-                  : planComparison.dlPct >= 70
-                  ? 'Below expected'
-                  : 'Connection issue'}
-              </Text>
-              <Text style={styles.verdictText}>
-                {planComparison.dlPct >= 100
-                  ? `You're getting ${planComparison.dlPct - 100}% extra above your subscribed speed.`
-                  : planComparison.dlPct >= 90
-                  ? `You're getting ${planComparison.dlPct}% of your subscribed download speed.`
-                  : planComparison.dlPct >= 70
-                  ? `Only ${planComparison.dlPct}% of your plan.`
-                  : `Only ${planComparison.dlPct}% of your plan. Contact CTECG support if this persists.`}
-              </Text>
-            </View>
-          )}
-
-          {phase === 'error' && errorMsg && (
-            <View style={styles.errorRow}>
-              <Text style={styles.errorText}>{errorMsg}</Text>
-            </View>
-          )}
-
-          <TouchableOpacity
-            style={[
-              styles.button,
-              isRunning ? styles.buttonSecondary : styles.buttonPrimary,
-            ]}
-            onPress={isRunning ? cancel : start}
-            activeOpacity={0.85}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                { color: isRunning ? Colors.primary : Colors.textInverse },
-              ]}
-            >
-              {isRunning
-                ? 'Cancel test'
-                : result || phase === 'error'
-                ? 'Run again'
-                : 'Start test'}
-            </Text>
-          </TouchableOpacity>
-
-          <Text style={styles.footer}>
-            For the most accurate result, connect to your CTECG Wi-Fi and pause
-            other downloads during the test.
-            {result?.server === 'cloudflare'
-              ? '\nTested against Cloudflare global edge.'
-              : result?.server === 'self'
-              ? '\nTested against CTECG server (Cloudflare unreachable).'
-              : ''}
-          </Text>
-        </ScrollView>
+            {phase === 'done' && <TouchableOpacity style={styles.primaryButton} onPress={start}><Ionicons name="refresh-outline" size={20} color={Colors.textInverse} /><Text style={styles.primaryButtonText}>Test again</Text></TouchableOpacity>}
+          </ScrollView>
+        </SafeAreaView>
       </View>
     </Modal>
   );
 }
 
-// ---------------------------------------------------------------------------
-// BarChart — vertical bars, one per sample, with a plan reference line.
-// ---------------------------------------------------------------------------
-function BarChart({
-  samples,
-  max,
-  color,
-  planMbps,
-}: {
-  samples: Sample[];
-  max: number;
-  color: string;
-  planMbps?: number;
-}) {
-  const slots = MAX_SAMPLES;
-  const gap = 2;
-  const barWidth = Math.max(2, (CHART_W - gap * (slots - 1)) / slots);
+function ReadyState({ onStart, plan, loading }: { onStart: () => void; plan: PlanInfo | null; loading: boolean }) {
+  return <View style={styles.ready}>
+    <View style={styles.networkLine}><Ionicons name="globe-outline" size={22} color={Colors.textMuted} /><Ionicons name="arrow-forward" size={16} color={Colors.textMuted} /><Text style={styles.networkText}>This device</Text></View>
+    <Text style={styles.readyTitle}>Internet speed test</Text>
+    <Text style={styles.readyText}>{loading ? 'Checking your package…' : plan ? `Your package  ·  ${plan.label || `${formatNumber(plan.downloadMbps)} Mbps`}` : 'Measure your CTECG connection'}</Text>
+    <TouchableOpacity style={styles.startButton} onPress={onStart} accessibilityRole="button" accessibilityLabel="Start speed test"><Text style={styles.startButtonText}>Start test</Text></TouchableOpacity>
+    <View style={styles.readyHintRow}><Ionicons name="information-circle-outline" size={16} color={Colors.textMuted} /><Text style={styles.readyHint}>Pause other downloads for the most accurate result.</Text></View>
+  </View>;
+}
 
-  const padded: (Sample | null)[] = [
-    ...new Array(Math.max(0, slots - samples.length)).fill(null),
-    ...samples.slice(-slots),
-  ];
+function LiveState({ phase, value, samples, compact }: { phase: Phase; value: number; samples: number[]; compact: boolean }) {
+  const isUpload = phase === 'upload';
+  const color = isUpload ? UPLOAD_COLOR : DOWNLOAD_COLOR;
+  const label = phase === 'meta' ? 'Connecting' : phase === 'latency' ? 'Ping' : isUpload ? 'Upload' : 'Download';
+  const shownValue = phase === 'latency' || phase === 'meta' ? '—' : formatNumber(value);
+  return <View style={styles.live}>
+    <Text style={[styles.liveLabel, { color }]}>{label}</Text>
+    <View style={styles.liveValueRow}><Text style={[styles.liveValue, compact && styles.liveValueCompact]} adjustsFontSizeToFit numberOfLines={1}>{shownValue}</Text>{shownValue !== '—' && <Text style={styles.liveUnit}>Mbps</Text>}</View>
+    <View style={styles.path}><Ionicons name="globe-outline" size={25} color={Colors.textMuted} /><View style={styles.pathDots}><View style={[styles.pathDot, { backgroundColor: color }]} /><View style={[styles.pathDot, { backgroundColor: color, opacity: 0.7 }]} /><View style={[styles.pathDot, { backgroundColor: color, opacity: 0.45 }]} /></View><Ionicons name="phone-portrait-outline" size={25} color={Colors.textMuted} /></View>
+    <AreaGraph values={samples} color={color} />
+  </View>;
+}
 
-  const planY =
-    planMbps != null && planMbps > 0 && planMbps <= max
-      ? CHART_H * (1 - planMbps / max)
-      : null;
+function AreaGraph({ values, color }: { values: number[]; color: string }) {
+  const { width } = useWindowDimensions();
+  const graphWidth = Math.min(width, 620);
+  const graphHeight = 260;
+  const max = Math.max(1, ...values) * 1.08;
+  const displayed = values.slice(-GRAPH_POINTS);
+  const points = displayed.map((value, index) => ({
+    x: (index / Math.max(1, GRAPH_POINTS - 1)) * graphWidth,
+    y: graphHeight - Math.max(4, (value / max) * (graphHeight * 0.82)),
+  }));
+  const linePath = createSmoothPath(points);
+  const areaPath = points.length
+    ? `${linePath} L ${points[points.length - 1].x} ${graphHeight} L 0 ${graphHeight} Z`
+    : '';
 
-  return (
-    <View style={[styles.chart, { width: CHART_W, height: CHART_H + 18 }]}>
-      <View style={[styles.chartInner, { width: CHART_W, height: CHART_H }]}>
-        {planY != null && (
-          <>
-            <View
-              style={[
-                styles.planLine,
-                { top: planY, width: CHART_W, borderColor: Colors.text },
-              ]}
-            />
-            <View style={[styles.planTagWrap, { top: planY - 9 }]}>
-              <Text style={styles.planTag}>
-                PLAN {Math.round(planMbps as number)}
-              </Text>
-            </View>
-          </>
-        )}
+  return <View style={[styles.graph, { backgroundColor: `${color}0B` }]}>
+    <Svg width="100%" height="100%" viewBox={`0 0 ${graphWidth} ${graphHeight}`} preserveAspectRatio="none">
+      <Defs>
+        <LinearGradient id="speedFill" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor={color} stopOpacity={0.9} />
+          <Stop offset="0.62" stopColor={color} stopOpacity={0.48} />
+          <Stop offset="1" stopColor={color} stopOpacity={0.08} />
+        </LinearGradient>
+      </Defs>
+      {areaPath ? <Path d={areaPath} fill="url(#speedFill)" /> : null}
+      {linePath ? <Path d={linePath} fill="none" stroke={color} strokeWidth={2.5} strokeLinejoin="round" /> : null}
+    </Svg>
+  </View>;
+}
 
-        <View style={styles.barsRow}>
-          {padded.map((s, i) => {
-            if (!s) {
-              return (
-                <View
-                  key={`b-${i}`}
-                  style={{
-                    width: barWidth,
-                    marginRight: i < slots - 1 ? gap : 0,
-                  }}
-                />
-              );
-            }
-            const h = Math.max(2, (s.mbps / max) * (CHART_H - 4));
-            const isOver = planMbps != null && s.mbps > planMbps;
-            return (
-              <View
-                key={`b-${i}`}
-                style={{
-                  width: barWidth,
-                  height: h,
-                  borderRadius: 1.5,
-                  backgroundColor: isOver ? Colors.success : color,
-                  marginRight: i < slots - 1 ? gap : 0,
-                  opacity: i === slots - 1 ? 1 : 0.55 + (i / slots) * 0.45,
-                }}
-              />
-            );
-          })}
-        </View>
+function createSmoothPath(points: Array<{ x: number; y: number }>): string {
+  if (!points.length) return '';
+  if (points.length === 1) return `M 0 ${points[0].y} L ${points[0].x} ${points[0].y}`;
 
-      </View>
+  let path = `M ${points[0].x} ${points[0].y}`;
+  for (let index = 1; index < points.length; index += 1) {
+    const previous = points[index - 1];
+    const current = points[index];
+    const midpointX = (previous.x + current.x) / 2;
+    path += ` C ${midpointX} ${previous.y}, ${midpointX} ${current.y}, ${current.x} ${current.y}`;
+  }
+  return path;
+}
 
-      <Text style={styles.axisLabel}>oldest    →    newest</Text>
+function ResultState({ result, plan }: { result: SpeedTestResult; plan: PlanInfo | null }) {
+  const max = Math.max(result.downloadMbps, result.uploadMbps, plan?.downloadMbps || 0, 1);
+  return <View style={styles.summary}>
+    <View style={styles.networkLine}><Ionicons name="globe-outline" size={22} color={Colors.textMuted} /><Ionicons name="arrow-forward" size={16} color={Colors.textMuted} /><Text style={styles.networkText}>This device</Text></View>
+    <SpeedBar color={DOWNLOAD_COLOR} icon="arrow-down" value={result.downloadMbps} max={max} />
+    <SpeedBar color={UPLOAD_COLOR} icon="arrow-up" value={result.uploadMbps} max={max} />
+    <Text style={styles.pingText}>Ping: {formatNumber(result.latencyMs)} ms</Text>
+    <View style={styles.summaryDetails}>
+      <Detail label="Jitter" value={`${formatNumber(result.jitterMs)} ms`} />
+      <Detail label="Packet loss" value={`${formatNumber(result.packetLossPercent)}%`} />
+      <Detail label="Test server" value={result.server === 'self' ? 'CTECG server' : 'Automatic edge'} />
     </View>
-  );
+  </View>;
 }
 
-// ---------------------------------------------------------------------------
-// Stat tile — clean, no decorative icon.
-// ---------------------------------------------------------------------------
-function Stat({
-  label,
-  value,
-  unit,
-  tint,
-  active = false,
-  planMbps,
-  actualMbps,
-}: {
-  label: string;
-  value: string;
-  unit: string;
-  tint: string;
-  active?: boolean;
-  planMbps?: number;
-  actualMbps?: number | null;
-}) {
-  const pct =
-    planMbps && planMbps > 0 && actualMbps != null
-      ? Math.round((actualMbps / planMbps) * 100)
-      : null;
-  const overPlan = pct != null && pct >= 100;
-  const pctColor = overPlan
-    ? Colors.success
-    : pct != null && pct >= 90
-    ? tint
-    : pct != null && pct >= 70
-    ? Colors.warning
-    : Colors.error;
-
-  return (
-    <View
-      style={[
-        styles.stat,
-        active && {
-          borderColor: tint,
-          backgroundColor: tint + '08',
-        },
-      ]}
-    >
-      <View style={styles.statTopRow}>
-        <Text style={[styles.statLabel, { color: tint }]}>{label}</Text>
-        {pct != null && (
-          <View
-            style={[
-              styles.statPctBadge,
-              { backgroundColor: pctColor + '18' },
-            ]}
-          >
-            <Text style={[styles.statPctText, { color: pctColor }]}>
-              {pct}%
-            </Text>
-          </View>
-        )}
-      </View>
-      <Text style={styles.statValue}>
-        {value}
-        <Text style={styles.statUnit}> {unit}</Text>
-      </Text>
-      {planMbps != null && (
-        <Text style={styles.statPlanHint}>of {planMbps} Mbps plan</Text>
-      )}
-    </View>
-  );
+function SpeedBar({ color, icon, value, max }: { color: string; icon: 'arrow-down' | 'arrow-up'; value: number; max: number }) {
+  return <View style={styles.speedBarRow}><View style={styles.speedBarTrack}><View style={[styles.speedBarFill, { width: `${Math.max(4, (value / max) * 100)}%`, backgroundColor: color }]} /></View><Ionicons name={icon} size={19} color={color} /><Text style={styles.speedBarValue}>{formatNumber(value)} Mbps</Text></View>;
 }
 
-function formatMbps(value: number): string {
-  if (value >= 100) return value.toFixed(0);
-  if (value >= 10) return value.toFixed(1);
-  return value.toFixed(2);
+function Detail({ label, value }: { label: string; value: string }) {
+  return <View style={styles.detailRow}><Text style={styles.detailLabel}>{label}</Text><Text style={styles.detailValue}>{value}</Text></View>;
 }
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024)
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+function ConnectionLine({ phase, latency, jitter, packetLoss, server }: { phase: Phase; latency: number | null; jitter: number | null; packetLoss: number | null; server?: SpeedTestResult['server'] }) {
+  return <View style={styles.connection}><Text style={styles.connectionText}>Connected via CTECG Internet Service Provider</Text><Text style={styles.connectionText}>to {server === 'self' ? 'CTECG test server' : 'automatic test server'}</Text>{phase === 'done' && <Text style={styles.connectionFine}>Ping {formatOptional(latency)} ms  ·  Jitter {formatOptional(jitter)} ms  ·  Loss {formatOptional(packetLoss)}%</Text>}</View>;
 }
 
-// ---------------------------------------------------------------------------
-// Styles
-// ---------------------------------------------------------------------------
+function ErrorState({ message, onRetry }: { message: string | null; onRetry: () => void }) {
+  return <View style={styles.error}>
+    <View style={styles.errorIcon}><Ionicons name="cloud-offline-outline" size={32} color={Colors.primary} /></View>
+    <Text style={styles.errorTitle}>Test could not finish</Text>
+    <Text style={styles.errorMessage}>{message || 'Please check your connection and try again.'}</Text>
+    <TouchableOpacity style={styles.retryButton} onPress={onRetry} accessibilityRole="button"><Ionicons name="refresh-outline" size={19} color={Colors.textInverse} /><Text style={styles.retryButtonText}>Try again</Text></TouchableOpacity>
+  </View>;
+}
+
+function formatNumber(value: number): string {
+  if (!Number.isFinite(value)) return '0.00';
+  return value >= 100 ? value.toFixed(2) : value.toFixed(2);
+}
+
+function formatOptional(value: number | null): string {
+  return value == null ? '—' : formatNumber(value);
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  headerBtn: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: Typography.lg,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.text,
-    textAlign: 'center',
-  },
-  headerSubtitle: {
-    fontSize: 11,
-    color: Colors.textMuted,
-    textAlign: 'center',
-    marginTop: 2,
-  },
-  scrollContent: {
-    padding: Spacing.md,
-    paddingBottom: Spacing.xl,
-  },
-
-  // ---- Plan card ----
-  planCard: {
-    backgroundColor: Colors.primary,
-    borderRadius: 16,
-    padding: Spacing.md,
-    marginBottom: Spacing.md,
-    shadowColor: Colors.primary,
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  planCardLabel: {
-    fontSize: 10,
-    fontWeight: Typography.weights.bold,
-    color: 'rgba(255,255,255,0.7)',
-    letterSpacing: 1.5,
-    marginBottom: 4,
-  },
-  planCardName: {
-    fontSize: Typography.md,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.textInverse,
-    marginBottom: Spacing.sm,
-  },
-  planCardLoading: {
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.85)',
-    fontWeight: Typography.weights.medium,
-    marginTop: 4,
-  },
-  planCardSpeedsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    marginTop: 4,
-  },
-  planCardSpeedBlock: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  planCardSpeedNum: {
-    fontSize: 32,
-    fontWeight: Typography.weights.bold,
-    color: Colors.textInverse,
-    lineHeight: 36,
-    letterSpacing: -0.5,
-  },
-  planCardSpeedUnit: {
-    fontSize: 11,
-    fontWeight: Typography.weights.semibold,
-    color: 'rgba(255,255,255,0.85)',
-    marginTop: -2,
-  },
-  planCardSpeedDir: {
-    fontSize: 9,
-    fontWeight: Typography.weights.bold,
-    color: 'rgba(255,255,255,0.7)',
-    letterSpacing: 1.2,
-    marginTop: 4,
-  },
-  planCardDivider: {
-    width: 1,
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.25)',
-  },
-
-  // ---- Chart card ----
-  chartCard: {
-    borderRadius: 18,
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.md,
-    backgroundColor: Colors.surface,
-    borderWidth: 1.5,
-    marginBottom: Spacing.md,
-  },
-  chartHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  chartPhase: {
-    fontSize: 11,
-    fontWeight: Typography.weights.bold,
-    letterSpacing: 1.5,
-  },
-  chartPhaseLabel: {
-    fontSize: 11,
-    color: Colors.textMuted,
-    fontWeight: Typography.weights.medium,
-  },
-  chartNumberRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginBottom: Spacing.sm,
-  },
-  chartNumber: {
-    fontSize: 56,
-    lineHeight: 60,
-    fontWeight: Typography.weights.bold,
-    color: Colors.text,
-    letterSpacing: -1.5,
-  },
-  chartUnitWrap: {
-    marginLeft: 10,
-    paddingBottom: 6,
-  },
-  chartUnit: {
-    fontSize: Typography.md,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.textSecondary,
-  },
-  chartPeak: {
-    fontSize: 10,
-    color: Colors.textMuted,
-    fontWeight: Typography.weights.medium,
-    marginTop: 2,
-  },
-
-  chart: {
-    alignSelf: 'center',
-    position: 'relative',
-  },
-  chartInner: {
-    position: 'relative',
-    backgroundColor: 'transparent',
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  gridLine: {
-    position: 'absolute',
-    left: 0,
-    height: 1,
-    backgroundColor: Colors.border,
-    opacity: 0.4,
-  },
-  gridLabel: {
-    position: 'absolute',
-    left: 6,
-    fontSize: 9,
-    color: Colors.textMuted,
-    fontWeight: Typography.weights.medium,
-    backgroundColor: 'transparent',
-  },
-  planLine: {
-    position: 'absolute',
-    left: 0,
-    height: 0,
-    borderTopWidth: 1.5,
-    borderStyle: 'dashed',
-    opacity: 0.85,
-  },
-  planTagWrap: {
-    position: 'absolute',
-    right: 6,
-    backgroundColor: Colors.text,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
-    borderRadius: 3,
-  },
-  planTag: {
-    fontSize: 8,
-    fontWeight: Typography.weights.bold,
-    color: '#FFFFFF',
-    letterSpacing: 0.5,
-  },
-  barsRow: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: CHART_H,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
-  axisLabel: {
-    fontSize: 9,
-    color: Colors.textMuted,
-    textAlign: 'center',
-    marginTop: 4,
-    fontWeight: Typography.weights.medium,
-    letterSpacing: 0.3,
-  },
-
-  phaseProgressTrack: {
-    height: 4,
-    borderRadius: 999,
-    backgroundColor: '#EDEDED',
-    overflow: 'hidden',
-    marginTop: Spacing.sm,
-  },
-  phaseProgressFill: {
-    height: '100%',
-    borderRadius: 999,
-  },
-  bytesText: {
-    fontSize: 11,
-    color: Colors.textMuted,
-    marginTop: 6,
-    textAlign: 'right',
-  },
-
-  // ---- Stats grid ----
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: Spacing.md,
-  },
-  stat: {
-    flexBasis: '48%',
-    flexGrow: 1,
-    backgroundColor: Colors.surface,
-    borderRadius: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  statTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  statPctBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-  },
-  statPctText: {
-    fontSize: 10,
-    fontWeight: Typography.weights.bold,
-  },
-  statLabel: {
-    fontSize: 10,
-    fontWeight: Typography.weights.bold,
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
-  },
-  statValue: {
-    fontSize: Typography.lg,
-    color: Colors.text,
-    fontWeight: Typography.weights.bold,
-  },
-  statUnit: {
-    fontSize: Typography.xs,
-    color: Colors.textMuted,
-    fontWeight: Typography.weights.regular,
-  },
-  statPlanHint: {
-    fontSize: 10,
-    color: Colors.textMuted,
-    marginTop: 3,
-  },
-
-  // ---- Verdict ----
-  verdictCard: {
-    padding: 14,
-    borderRadius: 14,
-    borderWidth: 1,
-    marginBottom: Spacing.md,
-  },
-  verdictTitle: {
-    fontSize: Typography.sm,
-    fontWeight: Typography.weights.bold,
-    marginBottom: 4,
-  },
-  verdictText: {
-    fontSize: 12,
-    lineHeight: 17,
-    color: Colors.textSecondary,
-  },
-
-  // ---- Error ----
-  errorRow: {
-    marginBottom: Spacing.sm,
-    padding: 12,
-    borderRadius: 12,
-    backgroundColor: Colors.error + '12',
-  },
-  errorText: {
-    fontSize: Typography.sm,
-    color: Colors.error,
-  },
-
-  // ---- Button ----
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
-  },
-  buttonPrimary: {
-    backgroundColor: Colors.primary,
-    shadowColor: Colors.primary,
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 4,
-  },
-  buttonSecondary: {
-    backgroundColor: Colors.primary + '15',
-    borderWidth: 1,
-    borderColor: Colors.primary + '40',
-  },
-  buttonText: {
-    fontSize: Typography.md,
-    fontWeight: Typography.weights.semibold,
-  },
-
-  footer: {
-    textAlign: 'center',
-    fontSize: 11,
-    color: Colors.textMuted,
-    lineHeight: 16,
-    marginTop: Spacing.md,
-  },
+  overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.55)' },
+  backdrop: { ...StyleSheet.absoluteFillObject },
+  sheet: { minHeight: '78%', maxHeight: '94%', backgroundColor: Colors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, overflow: 'hidden' },
+  sheetCompact: { height: '64%', minHeight: 0, maxHeight: '70%' },
+  handle: { width: 42, height: 4, borderRadius: 2, backgroundColor: Colors.border, alignSelf: 'center', marginTop: 9 },
+  header: { height: 66, flexDirection: 'row', alignItems: 'center', paddingHorizontal: Spacing.md },
+  close: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.backgroundAlt },
+  headerCopy: { flex: 1, marginLeft: Spacing.sm },
+  headerTitle: { fontSize: Typography.xl, fontWeight: Typography.weights.bold, color: Colors.text },
+  headerSubtitle: { fontSize: Typography.xs, color: Colors.textSecondary },
+  headerEnd: { width: 62 },
+  stopText: { fontSize: Typography.sm, color: Colors.textSecondary, padding: Spacing.sm },
+  content: { flexGrow: 1, width: '100%', maxWidth: 620, alignSelf: 'center', paddingBottom: Spacing.xl },
+  contentCompact: { paddingBottom: Spacing.md },
+  ready: { flex: 1, minHeight: 390, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.lg, paddingBottom: Spacing.lg },
+  networkLine: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: Spacing.sm, marginBottom: Spacing.lg },
+  networkText: { fontSize: Typography.sm, color: Colors.textSecondary },
+  readyTitle: { fontSize: Typography.xxl, fontWeight: Typography.weights.bold, color: Colors.text },
+  readyText: { maxWidth: 340, fontSize: Typography.sm, color: Colors.textSecondary, marginTop: Spacing.sm, textAlign: 'center' },
+  startButton: { width: '100%', maxWidth: 340, height: 52, paddingHorizontal: Spacing.xl, alignItems: 'center', justifyContent: 'center', borderRadius: BorderRadius.md, backgroundColor: Colors.primary, marginTop: Spacing.xl },
+  startButtonText: { fontSize: Typography.md, fontWeight: Typography.weights.bold, color: Colors.textInverse },
+  readyHintRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: Spacing.md },
+  readyHint: { flexShrink: 1, fontSize: Typography.xs, color: Colors.textMuted, textAlign: 'center' },
+  live: { minHeight: 570, alignItems: 'center', paddingTop: Spacing.xxl },
+  liveLabel: { fontSize: Typography.xxl, fontWeight: Typography.weights.bold },
+  liveValueRow: { height: 115, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', paddingHorizontal: Spacing.md },
+  liveValue: { maxWidth: '78%', fontSize: 88, lineHeight: 102, fontWeight: Typography.weights.bold, letterSpacing: -4, color: Colors.text },
+  liveValueCompact: { fontSize: 72, lineHeight: 86 },
+  liveUnit: { fontSize: Typography.xxl, color: Colors.textMuted, marginBottom: 18, marginLeft: 5 },
+  path: { height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 },
+  pathDots: { flexDirection: 'row', gap: 4 },
+  pathDot: { width: 6, height: 6, borderRadius: 3 },
+  graph: { alignSelf: 'stretch', height: 260, marginTop: Spacing.lg, overflow: 'hidden' },
+  summary: { minHeight: 470, paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg },
+  speedBarRow: { flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.sm },
+  speedBarTrack: { flex: 1, height: 15, borderRadius: 8, overflow: 'hidden', backgroundColor: Colors.border, marginRight: Spacing.sm },
+  speedBarFill: { height: '100%', borderRadius: 8 },
+  speedBarValue: { width: 120, fontSize: Typography.sm, fontWeight: Typography.weights.bold, color: Colors.text, marginLeft: 4 },
+  pingText: { fontSize: Typography.sm, color: Colors.text, marginTop: Spacing.sm },
+  summaryDetails: { marginTop: Spacing.xxl, paddingTop: Spacing.lg, borderTopWidth: 1, borderTopColor: Colors.border },
+  detailRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: Spacing.md },
+  detailLabel: { fontSize: Typography.sm, fontWeight: Typography.weights.semibold, color: Colors.text },
+  detailValue: { fontSize: Typography.sm, color: Colors.textSecondary },
+  connection: { alignItems: 'center', paddingHorizontal: Spacing.lg, paddingVertical: Spacing.md },
+  connectionText: { fontSize: Typography.xs, lineHeight: 19, color: Colors.textMuted, textAlign: 'center' },
+  connectionFine: { fontSize: 10, color: Colors.textMuted, marginTop: Spacing.sm, textAlign: 'center' },
+  primaryButton: { height: 50, marginHorizontal: Spacing.lg, marginTop: Spacing.sm, borderRadius: BorderRadius.md, backgroundColor: Colors.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: Spacing.sm },
+  primaryButtonText: { fontSize: Typography.sm, fontWeight: Typography.weights.bold, color: Colors.textInverse },
+  error: { flex: 1, minHeight: 390, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.lg, paddingBottom: Spacing.lg },
+  errorIcon: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', backgroundColor: `${Colors.primary}0D`, marginBottom: Spacing.md },
+  errorTitle: { fontSize: Typography.xl, fontWeight: Typography.weights.bold, color: Colors.text },
+  errorMessage: { maxWidth: 360, fontSize: Typography.sm, color: Colors.textSecondary, lineHeight: 20, textAlign: 'center', marginTop: Spacing.sm },
+  retryButton: { width: '100%', maxWidth: 340, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: Spacing.sm, borderRadius: BorderRadius.md, backgroundColor: Colors.primary, marginTop: Spacing.xl },
+  retryButtonText: { fontSize: Typography.sm, fontWeight: Typography.weights.bold, color: Colors.textInverse },
 });

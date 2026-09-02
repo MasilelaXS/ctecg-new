@@ -20,6 +20,16 @@
  */
 
 import { API_BASE_URL } from './api';
+import {
+  cacheDirectory,
+  createDownloadResumable,
+  createUploadTask,
+  deleteAsync,
+  DownloadResumable,
+  FileSystemUploadType,
+  UploadTask,
+} from 'expo-file-system/legacy';
+import { File, Paths } from 'expo-file-system';
 
 const SELF_HOST = `${API_BASE_URL}/speedtest.php`;
 
@@ -86,6 +96,9 @@ export interface SpeedTestProgress {
   mbps: number;
   progress: number;
   bytes: number;
+  latencyMs?: number;
+  jitterMs?: number;
+  packetLossPercent?: number;
   error?: string;
 }
 
@@ -94,6 +107,7 @@ export interface SpeedTestResult {
   uploadMbps: number;
   latencyMs: number;
   jitterMs: number;
+  packetLossPercent: number;
   durationSec: number;
   /** Which test backend was used. */
   server: 'cloudflare' | 'self';
@@ -126,6 +140,9 @@ export function runSpeedtest(options: RunOptions = {}): {
 
   let cancelled = false;
   const activeXhrs = new Set<XMLHttpRequest>();
+  const activeFetches = new Set<AbortController>();
+  const activeNativeDownloads = new Set<DownloadResumable>();
+  const activeNativeUploads = new Set<UploadTask>();
 
   const trackXhr = (x: XMLHttpRequest) => {
     activeXhrs.add(x);
@@ -155,6 +172,18 @@ export function runSpeedtest(options: RunOptions = {}): {
         }
       }
       activeXhrs.clear();
+      for (const abortController of activeFetches) {
+        abortController.abort();
+      }
+      activeFetches.clear();
+      for (const download of activeNativeDownloads) {
+        void download.cancelAsync().catch(() => undefined);
+      }
+      activeNativeDownloads.clear();
+      for (const upload of activeNativeUploads) {
+        void upload.cancelAsync().catch(() => undefined);
+      }
+      activeNativeUploads.clear();
     },
   };
 
@@ -178,30 +207,43 @@ export function runSpeedtest(options: RunOptions = {}): {
       if (cancelled) throw new Error('cancelled');
       const t = await measurePing(endpoint);
       if (t != null) pings.push(t);
+      const latencyStats = calculateLatencyStats(pings, i + 1);
       emit({
         phase: 'latency',
         mbps: 0,
         progress: (i + 1) / latencySamples,
         bytes: 0,
+        ...latencyStats,
       });
     }
-    const sorted = [...pings].sort((a, b) => a - b);
-    const latencyMs = sorted.length ? sorted[Math.floor(sorted.length / 2)] : 0;
-    const meanPing = pings.length
-      ? pings.reduce((a, b) => a + b, 0) / pings.length
-      : 0;
-    const jitterMs = pings.length
-      ? pings.reduce((a, p) => a + Math.abs(p - meanPing), 0) / pings.length
-      : 0;
+    if (pings.length < Math.max(3, Math.ceil(latencySamples / 2))) {
+      throw new Error('Unable to measure a stable connection. Please try again.');
+    }
+    const { latencyMs, jitterMs, packetLossPercent } = calculateLatencyStats(
+      pings,
+      latencySamples,
+    );
 
     // Download — streamed progress events.
     emit({ phase: 'download', mbps: 0, progress: 0, bytes: 0 });
+    // Download needs more parallel flows than upload on mobile. React Native
+    // materializes each response across the native/JS boundary, and a small
+    // number of flows can become CPU/latency bound before the line is full.
+    const downloadStreams = Math.min(12, Math.max(8, parallelStreams * 2));
     const downloadMbps = await measureDownloadStreamed({
       endpoint,
       durationSec: downloadDurationSec,
-      streams: parallelStreams,
+      streams: downloadStreams,
       isCancelled: () => cancelled,
       trackXhr,
+      trackFetch: (abortController) => {
+        activeFetches.add(abortController);
+        return () => activeFetches.delete(abortController);
+      },
+      trackNativeDownload: (download) => {
+        activeNativeDownloads.add(download);
+        return () => activeNativeDownloads.delete(download);
+      },
       onTick: (mbps, progress, bytes) =>
         emit({ phase: 'download', mbps, progress, bytes }),
     });
@@ -215,6 +257,10 @@ export function runSpeedtest(options: RunOptions = {}): {
       streams: Math.max(parallelStreams, 6),
       isCancelled: () => cancelled,
       trackXhr,
+      trackNativeUpload: (upload) => {
+        activeNativeUploads.add(upload);
+        return () => activeNativeUploads.delete(upload);
+      },
       onTick: (mbps, progress, bytes) =>
         emit({ phase: 'upload', mbps, progress, bytes }),
     });
@@ -225,7 +271,8 @@ export function runSpeedtest(options: RunOptions = {}): {
       downloadMbps,
       uploadMbps,
       latencyMs: Math.round(latencyMs),
-      jitterMs,
+      jitterMs: roundTo(jitterMs, 1),
+      packetLossPercent: roundTo(packetLossPercent, 1),
       durationSec,
       server: endpoint.name,
     };
@@ -255,6 +302,7 @@ interface WindowState {
   lastBytes: number[];
   entries: { t: number; bytes: number }[];
   steadyEntries: { t: number; bytes: number }[];
+  steadyBytes: number;
   totalBytes: number;
   peakWindowMbps: number;
   start: number;
@@ -268,6 +316,7 @@ function makeWindow(streams: number, durationSec: number): WindowState {
     lastBytes: new Array(streams).fill(0),
     entries: [],
     steadyEntries: [],
+    steadyBytes: 0,
     totalBytes: 0,
     peakWindowMbps: 0,
     start: Date.now(),
@@ -292,16 +341,19 @@ function addSample(
   ws.totalBytes += delta;
   const e = { t: now, bytes: delta };
   ws.entries.push(e);
-  if (now - ws.start >= ws.rampMs) ws.steadyEntries.push(e);
+  if (now - ws.start >= ws.rampMs) {
+    ws.steadyEntries.push(e);
+    ws.steadyBytes += delta;
+  }
 
   const cutoff = now - ws.windowMs;
   while (ws.entries.length && ws.entries[0].t < cutoff) ws.entries.shift();
 
   const winBytes = ws.entries.reduce((a, x) => a + x.bytes, 0);
-  const winSpan =
-    ws.entries.length >= 2
-      ? ws.entries[ws.entries.length - 1].t - ws.entries[0].t
-      : ws.windowMs;
+  // Use the real wall-clock observation window. Measuring only between the
+  // first and last progress event omits the final transfer interval and can
+  // materially overstate throughput, especially on fast connections.
+  const winSpan = Math.min(ws.windowMs, Math.max(1, now - ws.start));
   const liveMbps =
     winSpan > 0 ? (winBytes * 8) / (winSpan / 1000) / 1_000_000 : 0;
 
@@ -320,11 +372,9 @@ function finalizeWindow(ws: WindowState): number {
   // stick with the running average — the live readout converges to it
   // smoothly.
   if (ws.steadyEntries.length >= 2) {
-    const span =
-      ws.steadyEntries[ws.steadyEntries.length - 1].t - ws.steadyEntries[0].t;
-    const bytes = ws.steadyEntries.reduce((a, e) => a + e.bytes, 0);
+    const span = Date.now() - (ws.start + ws.rampMs);
     const steadyMbps =
-      span > 0 ? (bytes * 8) / (span / 1000) / 1_000_000 : 0;
+      span > 0 ? (ws.steadyBytes * 8) / (span / 1000) / 1_000_000 : 0;
     return steadyMbps;
   }
   const totalSpan = (Date.now() - ws.start) / 1000;
@@ -334,14 +384,171 @@ function finalizeWindow(ws: WindowState): number {
 // ---------------------------------------------------------------------------
 // Download — XHR with onprogress for true streamed measurement.
 // ---------------------------------------------------------------------------
-async function measureDownloadStreamed(opts: {
+interface DownloadMeasurementOptions {
   endpoint: Endpoint;
   durationSec: number;
   streams: number;
   isCancelled: () => boolean;
   trackXhr: (x: XMLHttpRequest) => void;
+  trackFetch: (controller: AbortController) => () => void;
+  trackNativeDownload: (download: DownloadResumable) => () => void;
   onTick: (mbps: number, progress: number, bytes: number) => void;
-}): Promise<number> {
+}
+
+async function measureDownloadStreamed(
+  opts: DownloadMeasurementOptions,
+): Promise<number> {
+  if (cacheDirectory) {
+    return measureDownloadNative(opts);
+  }
+  if (typeof fetch !== 'function' || typeof AbortController === 'undefined') {
+    return measureDownloadStreamedLegacy(opts);
+  }
+
+  const {
+    endpoint,
+    durationSec,
+    streams,
+    isCancelled,
+    trackFetch,
+    onTick,
+  } = opts;
+  const ws = makeWindow(streams, durationSec);
+  const stopAt = Date.now() + durationSec * 1000;
+  const sharedSize = { value: 256 * 1024 };
+  const MIN_BYTES = 128 * 1024;
+  // Keep completions frequent enough for a fluid graph. Concurrency, rather
+  // than very large individual buffers, is what saturates faster links.
+  const MAX_BYTES = 2 * 1024 * 1024;
+
+  const worker = async (idx: number) => {
+    let cumulativeBytes = 0;
+    while (!isCancelled() && Date.now() < stopAt) {
+      const bytesRequested = sharedSize.value;
+      const startedAt = Date.now();
+      const abortController = new AbortController();
+      const untrack = trackFetch(abortController);
+      const remainingMs = Math.max(1, stopAt - Date.now());
+      const deadline = setTimeout(() => abortController.abort(), remainingMs);
+
+      try {
+        const response = await fetch(endpoint.downUrl(bytesRequested), {
+          method: 'GET',
+          cache: 'no-store',
+          signal: abortController.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`download HTTP ${response.status}`);
+        }
+        const body = await response.arrayBuffer();
+        if (isCancelled()) return;
+
+        const receivedBytes = body.byteLength > 0
+          ? body.byteLength
+          : bytesRequested;
+        cumulativeBytes += receivedBytes;
+        const sample = addSample(ws, idx, cumulativeBytes);
+        onTick(sample.liveMbps, sample.progress, sample.totalBytes);
+
+        const elapsedMs = Date.now() - startedAt;
+        if (elapsedMs < 450) {
+          sharedSize.value = Math.min(MAX_BYTES, bytesRequested * 2);
+        } else if (elapsedMs > 1800) {
+          sharedSize.value = Math.max(MIN_BYTES, Math.floor(bytesRequested / 2));
+        }
+      } catch {
+        if (isCancelled() || Date.now() >= stopAt) return;
+        await new Promise((resolve) => setTimeout(resolve, 80));
+      } finally {
+        clearTimeout(deadline);
+        untrack();
+      }
+    }
+  };
+
+  await Promise.all(Array.from({ length: streams }, (_, index) => worker(index)));
+  const finalMbps = finalizeWindow(ws);
+  onTick(finalMbps, 1, ws.totalBytes);
+  return roundTo(finalMbps, 2);
+}
+
+async function measureDownloadNative(
+  opts: DownloadMeasurementOptions,
+): Promise<number> {
+  const {
+    endpoint,
+    durationSec,
+    streams,
+    isCancelled,
+    trackNativeDownload,
+    onTick,
+  } = opts;
+  const ws = makeWindow(streams, durationSec);
+  const stopAt = Date.now() + durationSec * 1000;
+  const sharedSize = { value: 512 * 1024 };
+  const MIN_BYTES = 256 * 1024;
+  const MAX_BYTES = 16 * 1024 * 1024;
+  let requestSequence = 0;
+  const nativeDownloads = new Set<DownloadResumable>();
+
+  const worker = async (idx: number) => {
+    while (!isCancelled() && Date.now() < stopAt) {
+      const requestedBytes = sharedSize.value;
+      const startedAt = Date.now();
+      const sequence = requestSequence++;
+      const fileUri = `${cacheDirectory}ctecg-speedtest-${Date.now()}-${idx}-${sequence}.bin`;
+      ws.lastBytes[idx] = 0;
+
+      const download = createDownloadResumable(
+        endpoint.downUrl(requestedBytes),
+        fileUri,
+        { cache: false },
+        ({ totalBytesWritten }) => {
+          if (isCancelled()) return;
+          const sample = addSample(ws, idx, totalBytesWritten);
+          onTick(sample.liveMbps, sample.progress, sample.totalBytes);
+        },
+      );
+      nativeDownloads.add(download);
+      const untrack = trackNativeDownload(download);
+
+      try {
+        const completed = await download.downloadAsync();
+        if (!completed || isCancelled()) return;
+
+        const elapsedMs = Date.now() - startedAt;
+        if (elapsedMs < 650) {
+          sharedSize.value = Math.min(MAX_BYTES, requestedBytes * 2);
+        } else if (elapsedMs > 2400) {
+          sharedSize.value = Math.max(MIN_BYTES, Math.floor(requestedBytes / 2));
+        }
+      } catch {
+        if (isCancelled() || Date.now() >= stopAt) return;
+        await new Promise((resolve) => setTimeout(resolve, 80));
+      } finally {
+        nativeDownloads.delete(download);
+        untrack();
+        void deleteAsync(fileUri, { idempotent: true }).catch(() => undefined);
+      }
+    }
+  };
+
+  const deadline = setTimeout(() => {
+    for (const download of nativeDownloads) {
+      void download.cancelAsync().catch(() => undefined);
+    }
+    nativeDownloads.clear();
+  }, durationSec * 1000);
+  await Promise.all(Array.from({ length: streams }, (_, index) => worker(index)));
+  clearTimeout(deadline);
+  const finalMbps = finalizeWindow(ws);
+  onTick(finalMbps, 1, ws.totalBytes);
+  return roundTo(finalMbps, 2);
+}
+
+async function measureDownloadStreamedLegacy(
+  opts: DownloadMeasurementOptions,
+): Promise<number> {
   const { endpoint, durationSec, streams, isCancelled, trackXhr, onTick } = opts;
   const ws = makeWindow(streams, durationSec);
 
@@ -350,9 +557,13 @@ async function measureDownloadStreamed(opts: {
   // drain fast enough so the server gets throttled) and over-reports
   // network state in the first few seconds. 32 MB is large enough that
   // setup overhead is amortized but small enough that we can pipeline.
-  const REQUEST_BYTES = 32 * 1024 * 1024;
+  // Begin with small requests so slow connections still complete a sample,
+  // then grow quickly to reduce request overhead on fast links.
+  const requestSize = { value: 128 * 1024 };
+  const MAX_REQUEST_BYTES = 4 * 1024 * 1024;
 
   const stopAt = Date.now() + durationSec * 1000;
+  const activeDownloads = new Set<XMLHttpRequest>();
 
   const worker = (idx: number): Promise<void> =>
     new Promise((resolve) => {
@@ -363,8 +574,12 @@ async function measureDownloadStreamed(opts: {
         }
 
         const xhr = new XMLHttpRequest();
+        activeDownloads.add(xhr);
         trackXhr(xhr);
+        const requestBytes = requestSize.value;
+        const requestStartedAt = Date.now();
         let lastSeen = 0;
+        let settled = false;
         // Reset the per-stream byte counter so deltas are correct across
         // successive requests.
         ws.lastBytes[idx] = 0;
@@ -377,7 +592,7 @@ async function measureDownloadStreamed(opts: {
           }
         };
 
-        xhr.open('GET', endpoint.downUrl(REQUEST_BYTES));
+        xhr.open('GET', endpoint.downUrl(requestBytes));
         xhr.responseType = 'arraybuffer';
         xhr.timeout = durationSec * 1000 + 5000;
 
@@ -404,6 +619,39 @@ async function measureDownloadStreamed(opts: {
         };
 
         const finish = () => {
+          if (settled) return;
+          settled = true;
+          activeDownloads.delete(xhr);
+
+          // Some React Native versions emit no incremental progress events
+          // for arraybuffer responses. Count the completed response as the
+          // fallback so a successful transfer cannot produce a zero result.
+          const bufferedResponseBytes =
+            xhr.response && typeof xhr.response.byteLength === 'number'
+              ? xhr.response.byteLength
+              : 0;
+          // React Native can expose a completed arraybuffer response without
+          // byteLength on some Android builds. A successful load means the
+          // requested fixed-length payload was received in full, so the
+          // requested size is the reliable fallback measurement.
+          const responseBytes = bufferedResponseBytes > 0
+            ? bufferedResponseBytes
+            : (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300))
+              ? requestBytes
+              : 0;
+          if (responseBytes > lastSeen) {
+            lastSeen = responseBytes;
+            const sample = addSample(ws, idx, responseBytes);
+            onTick(sample.liveMbps, sample.progress, sample.totalBytes);
+          }
+
+          const requestDuration = Date.now() - requestStartedAt;
+          if (requestDuration < 350) {
+            requestSize.value = Math.min(MAX_REQUEST_BYTES, requestBytes * 2);
+          } else if (requestDuration > 1500) {
+            requestSize.value = Math.max(64 * 1024, Math.floor(requestBytes / 2));
+          }
+
           // Free the buffer immediately so memory doesn't balloon across
           // many sequential requests.
           try {
@@ -421,18 +669,33 @@ async function measureDownloadStreamed(opts: {
 
         xhr.onload = finish;
         xhr.onerror = () => {
+          if (settled) return;
+          settled = true;
+          activeDownloads.delete(xhr);
           if (Date.now() < stopAt && !isCancelled()) {
             setTimeout(tryOnce, 100);
           } else {
             resolve();
           }
         };
-        xhr.ontimeout = () => resolve();
-        xhr.onabort = () => resolve();
+        xhr.ontimeout = () => {
+          if (settled) return;
+          settled = true;
+          activeDownloads.delete(xhr);
+          resolve();
+        };
+        xhr.onabort = () => {
+          if (settled) return;
+          settled = true;
+          activeDownloads.delete(xhr);
+          resolve();
+        };
 
         try {
           xhr.send();
         } catch {
+          settled = true;
+          activeDownloads.delete(xhr);
           resolve();
         }
       };
@@ -443,7 +706,14 @@ async function measureDownloadStreamed(opts: {
   // Hard-stop ticker — guarantees we don't run past the deadline even if
   // a request is still streaming.
   const guard = setTimeout(() => {
-    /* workers each check stopAt internally */
+    for (const xhr of activeDownloads) {
+      try {
+        xhr.abort();
+      } catch {
+        /* request may already have completed */
+      }
+    }
+    activeDownloads.clear();
   }, durationSec * 1000);
 
   await Promise.all(Array.from({ length: streams }, (_, i) => worker(i)));
@@ -462,9 +732,10 @@ async function measureUploadChunked(opts: {
   streams: number;
   isCancelled: () => boolean;
   trackXhr: (x: XMLHttpRequest) => void;
+  trackNativeUpload: (upload: UploadTask) => () => void;
   onTick: (mbps: number, progress: number, bytes: number) => void;
 }): Promise<number> {
-  const { endpoint, durationSec, streams, isCancelled, trackXhr, onTick } = opts;
+  const { endpoint, durationSec, streams, isCancelled, trackNativeUpload, onTick } = opts;
   const ws = makeWindow(streams, durationSec);
 
   const INITIAL = 512 * 1024;
@@ -473,19 +744,48 @@ async function measureUploadChunked(opts: {
 
   const stopAt = Date.now() + durationSec * 1000;
   const isDone = () => isCancelled() || Date.now() >= stopAt;
+  const nativeUploads = new Set<UploadTask>();
+  let uploadSequence = 0;
 
   const worker = async (idx: number) => {
-    let cum = 0;
     while (!isDone()) {
       const size = sharedSize.value;
+      const payload = createUploadPayload(size);
+      const file = new File(
+        Paths.cache,
+        `ctecg-speedtest-upload-${Date.now()}-${idx}-${uploadSequence++}.bin`,
+      );
+      file.create({ overwrite: true });
+      file.write(payload);
+      ws.lastBytes[idx] = 0;
+
+      const upload = createUploadTask(
+        endpoint.upUrl(),
+        file.uri,
+        {
+          httpMethod: 'POST',
+          uploadType: FileSystemUploadType.BINARY_CONTENT,
+          headers: { 'Content-Type': 'application/octet-stream' },
+        },
+        ({ totalBytesSent }) => {
+          if (isCancelled()) return;
+          const sample = addSample(ws, idx, totalBytesSent);
+          onTick(sample.liveMbps, sample.progress, sample.totalBytes);
+        },
+      );
+      nativeUploads.add(upload);
+      const untrack = trackNativeUpload(upload);
       const t0 = Date.now();
       try {
-        await uploadOnce(endpoint, size, trackXhr);
-        if (isDone()) return;
-        cum += size;
+        const completed = await upload.uploadAsync();
+        if (!completed || completed.status < 200 || completed.status >= 300) {
+          throw new Error(`upload HTTP ${completed?.status ?? 0}`);
+        }
+        // Count a chunk that completed at the deadline. Dropping it would
+        // exclude bytes that genuinely crossed the network and bias upload
+        // results downward on slower connections.
+        if (isCancelled()) return;
         const ms = Date.now() - t0;
-        const { liveMbps, progress, totalBytes } = addSample(ws, idx, cum);
-        onTick(liveMbps, progress, totalBytes);
 
         // Adaptive — aim for ~500ms per chunk.
         const observed = ms > 0 ? (size * 8) / (ms / 1000) / 1_000_000 : 0;
@@ -499,43 +799,37 @@ async function measureUploadChunked(opts: {
       } catch {
         if (isDone()) return;
         await new Promise((r) => setTimeout(r, 150));
+      } finally {
+        nativeUploads.delete(upload);
+        untrack();
+        try {
+          file.delete();
+        } catch {
+          /* cache cleanup is best-effort */
+        }
       }
     }
   };
 
+  const deadline = setTimeout(() => {
+    for (const upload of nativeUploads) {
+      void upload.cancelAsync().catch(() => undefined);
+    }
+    nativeUploads.clear();
+  }, durationSec * 1000);
   await Promise.all(Array.from({ length: streams }, (_, i) => worker(i)));
+  clearTimeout(deadline);
   const finalMbps = finalizeWindow(ws);
   onTick(finalMbps, 1, ws.totalBytes);
   return roundTo(finalMbps, 2);
 }
 
-function uploadOnce(
-  endpoint: Endpoint,
-  bytes: number,
-  trackXhr: (x: XMLHttpRequest) => void,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const payload = new Uint8Array(bytes);
-    for (let i = 0; i < bytes; i += 4096) payload[i] = (i & 0xff) ^ 0xa5;
-
-    const xhr = new XMLHttpRequest();
-    trackXhr(xhr);
-    xhr.open('POST', endpoint.upUrl());
-    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-    xhr.timeout = 30000;
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) resolve();
-      else reject(new Error(`upload HTTP ${xhr.status}`));
-    };
-    xhr.onerror = () => reject(new Error('upload network error'));
-    xhr.ontimeout = () => reject(new Error('upload timed out'));
-    xhr.onabort = () => reject(new Error('cancelled'));
-    try {
-      xhr.send(payload as unknown as Document);
-    } catch (e: any) {
-      reject(e);
-    }
-  });
+function createUploadPayload(bytes: number): Uint8Array {
+  const payload = new Uint8Array(bytes);
+  for (let index = 0; index < bytes; index += 4096) {
+    payload[index] = (index & 0xff) ^ 0xa5;
+  }
+  return payload;
 }
 
 // ---------------------------------------------------------------------------
@@ -543,10 +837,10 @@ function uploadOnce(
 // ---------------------------------------------------------------------------
 function measurePing(endpoint: Endpoint): Promise<number | null> {
   return new Promise((resolve) => {
-    const start = Date.now();
+    const start = preciseNow();
     const xhr = new XMLHttpRequest();
     xhr.open('GET', endpoint.pingUrl());
-    xhr.onload = () => resolve(Date.now() - start);
+    xhr.onload = () => resolve(preciseNow() - start);
     xhr.onerror = () => resolve(null);
     xhr.ontimeout = () => resolve(null);
     xhr.timeout = 5000;
@@ -556,6 +850,40 @@ function measurePing(endpoint: Endpoint): Promise<number | null> {
       resolve(null);
     }
   });
+}
+
+function preciseNow(): number {
+  return typeof globalThis.performance?.now === 'function'
+    ? globalThis.performance.now()
+    : Date.now();
+}
+
+function calculateLatencyStats(
+  samples: number[],
+  attempts: number,
+): { latencyMs: number; jitterMs: number; packetLossPercent: number } {
+  const sorted = [...samples].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  const latencyMs = sorted.length
+    ? sorted.length % 2
+      ? sorted[middle]
+      : (sorted[middle - 1] + sorted[middle]) / 2
+    : 0;
+
+  let jitterMs = 0;
+  if (samples.length > 1) {
+    let variation = 0;
+    for (let i = 1; i < samples.length; i++) {
+      variation += Math.abs(samples[i] - samples[i - 1]);
+    }
+    jitterMs = variation / (samples.length - 1);
+  }
+
+  const packetLossPercent = attempts > 0
+    ? ((attempts - samples.length) / attempts) * 100
+    : 0;
+
+  return { latencyMs, jitterMs, packetLossPercent };
 }
 
 function roundTo(value: number, decimals: number): number {

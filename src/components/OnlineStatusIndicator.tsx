@@ -16,7 +16,7 @@ export default function OnlineStatusIndicator({
   autoRefresh = true,
   refreshInterval = 60000,
 }: OnlineStatusIndicatorProps) {
-  const [isOnline, setIsOnline] = useState<boolean>(false);
+  const [isOnline, setIsOnline] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchOnlineStatus = async () => {
@@ -48,6 +48,7 @@ export default function OnlineStatusIndicator({
 
   const getStatusText = () => {
     if (loading) return 'Checking...';
+    if (isOnline === null) return 'Unknown';
     return isOnline ? 'Online' : 'Offline';
   };
 
@@ -82,11 +83,11 @@ export default function OnlineStatusIndicator({
             width: getDotSize(),
             height: getDotSize(),
             backgroundColor: getStatusColor(),
-            opacity: isOnline ? 1 : 0.5,
+            opacity: isOnline === true ? 1 : 0.5,
           },
         ]}
       >
-        {isOnline && <View style={styles.pulse} />}
+        {isOnline === true && <View style={styles.pulse} />}
       </View>
       {showText && (
         <Text

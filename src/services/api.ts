@@ -1,18 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as SecureStore from 'expo-secure-store';
 import { uploadAsync, FileSystemUploadType } from 'expo-file-system/legacy';
+import { ApiError } from './ApiError';
+import { logger } from '../utils/logger';
+import { accountCache } from './accountCache';
 import { 
   ApiResponse, 
   User, 
   AuthResponse, 
-  CustomerData, 
   UsageSummary, 
   DetailedUsageData,
   DetailedBillingData,
   OutageReport, 
-  Payment, 
   Invoice, 
-  Notification,
   DashboardData,
   CheckUserResponse,
   EmailDisplay,
@@ -21,29 +20,101 @@ import {
   ReportIssueResponse,
   SupportIssueQuota,
   SupportTicket,
-  TicketMessage,
   TicketConversation,
   CreateChatTicketRequest,
   SendMessageRequest,
   ChatSettings,
-  TicketAttachment
+  TicketAttachment,
+  TowerNotification
 } from '../types/api';
 
-// const API_BASE_URL = 'http://192.168.1.128:8500/api'; // Local development
-export const API_BASE_URL = 'https://app.ctecg.co.za/api'; // Production
+const PRODUCTION_API_BASE_URL = 'https://app.ctecg.co.za/api';
+const configuredApiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.trim();
+
+// EXPO_PUBLIC_* values are public application configuration, never secrets.
+// Local development can override the API host in .env.local while production
+// builds safely retain the deployed API URL.
+const safeConfiguredApiBaseUrl = configuredApiBaseUrl
+  && (__DEV__ || configuredApiBaseUrl.toLowerCase().startsWith('https://'))
+  ? configuredApiBaseUrl
+  : null;
+export const API_BASE_URL = (safeConfiguredApiBaseUrl || PRODUCTION_API_BASE_URL).replace(/\/+$/, '');
 const DEBUG_STORAGE_KEY = 'debug_api_logs';
 let debugApi = __DEV__;
 
+interface ApiRequestOptions extends RequestInit {
+  timeoutMs?: number;
+  retry?: boolean;
+  dedupe?: boolean;
+}
+
 class ApiService {
   private authToken: string | null = null;
+  private appInstanceId: string | null = null;
+  private appPlatform: 'ios' | 'android' | null = null;
+  private accountScope: string | null = null;
   private onAuthFailure: (() => void) | null = null;
+  private authFailureNotified = false;
+  private authGeneration = 0;
+  private inFlightGets = new Map<string, Promise<ApiResponse<unknown>>>();
 
   setAuthToken(token: string | null) {
+    if (this.authToken !== token) {
+      this.authGeneration += 1;
+      this.inFlightGets.clear();
+    }
     this.authToken = token;
+    if (token) {
+      this.authFailureNotified = false;
+    }
   }
 
   getAuthToken() {
     return this.authToken;
+  }
+
+  setAccountScope(accountScope: string | null) {
+    this.accountScope = accountScope?.trim() || null;
+  }
+
+  async clearCachedAccountData() {
+    await accountCache.clearAll();
+  }
+
+  private async cacheSuccessfulResponse<T>(
+    resource: string,
+    response: ApiResponse<T>,
+    accountScope: string | null,
+  ): Promise<ApiResponse<T>> {
+    if (response.success && response.data && accountScope) {
+      await accountCache.set(accountScope, resource, response.data).catch(() => {});
+    }
+    return { ...response, meta: { source: 'network' } };
+  }
+
+  private async cachedFallback<T>(
+    resource: string,
+    error: unknown,
+    accountScope: string | null,
+  ): Promise<ApiResponse<T> | null> {
+    const mayUseCache = error instanceof ApiError
+      && (error.kind === 'network' || error.kind === 'timeout'
+        || error.status === 502 || error.status === 503 || error.status === 504);
+    if (!mayUseCache || !accountScope) return null;
+    const cached = await accountCache.get<T>(accountScope, resource);
+    if (!cached) return null;
+    return {
+      success: true,
+      data: cached.data,
+      message: 'Showing saved data while the service is unavailable.',
+      timestamp: new Date().toISOString(),
+      meta: { source: 'cache', cached_at: cached.savedAt },
+    };
+  }
+
+  setAppIdentity(instanceId: string, platform: 'ios' | 'android') {
+    this.appInstanceId = instanceId;
+    this.appPlatform = platform;
   }
 
   setAuthFailureCallback(callback: (() => void) | null) {
@@ -69,9 +140,7 @@ class ApiService {
 
   async refreshDebugApiLogging() {
     try {
-      const response = await this.makeRequest<{ debug_api: boolean }>('/mobile-api.php?endpoint=app-config', {
-        method: 'GET'
-      });
+      const response = await this.getAppConfig();
       if (response.success && response.data) {
         this.setDebugApiLogging(!!response.data.debug_api);
       }
@@ -80,75 +149,145 @@ class ApiService {
     }
   }
 
-  private async makeRequest<T>(
-    endpoint: string, 
-    options: RequestInit = {}
+  async getAppConfig(): Promise<ApiResponse<{
+    debug_api: boolean;
+    outages_enabled: boolean;
+    support_chat_enabled: boolean;
+    notifications_enabled: boolean;
+    payments_enabled: boolean;
+    payment_provider: 'yoco';
+  }>> {
+    return this.makeRequest('/mobile-api.php?endpoint=app-config', {
+      method: 'GET',
+    });
+  }
+
+  private makeRequest<T>(endpoint: string, options: ApiRequestOptions = {}): Promise<ApiResponse<T>> {
+    const method = (options.method || 'GET').toUpperCase();
+    const shouldDedupe = method === 'GET' && options.dedupe !== false;
+    const key = `${this.authGeneration}:${method}:${endpoint}`;
+    const existing = shouldDedupe ? this.inFlightGets.get(key) : undefined;
+    if (existing) return existing as Promise<ApiResponse<T>>;
+
+    const request = this.requestWithRetry<T>(endpoint, options);
+    if (shouldDedupe) {
+      this.inFlightGets.set(key, request as Promise<ApiResponse<unknown>>);
+      void request.finally(() => this.inFlightGets.delete(key)).catch(() => {});
+    }
+    return request;
+  }
+
+  private async requestWithRetry<T>(endpoint: string, options: ApiRequestOptions): Promise<ApiResponse<T>> {
+    const method = (options.method || 'GET').toUpperCase();
+    const maxAttempts = method === 'GET' && options.retry !== false ? 2 : 1;
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      try {
+        return await this.performRequest<T>(endpoint, options);
+      } catch (error) {
+        const retryable = error instanceof ApiError
+          && (error.kind === 'network' || error.kind === 'timeout' || error.status === 502 || error.status === 504);
+        if (!retryable || attempt === maxAttempts) throw error;
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
+    }
+    throw new ApiError('Unable to complete the request.', { kind: 'network' });
+  }
+
+  private async performRequest<T>(
+    endpoint: string,
+    options: ApiRequestOptions,
   ): Promise<ApiResponse<T>> {
     const url = `${API_BASE_URL}${endpoint}`;
+    const method = (options.method || 'GET').toUpperCase();
+    // Capture the credential used by this request. A delayed response from an
+    // older request must never invalidate a newer login session.
+    const requestAuthToken = this.authToken;
+    const timeoutMs = options.timeoutMs ?? (method === 'GET' ? 15_000 : 30_000);
+    const { timeoutMs: _timeoutMs, retry: _retry, dedupe: _dedupe, ...fetchOptions } = options;
     
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...(options.headers as Record<string, string> || {}),
     };
 
-    if (this.authToken) {
-      headers['Authorization'] = `Bearer ${this.authToken}`;
+    if (requestAuthToken) {
+      headers['Authorization'] = `Bearer ${requestAuthToken}`;
+    }
+    if (this.appInstanceId) {
+      headers['X-App-Instance-ID'] = this.appInstanceId;
+    }
+    if (this.appPlatform) {
+      headers['X-App-Platform'] = this.appPlatform;
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      // Create abort controller for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
       
       if (debugApi) {
-        console.log('API Request:', { endpoint, method: options.method || 'GET' });
+        logger.debug('API request', { endpoint, method });
       }
 
       const response = await fetch(url, {
-        ...options,
+        ...fetchOptions,
         headers,
         signal: controller.signal,
         cache: 'no-store', // CRITICAL: Disable HTTP caching to prevent user switching
       });
       
-      clearTimeout(timeoutId);
-
       if (debugApi) {
-        console.log('API Response status:', response.status, endpoint);
+        logger.debug('API response', { endpoint, status: response.status });
       }
       
       const responseText = await response.text();
       
-      let data;
+      let data: ApiResponse<T> & { details?: unknown };
       try {
-        data = JSON.parse(responseText);
+        data = JSON.parse(responseText) as ApiResponse<T> & { details?: unknown };
       } catch (parseError) {
-        console.error('JSON Parse Error:', parseError);
-        console.error('Response was:', responseText);
-        throw new Error(`Invalid JSON response from server: ${responseText.substring(0, 100)}`);
+        throw new ApiError('The server returned an invalid response. Please try again.', {
+          kind: 'invalid-response', status: response.status, cause: parseError,
+        });
       }
       
       if (!response.ok) {
-        console.error('API Error response:', data);
+        if (debugApi) logger.warn('API error response', { endpoint, status: response.status });
         
         // Handle 401 Unauthorized - but only if we actually sent a token
         // (don't trigger logout on login failures)
-        if (response.status === 401 && this.authToken && this.onAuthFailure) {
-          console.log('🔴 Token expired/invalid, triggering logout');
+        if (
+          response.status === 401
+          && requestAuthToken
+          && requestAuthToken === this.authToken
+          && this.onAuthFailure
+          && !this.authFailureNotified
+          && endpoint !== '/auth.php?action=logout'
+        ) {
+          this.authFailureNotified = true;
+          console.log('🔴 Token expired/invalid, clearing local authentication');
           this.onAuthFailure();
         }
         
         // Create error with details
-        const error: any = new Error(data.message || `HTTP ${response.status}`);
-        error.details = data.details;
-        error.code = response.status;
-        throw error;
+        throw new ApiError(data.message || data.error || `HTTP ${response.status}`, {
+          kind: 'http', status: response.status, details: data.details,
+        });
       }
 
       return data;
-    } catch (error) {
-      console.error('API Request failed:', { endpoint, error });
+    } catch (cause) {
+      if (cause instanceof ApiError) throw cause;
+      const timedOut = cause instanceof Error && cause.name === 'AbortError';
+      const error = new ApiError(
+        timedOut
+          ? 'The service took too long to respond. Please try again.'
+          : 'The service could not be reached. Please try again.',
+        { kind: timedOut ? 'timeout' : 'network', cause },
+      );
+      if (debugApi) logger.error('API request failed', { endpoint, error });
       throw error;
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
@@ -179,24 +318,54 @@ class ApiService {
     });
   }
 
-  async login(invoicingId: string, password: string, deviceInfo?: { deviceName?: string; deviceModel?: string; osName?: string; osVersion?: string }): Promise<ApiResponse<AuthResponse>> {
+  async login(invoicingId: string, password: string, deviceInfo?: {
+    deviceName?: string;
+    deviceModel?: string;
+    osName?: string;
+    osVersion?: string;
+    appInstanceId?: string;
+    location?: {
+      latitude?: number;
+      longitude?: number;
+      accuracyMeters?: number;
+      capturedAt?: string;
+      permissionStatus: string;
+      source: 'device_gps' | 'timeout' | 'unavailable';
+    };
+  }): Promise<ApiResponse<AuthResponse>> {
     return this.makeRequest<AuthResponse>('/auth.php?action=login', {
       method: 'POST',
       body: JSON.stringify({
         identifier: invoicingId,
         password,
-        device_info: deviceInfo,
+        device_info: {
+          ...deviceInfo,
+          appInstanceId: this.appInstanceId || deviceInfo?.appInstanceId,
+        },
       }),
     });
   }
 
-  async verifyOTP(email: string, otpCode: string): Promise<ApiResponse<{ message: string }>> {
-    return this.makeRequest<{ message: string }>('/auth.php?action=verify-otp', {
+  async verifyOTP(email: string, otpCode: string): Promise<ApiResponse<{ verified: boolean; token: string }>> {
+    return this.makeRequest<{ verified: boolean; token: string }>('/auth.php?action=verify-otp', {
       method: 'POST',
       body: JSON.stringify({
         email,
         otp_code: otpCode,
+        device_info: {
+          appInstanceId: this.appInstanceId,
+          osName: this.appPlatform,
+        },
       }),
+    });
+  }
+
+  async heartbeat(): Promise<ApiResponse<{ online: boolean; server_time: string; presence_window_seconds: number; heartbeat_interval_seconds: number }>> {
+    return this.makeRequest('/mobile-api.php?endpoint=heartbeat', {
+      method: 'GET',
+      retry: false,
+      dedupe: false,
+      timeoutMs: 10_000,
     });
   }
 
@@ -218,22 +387,24 @@ class ApiService {
     });
   }
 
-  async resetPassword(token: string, newPassword: string): Promise<ApiResponse<{ password_reset: boolean }>> {
+  async resetPassword(token: string, newPassword: string, identifier: string): Promise<ApiResponse<{ password_reset: boolean }>> {
     return this.makeRequest<{ password_reset: boolean }>('/auth.php?action=reset-password', {
       method: 'POST',
       body: JSON.stringify({
         token,
         new_password: newPassword,
+        identifier,
       }),
     });
   }
 
-  async createPassword(userId: number, email: string, password: string): Promise<ApiResponse<{ password_created: boolean }>> {
+  async createPassword(userId: number, email: string, resetCode: string, password: string): Promise<ApiResponse<{ password_created: boolean }>> {
     return this.makeRequest<{ password_created: boolean }>('/auth.php?action=create-password', {
       method: 'POST',
       body: JSON.stringify({
         user_id: userId,
         email,
+        reset_code: resetCode,
         password,
       }),
     });
@@ -254,32 +425,11 @@ class ApiService {
     });
   }
 
-  async getOnlineStatus(): Promise<ApiResponse<{ is_online: boolean; last_seen: string | null; status: string; last_activity_seconds_ago?: number }>> {
+  async getOnlineStatus(): Promise<ApiResponse<{ is_online: boolean | null; last_seen: string | null; status: string; last_activity_seconds_ago?: number }>> {
     return this.makeRequest('/mobile-api.php?endpoint=online-status', {
-      method: 'GET'
+      method: 'GET',
+      timeoutMs: 12_000,
     });
-  }
-
-  // Customer Data
-  async getCustomerData(): Promise<ApiResponse<CustomerData>> {
-    // Note: customer.php doesn't exist. Use dashboard endpoint instead.
-    const dashboardData = await this.getDashboardData();
-    if (!dashboardData.success || !dashboardData.data) {
-      return {
-        success: false,
-        message: 'Failed to load customer data',
-        timestamp: new Date().toISOString()
-      };
-    }
-    
-    // Extract customer data from dashboard response
-    const customer = dashboardData.data.customer;
-    return {
-      success: true,
-      message: 'Customer data loaded',
-      data: customer as any,
-      timestamp: new Date().toISOString()
-    };
   }
 
   async getUsageData(): Promise<ApiResponse<UsageSummary>> {
@@ -288,34 +438,26 @@ class ApiService {
   }
 
   async getDetailedUsageData(): Promise<ApiResponse<DetailedUsageData>> {
+    const accountScope = this.accountScope;
     try {
-      console.log('getDetailedUsageData called, current authToken:', !!this.authToken);
-      
-      // If no token is set, try to load it from secure store
       if (!this.authToken) {
-        const token = await SecureStore.getItemAsync('auth_token');
-        console.log('Loaded token from SecureStore:', !!token);
-        if (token) {
-          this.setAuthToken(token);
-          console.log('Token set, length:', token.length);
-        } else {
-          console.log('No token found in SecureStore');
-          return {
-            success: false,
-            message: 'Authentication required - no token found',
-            timestamp: new Date().toISOString()
-          };
-        }
+        return { success: false, message: 'Authentication required', timestamp: new Date().toISOString() };
       }
 
-      console.log('Making request to usage-detailed endpoint');
       const response = await this.makeRequest<DetailedUsageData>(`/mobile-api.php?endpoint=usage-detailed`, {
         method: 'GET',
+        // This read depends on live Azotel usage data. Allow a bounded window
+        // for mobile latency, but do not duplicate the expensive backend work
+        // through the generic GET retry policy.
+        timeoutMs: 30_000,
+        retry: false,
       });
 
-      return response;
+      return await this.cacheSuccessfulResponse('usage-detailed', response, accountScope);
     } catch (error) {
-      console.error('getDetailedUsageData error:', error);
+      logger.error('Detailed usage request failed', error);
+      const cached = await this.cachedFallback<DetailedUsageData>('usage-detailed', error, accountScope);
+      if (cached) return cached;
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Failed to load detailed usage data',
@@ -325,34 +467,21 @@ class ApiService {
   }
 
   async getDetailedBillingData(): Promise<ApiResponse<DetailedBillingData>> {
+    const accountScope = this.accountScope;
     try {
-      console.log('getDetailedBillingData called, current authToken:', !!this.authToken);
-      
-      // If no token is set, try to load it from secure store
       if (!this.authToken) {
-        const token = await SecureStore.getItemAsync('auth_token');
-        console.log('Loaded token from SecureStore:', !!token);
-        if (token) {
-          this.setAuthToken(token);
-          console.log('Token set, length:', token.length);
-        } else {
-          console.log('No token found in SecureStore');
-          return {
-            success: false,
-            message: 'Authentication required - no token found',
-            timestamp: new Date().toISOString()
-          };
-        }
+        return { success: false, message: 'Authentication required', timestamp: new Date().toISOString() };
       }
 
-      console.log('Making request to billing-detailed endpoint');
       const response = await this.makeRequest<DetailedBillingData>(`/mobile-api.php?endpoint=billing-detailed`, {
         method: 'GET',
       });
 
-      return response;
+      return await this.cacheSuccessfulResponse('billing-detailed', response, accountScope);
     } catch (error) {
-      console.error('getDetailedBillingData error:', error);
+      logger.error('Detailed billing request failed', error);
+      const cached = await this.cachedFallback<DetailedBillingData>('billing-detailed', error, accountScope);
+      if (cached) return cached;
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Failed to load detailed billing data',
@@ -363,35 +492,14 @@ class ApiService {
 
   // Dashboard
   async getDashboardData(): Promise<ApiResponse<DashboardData>> {
+    const accountScope = this.accountScope;
     try {
-      console.log('getDashboardData called, current authToken:', !!this.authToken);
-      
-      // If no token is set, try to load it from secure store
       if (!this.authToken) {
-        const token = await SecureStore.getItemAsync('auth_token');
-        console.log('Loaded token from SecureStore:', !!token);
-        if (token) {
-          this.setAuthToken(token);
-          console.log('Token set, length:', token.length);
-        } else {
-          console.log('No token found in SecureStore');
-          return {
-            success: false,
-            message: 'Authentication required - no token found',
-            timestamp: new Date().toISOString()
-          };
-        }
+        return { success: false, message: 'Authentication required', timestamp: new Date().toISOString() };
       }
 
-      console.log('Making request to dashboard endpoint');
       const response = await this.makeRequest<any>(`/mobile-api.php?endpoint=dashboard`, {
         method: 'GET',
-      });
-
-      console.log('Dashboard API Response:', {
-        success: response.success,
-        hasData: !!response.data,
-        dataKeys: response.data ? Object.keys(response.data) : []
       });
 
       if (response.success && response.data) {
@@ -400,19 +508,6 @@ class ApiService {
         
         // Handle email field which can be a string or object
         const displayEmail = this.formatEmailForDisplay(apiData.customer_info?.email);
-        
-        console.log('Email processing:', {
-          originalEmail: apiData.customer_info?.email,
-          displayEmail,
-          emailType: typeof apiData.customer_info?.email
-        });
-
-        console.log('Service status details:', {
-          status: apiData.service_status?.status,
-          connection: apiData.service_status?.connection,
-          location: apiData.service_status?.location,
-          isUncapped: apiData.service_status?.is_uncapped
-        });
         
         const dashboardData: DashboardData = {
           customer_info: {
@@ -426,19 +521,18 @@ class ApiService {
             package_name: apiData.customer_info?.package_name || '',
             package_code: apiData.customer_info?.package_code || '',
             site_name: apiData.customer_info?.site_name || '',
+            packages: Array.isArray(apiData.customer_info?.packages) ? apiData.customer_info.packages : [],
+            total_subscription_amount: Number(apiData.customer_info?.total_subscription_amount || 0),
           },
           customer: {
             customer_number: apiData.customer_info?.id || '',
             name: apiData.customer_info?.name || '',
             email: displayEmail,
-            phone: '',
-            address: '',
             package_name: apiData.customer_info?.package_name || apiData.service_status?.subscription_plan || '',
             package_speed: `${apiData.service_status?.download_speed_mbps || 0}/${apiData.service_status?.upload_speed_mbps || 0}MBPS`,
-            monthly_fee: 0,
             status: apiData.customer_info?.status || '',
-            installation_date: '',
-            last_payment_date: apiData.billing_summary?.latest_invoice?.date || '',
+            account_type: apiData.customer_info?.account_type || '',
+            status_reason: apiData.customer_info?.status_reason || null,
             balance: parseFloat(apiData.billing_summary?.current_balance || '0'),
             service_type: apiData.customer_info?.service_type || '',
             customerid: apiData.customer_info?.customerid || 0
@@ -448,20 +542,12 @@ class ApiService {
               download_gb: apiData.usage_summary?.download_gb || 0,
               upload_gb: apiData.usage_summary?.upload_gb || 0,
               total_gb: apiData.usage_summary?.total_gb || 0,
-              days_remaining: 30,
-              daily_average: (apiData.usage_summary?.total_gb || 0) / 30,
               period: apiData.usage_summary?.period || 'Current Month'
-            },
-            previous_month: {
-              download_gb: 0,
-              upload_gb: 0,
-              total_gb: 0
             },
             package_details: {
               name: apiData.customer_info?.package_name || apiData.service_status?.subscription_plan || '',
               speed: apiData.service_status?.plan || `${apiData.service_status?.download_speed_mbps || 0}/${apiData.service_status?.upload_speed_mbps || 0}MBPS`,
               limit_gb: apiData.service_status?.limit_gb_numeric || 0,
-              monthly_fee: 0,
               subscription_plan: apiData.service_status?.subscription_plan || '',
               subscription_limit: apiData.service_status?.subscription_limit || 'N/A',
               download_speed_mbps: apiData.service_status?.download_speed_mbps || 0,
@@ -488,18 +574,16 @@ class ApiService {
             connection_status: apiData.alerts?.connection_status || apiData.service_status?.connection || ''
           },
           recent_payments: apiData.billing_summary?.recent_invoices || [],
-          outstanding_invoices: [], // Not provided in current API response
           active_tickets: apiData.maintenance?.recent_tickets || [],
-          current_outages: [], // Not provided in current API response
-          unread_notifications: 0 // Not provided in current API response
         };
 
-        return {
+        const result: ApiResponse<DashboardData> = {
           success: true,
           message: 'Dashboard data loaded',
           data: dashboardData,
           timestamp: new Date().toISOString()
         };
+        return await this.cacheSuccessfulResponse('dashboard', result, accountScope);
       } else {
         return {
           success: false,
@@ -508,6 +592,8 @@ class ApiService {
         };
       }
     } catch (error) {
+      const cached = await this.cachedFallback<DashboardData>('dashboard', error, accountScope);
+      if (cached) return cached;
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -609,36 +695,6 @@ class ApiService {
     }
     return packageDetails.subscription_limit || `${packageDetails.limit_gb} GB`;
   }
-  async getSupportTickets(): Promise<ApiResponse<SupportTicket[]>> {
-    return this.makeRequest<SupportTicket[]>('/support.php?action=list');
-  }
-
-  async createSupportTicket(ticketData: {
-    subject: string;
-    description: string;
-    category: string;
-    priority: string;
-  }): Promise<ApiResponse<SupportTicket>> {
-    return this.makeRequest<SupportTicket>('/support.php?action=create', {
-      method: 'POST',
-      body: JSON.stringify(ticketData),
-    });
-  }
-
-  async getTicketMessages(ticketId: number): Promise<ApiResponse<TicketMessage[]>> {
-    return this.makeRequest<TicketMessage[]>(`/support.php?action=messages&ticket_id=${ticketId}`);
-  }
-
-  async addTicketMessage(ticketId: number, message: string): Promise<ApiResponse<TicketMessage>> {
-    return this.makeRequest<TicketMessage>('/support.php?action=message', {
-      method: 'POST',
-      body: JSON.stringify({
-        ticket_id: ticketId,
-        message,
-      }),
-    });
-  }
-
   // Outages
   async getOutages(): Promise<ApiResponse<OutagesResponse>> {
     return this.makeRequest<OutagesResponse>('/mobile-api.php?endpoint=outages');
@@ -646,6 +702,17 @@ class ApiService {
 
   async getOutageNotifications(): Promise<ApiResponse<any>> {
     return this.makeRequest<any>('/mobile-api.php?endpoint=outage-notifications');
+  }
+
+  async getTowerNotifications(): Promise<ApiResponse<{ notifications: TowerNotification[]; count: number; enabled: boolean }>> {
+    return this.makeRequest('/mobile-api.php?endpoint=tower-notifications');
+  }
+
+  async markTowerNotificationRead(ticketId: number): Promise<ApiResponse<{ ticket_id: number }>> {
+    return this.makeRequest('/mobile-api.php?endpoint=mark-tower-notification-read', {
+      method: 'POST',
+      body: JSON.stringify({ ticket_id: ticketId }),
+    });
   }
 
   async markNotificationRead(notificationId: number): Promise<ApiResponse<any>> {
@@ -659,22 +726,6 @@ class ApiService {
     return this.makeRequest('/mobile-api.php?endpoint=dismiss-notification', {
       method: 'POST',
       body: JSON.stringify({ notification_id: notificationId }),
-    });
-  }
-
-  // Payments
-  async getPayments(): Promise<ApiResponse<Payment[]>> {
-    return this.makeRequest<Payment[]>('/payment.php?action=list');
-  }
-
-  async initiatePayment(paymentData: {
-    amount: number;
-    method: string;
-    description: string;
-  }): Promise<ApiResponse<any>> {
-    return this.makeRequest('/payment.php?action=initiate', {
-      method: 'POST',
-      body: JSON.stringify(paymentData),
     });
   }
 
@@ -718,76 +769,16 @@ class ApiService {
     };
   }
 
-  // Notifications
-  async getNotifications(): Promise<ApiResponse<Notification[]>> {
-    return this.makeRequest<Notification[]>('/notifications.php?action=list');
-  }
-
-  async markNotificationAsRead(notificationId: number): Promise<ApiResponse<any>> {
-    return this.makeRequest('/notifications.php?action=mark-read', {
-      method: 'PUT',
-      body: JSON.stringify({
-        notification_id: notificationId,
-      }),
+  async logout(): Promise<void> {
+    await this.makeRequest('/auth.php?action=logout', {
+      method: 'POST',
+      body: JSON.stringify({}),
     });
-  }
-
-  async updateNotificationSettings(settings: {
-    push_outages?: boolean;
-    push_payments?: boolean;
-    push_support?: boolean;
-    push_account?: boolean;
-    push_usage_alerts?: boolean;
-    email_notifications?: boolean;
-    usage_alert_threshold?: number;
-  }): Promise<ApiResponse<any>> {
-    return this.makeRequest('/notifications.php?action=settings', {
-      method: 'PUT',
-      body: JSON.stringify(settings),
-    });
-  }
-  // Debug endpoints
-  async testDatabase(): Promise<any> {
-    return this.makeRequest('/debug.php?action=test-database');
-  }
-
-  async testToken(): Promise<any> {
-    return this.makeRequest('/debug.php?action=test-token');
-  }
-
-  async listTokens(): Promise<any> {
-    return this.makeRequest('/debug.php?action=list-tokens');
-  }
-
-  async testAuth(): Promise<any> {
-    const url = `${API_BASE_URL}/test-auth.php`;
-    
-    const headers: Record<string, string> = {
-      'Content-Type': 'text/plain',
-    };
-
-    if (this.authToken) {
-      headers['Authorization'] = `Bearer ${this.authToken}`;
-    }
-
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers,
-      });
-
-      const text = await response.text();
-      console.log('Test Auth Response:', text);
-      return { response: text };
-    } catch (error) {
-      console.error('Test Auth failed:', error);
-      throw error;
-    }
   }
 
   // Report Issue (Support)
   async reportIssue(issueData: ReportIssueRequest): Promise<ApiResponse<ReportIssueResponse>> {
-    return this.makeRequest<ReportIssueResponse>('/mobile-api.php?action=report-issue', {
+    return this.makeRequest<ReportIssueResponse>('/mobile-api.php?endpoint=report-issue', {
       method: 'POST',
       body: JSON.stringify(issueData),
     });
@@ -945,10 +936,10 @@ class ApiService {
   /**
    * Update typing indicator
    */
-  async updateTypingIndicator(data: { ticket_id: number; user_type: string; user_id: number; user_name: string }): Promise<ApiResponse<{ success: boolean }>> {
+  async updateTypingIndicator(ticketId: number): Promise<ApiResponse<{ success: boolean }>> {
     return this.makeRequest<{ success: boolean }>('/support-chat-api.php?action=update_typing', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ticket_id: ticketId }),
     });
   }
 
@@ -962,10 +953,10 @@ class ApiService {
   /**
    * Submit ticket rating
    */
-  async submitTicketRating(data: { ticket_id: number; customer_id: number; rating: number; feedback: string | null }): Promise<ApiResponse<{ rating_id: number; rating: number }>> {
+  async submitTicketRating(data: { ticket_id: number; rating: number; feedback: string | null }): Promise<ApiResponse<{ rating_id: number; rating: number }>> {
     return this.makeRequest<{ rating_id: number; rating: number }>('/support-chat-api.php?action=submit_rating', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ticket_id: data.ticket_id, rating: data.rating, feedback: data.feedback }),
     });
   }
 
@@ -1020,17 +1011,18 @@ class ApiService {
   async unlinkAccount(targetUserId: number): Promise<ApiResponse<any>> {
     return this.makeRequest<any>('/mobile-api.php?endpoint=account-unlink', {
       method: 'POST',
-      body: JSON.stringify({ target_user_id: targetUserId }),
+      body: JSON.stringify({ linked_user_id: targetUserId }),
     });
   }
 
   // Payment Methods (used by BillingScreen)
-  async getPaymentInfo(): Promise<ApiResponse<any>> {
-    // Returns payment configuration info - currently a stub
+  async getPaymentInfo(): Promise<ApiResponse<{ enabled: boolean; provider: 'yoco' }>> {
+    const response = await this.getAppConfig();
     return {
-      success: true,
-      data: { enabled: true, provider: 'yoco' },
-      timestamp: new Date().toISOString()
+      ...response,
+      data: response.data
+        ? { enabled: response.data.payments_enabled, provider: response.data.payment_provider }
+        : undefined,
     };
   }
 
@@ -1070,19 +1062,18 @@ class ApiService {
     completed_at: string | null;
     failure_reason: string | null;
   }>> {
-    return this.makeRequest(`/mobile-api.php?endpoint=yoco-payment-status&payment_reference=${paymentReference}`, {
+    return this.makeRequest(`/mobile-api.php?endpoint=yoco-payment-status&payment_reference=${encodeURIComponent(paymentReference)}`, {
       method: 'GET',
     });
   }
 
   async getYocoPaymentHistory(limit: number = 10): Promise<ApiResponse<{
     payments: Array<{
-      payment_reference: string;
+      invoice_reference: string;
       amount: number;
-      description: string;
       status: string;
       created_at: string;
-      completed_at: string | null;
+      paid_at: string | null;
     }>;
     count: number;
   }>> {
@@ -1120,18 +1111,14 @@ class ApiService {
   async trackAdClick(adId: number): Promise<ApiResponse<{ message: string }>> {
     return this.makeRequest(`/admin-api.php/ads/${adId}/click`, {
       method: 'POST',
-      body: JSON.stringify({
-        invoicing_id: this.authToken ? 'authenticated' : null,
-      }),
+      body: JSON.stringify({}),
     });
   }
 
   async trackAdView(adId: number): Promise<ApiResponse<{ message: string }>> {
     return this.makeRequest(`/admin-api.php/ads/${adId}/view`, {
       method: 'POST',
-      body: JSON.stringify({
-        invoicing_id: this.authToken ? 'authenticated' : null,
-      }),
+      body: JSON.stringify({}),
     });
   }
 
@@ -1150,9 +1137,6 @@ class ApiService {
     try {
       const url = `${API_BASE_URL}/mobile-api.php?endpoint=submit-debit-order`;
       
-      console.log('Submitting debit order to:', url);
-      console.log('Has file:', !!data.confirmation_file);
-      
       // Prepare form fields
       const formFields: Record<string, string> = {
         account_holder: data.account_holder,
@@ -1169,8 +1153,6 @@ class ApiService {
       
       if (data.confirmation_file) {
         // Upload with file using legacy uploadAsync
-        console.log('Uploading with file from:', data.confirmation_file.uri);
-        
         const uploadResult = await uploadAsync(url, data.confirmation_file.uri, {
           httpMethod: 'POST',
           uploadType: FileSystemUploadType.MULTIPART,
@@ -1181,9 +1163,6 @@ class ApiService {
           } : {},
         });
         
-        console.log('Upload response status:', uploadResult.status);
-        console.log('Upload response body:', uploadResult.body);
-        
         if (uploadResult.status !== 200) {
           throw new Error(`Server returned status ${uploadResult.status}`);
         }
@@ -1191,7 +1170,6 @@ class ApiService {
         result = JSON.parse(uploadResult.body);
       } else {
         // Submit without file using regular fetch
-        console.log('Submitting without file attachment');
         const formData = new FormData();
         Object.entries(formFields).forEach(([key, value]) => {
           formData.append(key, value);
@@ -1206,8 +1184,6 @@ class ApiService {
         });
         
         const responseText = await response.text();
-        console.log('Response:', responseText);
-        
         if (!response.ok) {
           throw new Error(`Server returned status ${response.status}`);
         }
@@ -1219,7 +1195,6 @@ class ApiService {
         throw new Error(result.message || 'Failed to submit debit order application');
       }
 
-      console.log('✓ Debit order submitted successfully');
       return true;
       
     } catch (error) {

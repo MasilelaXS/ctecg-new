@@ -61,6 +61,15 @@ export default function MakePaymentScreen({ navigation }: any) {
     setIsLoading(true);
 
     try {
+      const paymentInfo = await apiService.getPaymentInfo();
+      if (!paymentInfo.success || !paymentInfo.data?.enabled) {
+        showToast.warning(
+          'Payments Unavailable',
+          'Yoco payments are temporarily unavailable. Please contact Customer Care for assistance.',
+        );
+        return;
+      }
+
       const response = await apiService.createYocoCheckout(
         amountNum,
         description || 'Account Payment',
@@ -253,7 +262,7 @@ export default function MakePaymentScreen({ navigation }: any) {
                     color={getStatusColor(payment.status)}
                   />
                   <View style={styles.historyDetails}>
-                    <Text style={styles.historyDescription}>{payment.description}</Text>
+                    <Text style={styles.historyDescription}>{payment.invoice_reference}</Text>
                     <Text style={styles.historyDate}>
                       {new Date(payment.created_at).toLocaleDateString('en-ZA', {
                         day: 'numeric',

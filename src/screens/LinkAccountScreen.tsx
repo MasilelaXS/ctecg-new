@@ -9,6 +9,7 @@ import CustomButton from '../components/CustomButton';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { showToast } from '../components/Toast';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { OtpCodeField } from '../components/AuthFields';
 import { Colors, Typography, CommonStyles, Spacing } from '../constants/Design';
 
 export default function LinkAccountScreen() {
@@ -189,18 +190,12 @@ export default function LinkAccountScreen() {
               Enter the 6-digit verification code sent to {selectedEmail.replace(/(\w{1})\w+(@)/, '$1******$2')}
             </Text>
             
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Verification Code</Text>
-              <TextInput
-                style={[styles.input, styles.otpInput]}
-                placeholder="000000"
-                value={otpCode}
-                onChangeText={setOtpCode}
-                keyboardType="number-pad"
-                maxLength={6}
-                autoFocus
-              />
-            </View>
+            <OtpCodeField
+              label="Verification Code"
+              value={otpCode}
+              onChangeText={setOtpCode}
+              autoFocus
+            />
 
             <CustomButton
               title="Verify & Link"
@@ -282,12 +277,6 @@ const styles = StyleSheet.create({
     padding: Spacing.md,
     fontSize: Typography.md,
     color: Colors.text,
-  },
-  otpInput: {
-    textAlign: 'center',
-    fontSize: Typography.xl,
-    letterSpacing: 8,
-    fontWeight: Typography.weights.bold,
   },
   accountInfo: {
     backgroundColor: Colors.background,

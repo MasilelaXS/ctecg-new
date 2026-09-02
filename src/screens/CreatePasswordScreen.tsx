@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
@@ -17,6 +16,8 @@ import { RootStackParamList } from '../navigation/AppNavigator';
 import { Colors, Typography, Spacing } from '../constants/Design';
 import { showToast } from '../components/Toast';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { OtpCodeField, PasswordField } from '../components/AuthFields';
+import { PASSWORD_MIN_LENGTH, validatePassword as validatePasswordPolicy } from '../utils/helpers-new';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreatePassword'>;
 
@@ -40,31 +41,19 @@ const maskEmail = (email: string): string => {
 
 export default function CreatePasswordScreen({ navigation, route }: Props) {
   const { userId, email } = route.params;
+  const [resetCode, setResetCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errors, setErrors] = useState({
+    resetCode: '',
     password: '',
     confirmPassword: '',
   });
 
   const validatePassword = (pass: string): string => {
-    if (pass.length < 8) {
-      return 'Password must be at least 8 characters';
-    }
-    if (!/(?=.*[a-z])/.test(pass)) {
-      return 'Password must contain at least one lowercase letter';
-    }
-    if (!/(?=.*[A-Z])/.test(pass)) {
-      return 'Password must contain at least one uppercase letter';
-    }
-    if (!/(?=.*\d)/.test(pass)) {
-      return 'Password must contain at least one number';
-    }
-    return '';
+    return validatePasswordPolicy(pass).errors[0] || '';
   };
 
   const handlePasswordChange = (text: string) => {
@@ -78,6 +67,10 @@ export default function CreatePasswordScreen({ navigation, route }: Props) {
   };
 
   const handleSubmit = async () => {
+    if (!/^\d{6}$/.test(resetCode)) {
+      setErrors({ ...errors, resetCode: 'Enter the 6-digit code sent to your email' });
+      return;
+    }
     // Validate password
     const passwordError = validatePassword(password);
     if (passwordError) {
@@ -94,7 +87,7 @@ export default function CreatePasswordScreen({ navigation, route }: Props) {
     setLoading(true);
 
     try {
-      const response = await apiService.createPassword(userId, email, password);
+      const response = await apiService.createPassword(userId, email, resetCode, password);
 
       if (response.success) {
         setShowSuccessModal(true);
@@ -114,14 +107,14 @@ export default function CreatePasswordScreen({ navigation, route }: Props) {
 
   const getPasswordStrength = (): string => {
     if (password.length === 0) return '';
-    if (password.length < 8) return 'Weak';
+    if (password.length < PASSWORD_MIN_LENGTH) return 'Weak';
     
     let strength = 0;
     if (/(?=.*[a-z])/.test(password)) strength++;
     if (/(?=.*[A-Z])/.test(password)) strength++;
     if (/(?=.*\d)/.test(password)) strength++;
     if (/(?=.*[@$!%*?&])/.test(password)) strength++;
-    if (password.length >= 12) strength++;
+    if (password.length >= PASSWORD_MIN_LENGTH) strength++;
 
     if (strength <= 2) return 'Weak';
     if (strength <= 3) return 'Medium';
@@ -135,7 +128,7 @@ export default function CreatePasswordScreen({ navigation, route }: Props) {
     return Colors.success;
   };
 
-  const isFormValid = password.length >= 8 && confirmPassword.length > 0 && password === confirmPassword;
+  const isFormValid = /^\d{6}$/.test(resetCode) && validatePasswordPolicy(password).isValid && confirmPassword.length > 0 && password === confirmPassword;
 
   return (
     <KeyboardAvoidingView
@@ -170,110 +163,72 @@ export default function CreatePasswordScreen({ navigation, route }: Props) {
         {/* Title */}
         <Text style={styles.title}>Create Your Password</Text>
         <Text style={styles.subtitle}>
-          Your account exists but needs a password. This email is linked to an existing account. Please create a password for{' '}
+          Enter the verification code sent to{' '}
           <Text style={styles.emailHighlight}>{maskEmail(email)}</Text>
+          {' '}and create your password.
         </Text>
 
-        {/* Password Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>New Password</Text>
-          <View style={[styles.inputWrapper, errors.password ? styles.inputError : null]}>
-            <Ionicons
-              name="lock-closed-outline"
-              size={20}
-              color={errors.password ? Colors.error : Colors.textMuted}
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              value={password}
-              onChangeText={handlePasswordChange}
-              placeholder="Enter new password"
-              placeholderTextColor={Colors.textMuted}
-              secureTextEntry={!showPassword}
-              autoCapitalize="none"
-              editable={!loading}
-            />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.eyeIcon}
-            >
-              <Ionicons
-                name={showPassword ? 'eye-outline' : 'eye-off-outline'}
-                size={20}
-                color={Colors.textMuted}
-              />
-            </TouchableOpacity>
-          </View>
-          {errors.password ? (
-            <Text style={styles.errorText}>{errors.password}</Text>
-          ) : null}
-          {!errors.password && password.length > 0 ? (
+        <OtpCodeField
+          label="Verification Code"
+          value={resetCode}
+          onChangeText={(text) => {
+            setResetCode(text);
+            setErrors({ ...errors, resetCode: '' });
+          }}
+          error={errors.resetCode}
+          disabled={loading}
+        />
+
+        <PasswordField
+          label="New Password"
+          value={password}
+          onChangeText={handlePasswordChange}
+          placeholder="Enter new password"
+          error={errors.password}
+          disabled={loading}
+          autoComplete="new-password"
+          textContentType="newPassword"
+          helperContent={!errors.password && password.length > 0 ? (
             <View style={styles.strengthContainer}>
               <Text style={styles.strengthLabel}>Strength: </Text>
               <Text style={[styles.strengthValue, { color: getPasswordStrengthColor() }]}>
                 {getPasswordStrength()}
               </Text>
             </View>
-          ) : null}
-        </View>
+          ) : undefined}
+        />
 
-        {/* Confirm Password Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Confirm Password</Text>
-          <View style={[styles.inputWrapper, errors.confirmPassword ? styles.inputError : null]}>
-            <Ionicons
-              name="lock-closed-outline"
-              size={20}
-              color={errors.confirmPassword ? Colors.error : Colors.textMuted}
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              value={confirmPassword}
-              onChangeText={handleConfirmPasswordChange}
-              placeholder="Confirm your password"
-              placeholderTextColor={Colors.textMuted}
-              secureTextEntry={!showConfirmPassword}
-              autoCapitalize="none"
-              editable={!loading}
-            />
-            <TouchableOpacity
-              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-              style={styles.eyeIcon}
-            >
-              <Ionicons
-                name={showConfirmPassword ? 'eye-outline' : 'eye-off-outline'}
-                size={20}
-                color={Colors.textMuted}
-              />
-            </TouchableOpacity>
-          </View>
-          {errors.confirmPassword ? (
-            <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-          ) : null}
-          {!errors.confirmPassword && confirmPassword.length > 0 && password === confirmPassword ? (
+        <PasswordField
+          label="Confirm Password"
+          value={confirmPassword}
+          onChangeText={handleConfirmPasswordChange}
+          placeholder="Confirm your password"
+          error={errors.confirmPassword}
+          disabled={loading}
+          autoComplete="new-password"
+          textContentType="newPassword"
+          helperContent={!errors.confirmPassword && confirmPassword.length > 0 && password === confirmPassword ? (
             <View style={styles.matchContainer}>
               <Ionicons name="checkmark-circle" size={14} color={Colors.success} />
               <Text style={styles.matchText}>Passwords match</Text>
             </View>
-          ) : null}
-        </View>
+          ) : undefined}
+        />
 
         {/* Password Requirements */}
         <View style={styles.requirementsContainer}>
           <Text style={styles.requirementsTitle}>Password must contain:</Text>
           <View style={styles.requirementRow}>
             <Ionicons
-              name={password.length >= 8 ? 'checkmark-circle' : 'ellipse-outline'}
+              name={password.length >= PASSWORD_MIN_LENGTH ? 'checkmark-circle' : 'ellipse-outline'}
               size={16}
-              color={password.length >= 8 ? Colors.success : Colors.textMuted}
+              color={password.length >= PASSWORD_MIN_LENGTH ? Colors.success : Colors.textMuted}
             />
             <Text style={[
               styles.requirementText,
-              password.length >= 8 && styles.requirementMet
+              password.length >= PASSWORD_MIN_LENGTH && styles.requirementMet
             ]}>
-              At least 8 characters
+              At least {PASSWORD_MIN_LENGTH} characters
             </Text>
           </View>
           <View style={styles.requirementRow}>
@@ -420,45 +375,6 @@ const styles = StyleSheet.create({
   emailHighlight: {
     color: Colors.primary,
     fontWeight: Typography.weights.semibold,
-  },
-  inputContainer: {
-    marginBottom: Spacing.lg,
-  },
-  label: {
-    fontSize: Typography.sm,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.text,
-    marginBottom: Spacing.xs,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.backgroundAlt,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    paddingHorizontal: Spacing.md,
-    height: 52,
-  },
-  inputError: {
-    borderColor: Colors.error,
-  },
-  inputIcon: {
-    marginRight: Spacing.sm,
-  },
-  input: {
-    flex: 1,
-    fontSize: Typography.md,
-    color: Colors.text,
-    padding: 0,
-  },
-  eyeIcon: {
-    padding: Spacing.xs,
-  },
-  errorText: {
-    fontSize: Typography.xs,
-    color: Colors.error,
-    marginTop: Spacing.xs,
   },
   strengthContainer: {
     flexDirection: 'row',

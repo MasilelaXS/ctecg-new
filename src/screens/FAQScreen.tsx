@@ -1,83 +1,30 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import TopNavigation from '../components/TopNavigation';
-import { Colors, Typography, Spacing } from '../constants/Design';
+import { Colors, Spacing, Typography } from '../constants/Design';
 
 interface FAQItem {
   id: string;
   question: string;
   answer: string;
+  paymentOptions?: boolean;
 }
 
+const SHOP2SHOP_URL = 'https://shop.shoptoshop.co.za/qr-code/send?code=QZ2AJ7';
+
 const faqData: FAQItem[] = [
-  {
-    id: '1',
-    question: 'How do I check my data usage?',
-    answer: 'You can check your data usage in real-time through the Usage tab in the app. We provide detailed breakdowns of your daily, weekly, and monthly usage including upload and download statistics. For uncapped packages, you can monitor your usage patterns and trends.'
-  },
-  {
-    id: '2',
-    question: 'What payment methods do you accept?',
-    answer: 'We accept various payment methods including:\n• Bank transfers (EFT)\n• Direct debit orders\n• Cash deposits at our office\n• Online banking payments\n• Debit orders\n\nFor bank transfers, use your account number as the payment reference.'
-  },
-  {
-    id: '3',
-    question: 'How do I report a technical issue?',
-    answer: 'You can report technical issues through:\n• This app using the "Report Issue" feature in Customer Care\n• Calling our support line: 076 979 0642\n• Emailing helpdesk@ctecg.co.za\n• Landline: 013 262 4798\n\nPlease provide details about the issue, when it started, and any error messages you see.'
-  },
-  {
-    id: '4',
-    question: 'What should I do if my internet is slow?',
-    answer: 'First, try these troubleshooting steps:\n• Restart your router/modem\n• Check if multiple devices are using the connection\n• Run a speed test at different times\n• Check for any scheduled maintenance in the Outages section\n\nIf the issue persists, contact our technical support team.'
-  },
-  {
-    id: '5',
-    question: 'How do I change my package or upgrade my speed?',
-    answer: 'To change your package:\n• Contact our sales team via phone or email\n• Visit our office during business hours\n• Use the app to submit an upgrade request\n\nUpgrades typically take 24-48 hours to process. Downgrades may require a 30-day notice period.'
-  },
-  {
-    id: '6',
-    question: 'What are your service hours and support availability?',
-    answer: 'Our service hours are:\n• Office: Monday to Friday, 8:00 AM - 5:00 PM\n• Technical Support: Monday to Friday, 8:00 AM - 8:00 PM\n• Emergency Support: 24/7 for critical issues\n• Weekend Support: Saturday 9:00 AM - 1:00 PM\n\nEmergency contact available for business customers.'
-  },
-  {
-    id: '7',
-    question: 'How do I set up port forwarding or configure my router?',
-    answer: 'Router configuration depends on your specific model:\n• Most settings can be accessed via 192.168.1.1 or 192.168.0.1\n• Default login credentials are usually on the router label\n• For port forwarding, contact our technical support for assistance\n• We provide free basic router configuration support\n\nAdvanced configurations may require a technician visit.'
-  },
-  {
-    id: '8',
-    question: 'What is your fair usage policy for uncapped packages?',
-    answer: 'Our uncapped packages include:\n• Truly unlimited data usage\n• No throttling or speed reductions\n• Fair usage applies only to excessive business usage (>1TB/month)\n• Residential users are not affected by fair usage policies\n• Gaming and streaming are fully supported\n\nWe maintain network quality for all users.'
-  },
-  {
-    id: '9',
-    question: 'How do I get a tax invoice or payment receipt?',
-    answer: 'Tax invoices and receipts:\n• Automatically emailed after each payment\n• Available in the Billing section of this app\n• Can be downloaded from our customer portal\n• Duplicates available on request\n\nFor VAT registration changes, contact our accounts department with your updated VAT certificate.'
-  },
-  {
-    id: '10',
-    question: 'What happens if I move to a new address?',
-    answer: 'For relocations:\n• Contact us at least 7 days before moving\n• We\'ll check service availability at your new address\n• Relocation fees may apply depending on distance\n• Installation at the new address typically takes 3-5 business days\n• Your package and billing remain unchanged\n\nSome areas may require different package options.'
-  },
-  {
-    id: '11',
-    question: 'How do I cancel my service or request a refund?',
-    answer: 'Service cancellation:\n• 30-day written notice required\n• Contact our customer service team\n• Outstanding amounts must be settled\n• Equipment must be returned in good condition\n• Installation fees are non-refundable\n• Pro-rata refunds available for unused subscription periods\n\nCancellation confirmation will be sent via email.'
-  },
-  {
-    id: '12',
-    question: 'What do I do during power outages or load shedding?',
-    answer: 'During power outages:\n• Our towers have backup power (4-8 hours typically)\n• Use a UPS or inverter to power your router\n• Check the Outages section for updates on extended outages\n• Report extended outages in your area\n• Consider a mobile backup solution\n\nWe provide real-time outage updates and estimated restoration times.'
-  }
+  { id: 'usage', question: 'How do I check my data usage?', answer: 'Open the Usage tab to see the usage information available for your account, including the current billing period and the daily counters supplied by Azotel.' },
+  { id: 'payments', question: 'What payment methods do you accept?', answer: 'You can pay securely in the following ways:\n• Yoco card payment from Billing > Make a Payment\n• Shop2Shop using the QR code below\n• Bank transfer (EFT)\n• Debit order\n• Cash deposit at our office\n\nAlways use your CTECG account number as the payment reference.', paymentOptions: true },
+  { id: 'report-issue', question: 'How do I report a technical issue?', answer: 'Use Report Issue on the Support screen, call 076 979 0642, WhatsApp 076 979 0642, call our landline on 013 262 4798, or email helpdesk@ctecg.co.za. Please explain what happened, when it started, and any error message you saw.' },
+  { id: 'slow-internet', question: 'What should I do if my internet is slow?', answer: 'Restart your router, check whether several devices are using the connection, and run a speed test. If the problem continues, report it from the Support screen or contact Technical Support.' },
+  { id: 'package-change', question: 'How do I change my package or upgrade my speed?', answer: 'Contact Customer Care so the team can check which packages and speeds are available for your service and explain any applicable processing time or notice period.' },
+  { id: 'hours', question: 'What are your service hours and support availability?', answer: 'Our service hours are:\n• Office: 08H00 - 17H00, Monday to Friday\n• Technical Support: 05H00 - 22H00, Monday to Sunday.' },
+  { id: 'fair-usage', question: 'Do you have a fair usage policy?', answer: 'No. CTECG does not have a fair usage policy.' },
+  { id: 'invoices', question: 'How do I get my invoices?', answer: 'Your latest three invoices are available on the Billing screen in this app. If you need an older invoice or have a question about an invoice, contact Customer Care.' },
+  { id: 'relocation', question: 'What happens if I move to a new address?', answer: 'Contact Customer Care before moving so CTECG can check service availability at the new address and explain the relocation process, expected timing, and any applicable fees.' },
+  { id: 'power-outage', question: 'What do I do during power outages or load shedding?', answer: 'Your router and related equipment need power to keep working during an outage. If you have a suitable DC UPS, connect it according to the manufacturer’s instructions. If you do not have one, you may purchase a compatible DC UPS yourself or contact Customer Care to purchase one from CTECG.' },
 ];
 
 export default function FAQScreen() {
@@ -85,74 +32,52 @@ export default function FAQScreen() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
   const toggleExpanded = (id: string) => {
-    const newExpanded = new Set(expandedItems);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
-    } else {
-      newExpanded.add(id);
-    }
-    setExpandedItems(newExpanded);
-  };
-
-  const expandAll = () => {
-    setExpandedItems(new Set(faqData.map(item => item.id)));
-  };
-
-  const collapseAll = () => {
-    setExpandedItems(new Set());
+    setExpandedItems((current) => {
+      const next = new Set(current);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
   };
 
   return (
     <>
-      <TopNavigation
-        title="Frequently Asked Questions"
-        subtitle="Common questions and answers"
-        showBackButton={true}
-        onBackPress={() => navigation.goBack()}
-      />
-
+      <TopNavigation title="Frequently Asked Questions" subtitle="Common questions and answers" showBackButton onBackPress={() => navigation.goBack()} />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Header with expand/collapse controls */}
         <View style={styles.headerControls}>
-          <Text style={styles.headerText}>
-            {faqData.length} frequently asked questions
-          </Text>
+          <Text style={styles.headerText}>{faqData.length} frequently asked questions</Text>
           <View style={styles.controlButtons}>
-            <TouchableOpacity onPress={expandAll} style={styles.controlButton}>
+            <TouchableOpacity onPress={() => setExpandedItems(new Set(faqData.map((item) => item.id)))} style={styles.controlButton} accessibilityRole="button">
               <Text style={styles.controlButtonText}>Expand All</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={collapseAll} style={styles.controlButton}>
+            <TouchableOpacity onPress={() => setExpandedItems(new Set())} style={styles.controlButton} accessibilityRole="button">
               <Text style={styles.controlButtonText}>Collapse All</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* FAQ Items */}
         <View style={styles.faqContainer}>
           {faqData.map((item) => {
             const isExpanded = expandedItems.has(item.id);
-            
             return (
               <View key={item.id} style={styles.faqItem}>
-                <TouchableOpacity
-                  style={styles.faqHeader}
-                  onPress={() => toggleExpanded(item.id)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.questionContainer}>
-                    <Text style={styles.questionText}>{item.question}</Text>
-                  </View>
-                  <Ionicons
-                    name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                    size={20}
-                    color={Colors.primary}
-                    style={styles.chevronIcon}
-                  />
+                <TouchableOpacity style={styles.faqHeader} onPress={() => toggleExpanded(item.id)} activeOpacity={0.7} accessibilityRole="button" accessibilityState={{ expanded: isExpanded }}>
+                  <Text style={styles.questionText}>{item.question}</Text>
+                  <Ionicons name={isExpanded ? 'chevron-up' : 'chevron-down'} size={20} color={Colors.primary} />
                 </TouchableOpacity>
-                
                 {isExpanded && (
                   <View style={styles.answerContainer}>
                     <Text style={styles.answerText}>{item.answer}</Text>
+                    {item.paymentOptions && (
+                      <View style={styles.paymentContainer}>
+                        <Text style={styles.paymentTitle}>Shop2Shop payment QR</Text>
+                        <Image source={require('../../assets/shop2shop-qr.png')} style={styles.paymentQr} resizeMode="contain" accessibilityLabel="Shop2Shop payment QR code" />
+                        <TouchableOpacity style={styles.paymentButton} onPress={() => Linking.openURL(SHOP2SHOP_URL)} accessibilityRole="link" accessibilityLabel="Open Shop2Shop payment page">
+                          <Text style={styles.paymentButtonText}>Open Shop2Shop</Text>
+                          <Ionicons name="open-outline" size={17} color={Colors.textInverse} />
+                        </TouchableOpacity>
+                        <Text style={styles.paymentHint}>For Yoco, open Billing and select Make a Payment.</Text>
+                      </View>
+                    )}
                   </View>
                 )}
               </View>
@@ -160,19 +85,13 @@ export default function FAQScreen() {
           })}
         </View>
 
-        {/* Contact support section */}
         <View style={styles.contactSection}>
           <View style={styles.contactHeader}>
             <Ionicons name="help-circle" size={24} color={Colors.primary} />
             <Text style={styles.contactTitle}>Still need help?</Text>
           </View>
-          <Text style={styles.contactText}>
-            If you couldn't find the answer to your question, our support team is here to help.
-          </Text>
-          <TouchableOpacity
-            style={styles.contactButton}
-            onPress={() => navigation.goBack()}
-          >
+          <Text style={styles.contactText}>If you could not find the answer, our Customer Care team is ready to help.</Text>
+          <TouchableOpacity style={styles.contactButton} onPress={() => navigation.goBack()} accessibilityRole="button">
             <Text style={styles.contactButtonText}>Back to Support</Text>
             <Ionicons name="arrow-forward" size={16} color={Colors.textInverse} />
           </TouchableOpacity>
@@ -183,116 +102,29 @@ export default function FAQScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  scrollContent: {
-    padding: Spacing.md,
-    paddingBottom: Spacing.xl * 2,
-  },
-  headerControls: {
-    marginBottom: Spacing.lg,
-  },
-  headerText: {
-    fontSize: Typography.lg,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.text,
-    marginBottom: Spacing.sm,
-  },
-  controlButtons: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
-  },
-  controlButton: {
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xs,
-    backgroundColor: Colors.surface,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  controlButtonText: {
-    fontSize: Typography.sm,
-    color: Colors.primary,
-    fontWeight: Typography.weights.medium,
-  },
-  faqContainer: {
-    marginBottom: Spacing.xl,
-  },
-  faqItem: {
-    backgroundColor: Colors.background,
-    borderRadius: 12,
-    marginBottom: Spacing.sm,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    overflow: 'hidden',
-  },
-  faqHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: Spacing.md,
-    backgroundColor: Colors.surface,
-  },
-  questionContainer: {
-    flex: 1,
-    marginRight: Spacing.sm,
-  },
-  questionText: {
-    fontSize: Typography.md,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.text,
-    lineHeight: Typography.md * Typography.lineHeights.relaxed,
-  },
-  chevronIcon: {
-    marginLeft: Spacing.xs,
-  },
-  answerContainer: {
-    padding: Spacing.md,
-    paddingTop: 0,
-  },
-  answerText: {
-    fontSize: Typography.sm,
-    color: Colors.textSecondary,
-    lineHeight: Typography.sm * Typography.lineHeights.relaxed,
-  },
-  contactSection: {
-    backgroundColor: Colors.surface,
-    padding: Spacing.lg,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  contactHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: Spacing.sm,
-  },
-  contactTitle: {
-    fontSize: Typography.lg,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.text,
-    marginLeft: Spacing.sm,
-  },
-  contactText: {
-    fontSize: Typography.sm,
-    color: Colors.textSecondary,
-    lineHeight: Typography.sm * Typography.lineHeights.relaxed,
-    marginBottom: Spacing.md,
-  },
-  contactButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.primary,
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
-    borderRadius: 8,
-    gap: Spacing.xs,
-  },
-  contactButtonText: {
-    fontSize: Typography.md,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.textInverse,
-  },
+  scrollView: { flex: 1, backgroundColor: Colors.background },
+  scrollContent: { padding: Spacing.md, paddingBottom: Spacing.xl * 2 },
+  headerControls: { marginBottom: Spacing.lg },
+  headerText: { fontSize: Typography.lg, fontWeight: Typography.weights.semibold, color: Colors.text, marginBottom: Spacing.sm },
+  controlButtons: { flexDirection: 'row', gap: Spacing.sm },
+  controlButton: { minHeight: 44, justifyContent: 'center', paddingHorizontal: Spacing.sm, backgroundColor: Colors.surface, borderRadius: 8, borderWidth: 1, borderColor: Colors.border },
+  controlButtonText: { fontSize: Typography.sm, color: Colors.primary, fontWeight: Typography.weights.medium },
+  faqContainer: { marginBottom: Spacing.xl },
+  faqItem: { backgroundColor: Colors.background, borderRadius: 12, marginBottom: Spacing.sm, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
+  faqHeader: { minHeight: 58, flexDirection: 'row', alignItems: 'center', padding: Spacing.md, backgroundColor: Colors.surface },
+  questionText: { flex: 1, marginRight: Spacing.sm, fontSize: Typography.md, fontWeight: Typography.weights.semibold, color: Colors.text, lineHeight: Typography.md * Typography.lineHeights.relaxed },
+  answerContainer: { padding: Spacing.md, paddingTop: 0 },
+  answerText: { fontSize: Typography.sm, color: Colors.textSecondary, lineHeight: Typography.sm * Typography.lineHeights.relaxed },
+  paymentContainer: { alignItems: 'center', marginTop: Spacing.lg, paddingTop: Spacing.md, borderTopWidth: 1, borderTopColor: Colors.border },
+  paymentTitle: { fontSize: Typography.md, fontWeight: Typography.weights.semibold, color: Colors.text, marginBottom: Spacing.sm },
+  paymentQr: { width: 220, height: 220, backgroundColor: '#FFFFFF' },
+  paymentButton: { minHeight: 46, marginTop: Spacing.md, paddingHorizontal: Spacing.lg, borderRadius: 8, backgroundColor: Colors.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: Spacing.xs },
+  paymentButtonText: { color: Colors.textInverse, fontSize: Typography.sm, fontWeight: Typography.weights.semibold },
+  paymentHint: { color: Colors.textSecondary, fontSize: Typography.xs, textAlign: 'center', marginTop: Spacing.sm },
+  contactSection: { backgroundColor: Colors.surface, padding: Spacing.lg, borderRadius: 12, borderWidth: 1, borderColor: Colors.border },
+  contactHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.sm },
+  contactTitle: { fontSize: Typography.lg, fontWeight: Typography.weights.semibold, color: Colors.text, marginLeft: Spacing.sm },
+  contactText: { fontSize: Typography.sm, color: Colors.textSecondary, lineHeight: Typography.sm * Typography.lineHeights.relaxed, marginBottom: Spacing.md },
+  contactButton: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.primary, paddingHorizontal: Spacing.md, borderRadius: 8, gap: Spacing.xs },
+  contactButtonText: { fontSize: Typography.md, fontWeight: Typography.weights.semibold, color: Colors.textInverse },
 });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,22 +10,35 @@ import {
   TouchableOpacity,
   Image,
   Linking,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../contexts/AuthContext';
-import { apiService } from '../services/api';
-import { RootStackParamList } from '../navigation/AppNavigator';
-import { validateSAPhoneNumber, formatPhoneInput, normalizePhoneNumber } from '../utils/phoneValidation';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "../contexts/AuthContext";
+import { apiService } from "../services/api";
+import { RootStackParamList } from "../navigation/AppNavigator";
+import {
+  validateSAPhoneNumber,
+  formatPhoneInput,
+  normalizePhoneNumber,
+} from "../utils/phoneValidation";
+import { PASSWORD_MIN_LENGTH, validatePassword } from "../utils/helpers-new";
 
-import CustomButton from '../components/CustomButton';
-import LoadingSpinner from '../components/LoadingSpinner';
-import { showToast } from '../components/Toast';
-import ConfirmationModal from '../components/ConfirmationModal';
-import { Colors, Typography, Spacing, BorderRadius, CommonStyles } from '../constants/Design';
+import CustomButton from "../components/CustomButton";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { showToast } from "../components/Toast";
+import ConfirmationModal from "../components/ConfirmationModal";
+import CustomerCareModal from "../components/CustomerCareModal";
+import { PasswordField } from "../components/AuthFields";
+import {
+  Colors,
+  Typography,
+  Spacing,
+  BorderRadius,
+  CommonStyles,
+} from "../constants/Design";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
 interface CheckUserData {
   client_code: string;
@@ -44,25 +57,27 @@ interface CheckUserData {
 }
 
 export default function LoginScreen({ navigation }: Props) {
-  const [clientCode, setClientCode] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [phoneError, setPhoneError] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [clientCode, setClientCode] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [loginWithEmail, setLoginWithEmail] = useState(true);
   const [userData, setUserData] = useState<CheckUserData | null>(null);
   const [emailOptions, setEmailOptions] = useState<string[]>([]);
   const [phoneOptions, setPhoneOptions] = useState<string[]>([]);
-  const [selectedEmail, setSelectedEmail] = useState('');
-  const [selectedPhone, setSelectedPhone] = useState('');
-  const [emailInput, setEmailInput] = useState('');
-  const [phoneInput, setPhoneInput] = useState('');
+  const [selectedEmail, setSelectedEmail] = useState("");
+  const [selectedPhone, setSelectedPhone] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [phoneInput, setPhoneInput] = useState("");
   const [mismatchAttempts, setMismatchAttempts] = useState(0);
   const [showMismatchModal, setShowMismatchModal] = useState(false);
-  const [mismatchType, setMismatchType] = useState<'email' | 'phone' | 'both'>('email');
+  const [showCustomerCareModal, setShowCustomerCareModal] = useState(false);
+  const [mismatchType, setMismatchType] = useState<"email" | "phone" | "both">(
+    "email",
+  );
   const { login } = useAuth();
 
   // Modal states
@@ -73,28 +88,33 @@ export default function LoginScreen({ navigation }: Props) {
     // Format as user types
     const formatted = formatPhoneInput(text);
     setPhone(formatted);
-    
+
     // Clear error when user starts typing
     if (phoneError) {
-      setPhoneError('');
+      setPhoneError("");
     }
   };
 
   const validatePhone = (): boolean => {
     const validation = validateSAPhoneNumber(phone);
     if (!validation.isValid) {
-      setPhoneError(validation.error || 'Invalid phone number');
+      setPhoneError(validation.error || "Invalid phone number");
       return false;
     }
-    setPhoneError('');
+    setPhoneError("");
     return true;
   };
 
   const handleLogin = async () => {
     let identifier = loginWithEmail ? email.trim() : phone.trim();
-    
+
     if (!identifier) {
-      showToast.error('Error', loginWithEmail ? 'Please enter your email address' : 'Please enter your phone number');
+      showToast.error(
+        "Error",
+        loginWithEmail
+          ? "Please enter your email address"
+          : "Please enter your phone number",
+      );
       return;
     }
 
@@ -107,7 +127,7 @@ export default function LoginScreen({ navigation }: Props) {
     }
 
     if (!password.trim()) {
-      showToast.error('Error', 'Please enter your password');
+      showToast.error("Error", "Please enter your password");
       return;
     }
 
@@ -117,20 +137,22 @@ export default function LoginScreen({ navigation }: Props) {
     } catch (error: any) {
       // Check if user needs to create a password
       if (error.requiresPasswordCreation) {
-        navigation.navigate('CreatePassword', {
+        navigation.navigate("CreatePassword", {
           userId: error.userId,
           email: error.email,
         });
-      } 
+      }
       // Check if account needs verification
       else if (error.requiresVerification) {
-        navigation.navigate('VerifyOTP', {
+        navigation.navigate("VerifyOTP", {
           email: error.email,
           password: password,
         });
-      } 
-      else {
-        showToast.error('Login Failed', error.message || 'Please check your credentials and try again');
+      } else {
+        showToast.error(
+          "Login Failed",
+          error.message || "Please check your credentials and try again",
+        );
       }
     } finally {
       setIsLoading(false);
@@ -139,11 +161,11 @@ export default function LoginScreen({ navigation }: Props) {
 
   const handleForgotPassword = async () => {
     let identifier = loginWithEmail ? email.trim() : phone.trim();
-    
+
     if (!identifier) {
       showToast.info(
-        'Reset Password',
-        `Please enter your ${loginWithEmail ? 'email address' : 'phone number'} first`
+        "Reset Password",
+        `Please enter your ${loginWithEmail ? "email address" : "phone number"} first`,
       );
       return;
     }
@@ -152,7 +174,7 @@ export default function LoginScreen({ navigation }: Props) {
     if (!loginWithEmail) {
       const validation = validateSAPhoneNumber(phone);
       if (!validation.isValid) {
-        setPhoneError(validation.error || 'Invalid phone number');
+        setPhoneError(validation.error || "Invalid phone number");
         return;
       }
       identifier = normalizePhoneNumber(phone);
@@ -163,18 +185,23 @@ export default function LoginScreen({ navigation }: Props) {
 
   const sendResetCode = async () => {
     setShowResetConfirm(false);
-    let identifier = loginWithEmail ? email.trim() : normalizePhoneNumber(phone);
-    
+    let identifier = loginWithEmail
+      ? email.trim()
+      : normalizePhoneNumber(phone);
+
     setIsLoading(true);
     try {
       const response = await apiService.forgotPassword(identifier);
       if (response.success) {
         setShowResetSentModal(true);
       } else {
-        showToast.error('Error', response.message || 'Failed to send reset code');
+        showToast.error(
+          "Error",
+          response.message || "Failed to send reset code",
+        );
       }
     } catch (error: any) {
-      showToast.error('Error', error.message || 'Failed to send reset code');
+      showToast.error("Error", error.message || "Failed to send reset code");
     } finally {
       setIsLoading(false);
     }
@@ -182,26 +209,26 @@ export default function LoginScreen({ navigation }: Props) {
 
   const handleWhatsAppSupport = async () => {
     try {
-      await Linking.openURL('https://wa.me/27769790642');
+      await Linking.openURL("https://wa.me/27769790642");
     } catch (error) {
-      console.error('WhatsApp link error:', error);
-      showToast.error('Error', 'Unable to open WhatsApp');
+      console.error("WhatsApp link error:", error);
+      showToast.error("Error", "Unable to open WhatsApp");
     }
   };
 
   const handleCheckUser = async () => {
     if (!clientCode.trim()) {
-      showToast.error('Error', 'Please enter your client code');
+      showToast.error("Error", "Please enter your client code");
       return;
     }
 
-    console.log('🔍 Checking client code:', clientCode.trim());
+    console.log("🔍 Checking client code:", clientCode.trim());
     setIsLoading(true);
-    
+
     try {
       const response = await apiService.checkUser(clientCode.trim());
-      console.log('✅ CheckUser response:', response);
-      
+      console.log("✅ CheckUser response:", response);
+
       if (response.success && response.data) {
         setUserData(response.data);
 
@@ -210,24 +237,30 @@ export default function LoginScreen({ navigation }: Props) {
         setEmailOptions(fetchedEmailOptions);
         setPhoneOptions(fetchedPhoneOptions);
         // Don't auto-fill for security
-        setEmailInput('');
-        setPhoneInput('');
+        setEmailInput("");
+        setPhoneInput("");
         setMismatchAttempts(0);
-        
+
         // Pre-fill email from first account if available
         if (response.data.accounts && response.data.accounts.length > 0) {
-          setEmail(response.data.accounts[0].email || '');
+          setEmail(response.data.accounts[0].email || "");
         }
-        
+
         // User doesn't exist, proceed with registration
         if (!response.data.user_exists) {
           // Form is already showing registration fields
         } else {
-          showToast.info('Account Exists', 'This client code is already registered. Please use the login form.');
+          showToast.info(
+            "Account Exists",
+            "This client code is already registered. Please use the login form.",
+          );
         }
       }
     } catch (error: any) {
-      showToast.error('Customer Not Found', error.message || 'Please check your client code and try again');
+      showToast.error(
+        "Customer Not Found",
+        error.message || "Please check your client code and try again",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -235,53 +268,64 @@ export default function LoginScreen({ navigation }: Props) {
 
   const handleRegister = async () => {
     if (!password.trim()) {
-      showToast.error('Error', 'Please create a password');
+      showToast.error("Error", "Please create a password");
       return;
     }
 
-    if (password.length < 8) {
-      showToast.error('Error', 'Password must be at least 8 characters long');
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      showToast.error("Error", passwordValidation.errors[0]);
       return;
     }
 
     if (!emailInput.trim()) {
-      showToast.error('Error', 'Please enter your email address');
+      showToast.error("Error", "Please enter your email address");
       return;
     }
 
     if (!phoneInput.trim()) {
-      showToast.error('Error', 'Please enter your phone number');
+      showToast.error("Error", "Please enter your phone number");
       return;
     }
 
     // Validate against Azotel options
-    const emailMatches = emailOptions.some(opt => opt.toLowerCase() === emailInput.toLowerCase().trim());
-    const phoneMatches = phoneOptions.some(opt => {
-      const normalizedInput = phoneInput.trim().replace(/\s/g, '');
-      const normalizedOpt = opt.replace(/\s/g, '');
-      return normalizedOpt === normalizedInput || normalizedOpt === '+27' + normalizedInput.replace(/^0/, '');
+    const emailMatches = emailOptions.some(
+      (opt) => opt.toLowerCase() === emailInput.toLowerCase().trim(),
+    );
+    const phoneMatches = phoneOptions.some((opt) => {
+      const normalizedInput = phoneInput.trim().replace(/\s/g, "");
+      const normalizedOpt = opt.replace(/\s/g, "");
+      return (
+        normalizedOpt === normalizedInput ||
+        normalizedOpt === "+27" + normalizedInput.replace(/^0/, "")
+      );
     });
 
     if (!emailMatches || !phoneMatches) {
       // Show mismatch modal for confirmation
       if (!emailMatches && !phoneMatches) {
-        setMismatchType('both');
+        setMismatchType("both");
       } else if (!emailMatches) {
-        setMismatchType('email');
+        setMismatchType("email");
       } else {
-        setMismatchType('phone');
+        setMismatchType("phone");
       }
       setShowMismatchModal(true);
       return;
     }
 
     // Match found, use the matched values
-    const matchedEmail = emailOptions.find(opt => opt.toLowerCase() === emailInput.toLowerCase().trim())!;
-    const matchedPhone = phoneOptions.find(opt => {
-      const normalizedInput = phoneInput.trim().replace(/\s/g, '');
-      const normalizedOpt = opt.replace(/\s/g, '');
-      return normalizedOpt === normalizedInput || normalizedOpt === '+27' + normalizedInput.replace(/^0/, '');
-    })!
+    const matchedEmail = emailOptions.find(
+      (opt) => opt.toLowerCase() === emailInput.toLowerCase().trim(),
+    )!;
+    const matchedPhone = phoneOptions.find((opt) => {
+      const normalizedInput = phoneInput.trim().replace(/\s/g, "");
+      const normalizedOpt = opt.replace(/\s/g, "");
+      return (
+        normalizedOpt === normalizedInput ||
+        normalizedOpt === "+27" + normalizedInput.replace(/^0/, "")
+      );
+    })!;
 
     setIsLoading(true);
     try {
@@ -294,13 +338,16 @@ export default function LoginScreen({ navigation }: Props) {
 
       if (response.success && response.data) {
         // Navigate to OTP verification screen
-        navigation.navigate('VerifyOTP', { 
-          email: matchedEmail, 
-          password: password 
+        navigation.navigate("VerifyOTP", {
+          email: matchedEmail,
+          password: password,
         });
       }
     } catch (error: any) {
-      showToast.error('Registration Failed', error.message || 'Registration failed. Please try again.');
+      showToast.error(
+        "Registration Failed",
+        error.message || "Registration failed. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -308,7 +355,7 @@ export default function LoginScreen({ navigation }: Props) {
 
   const handleMismatchConfirm = () => {
     setShowMismatchModal(false);
-    setMismatchAttempts(prev => prev + 1);
+    setMismatchAttempts((prev) => prev + 1);
   };
 
   const handleMismatchRetry = () => {
@@ -317,7 +364,7 @@ export default function LoginScreen({ navigation }: Props) {
 
   const handleRegisterWithMismatch = async () => {
     setShowMismatchModal(false);
-    
+
     // Use user-provided values even if they don't match
     setIsLoading(true);
     try {
@@ -329,13 +376,16 @@ export default function LoginScreen({ navigation }: Props) {
       });
 
       if (response.success && response.data) {
-        navigation.navigate('VerifyOTP', { 
-          email: emailInput.trim(), 
-          password: password 
+        navigation.navigate("VerifyOTP", {
+          email: emailInput.trim(),
+          password: password,
         });
       }
     } catch (error: any) {
-      showToast.error('Registration Failed', error.message || 'Registration failed. Please try again.');
+      showToast.error(
+        "Registration Failed",
+        error.message || "Registration failed. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -343,37 +393,42 @@ export default function LoginScreen({ navigation }: Props) {
 
   const toggleMode = () => {
     setIsRegisterMode(!isRegisterMode);
-    setClientCode('');
-    setEmail('');
-    setPhone('');
-    setPassword('');
+    setClientCode("");
+    setEmail("");
+    setPhone("");
+    setPassword("");
     setUserData(null);
     setEmailOptions([]);
     setPhoneOptions([]);
-    setSelectedEmail('');
-    setSelectedPhone('');
-    setEmailInput('');
-    setPhoneInput('');
+    setSelectedEmail("");
+    setSelectedPhone("");
+    setEmailInput("");
+    setPhoneInput("");
     setMismatchAttempts(0);
   };
 
   const toggleLoginMethod = () => {
     setLoginWithEmail(!loginWithEmail);
-    setEmail('');
-    setPhone('');
+    setEmail("");
+    setPhone("");
   };
 
   const missingEmail = emailOptions.length === 0;
   const missingPhone = phoneOptions.length === 0;
-  const needsSupport = !!userData && !userData.user_exists && (missingEmail || missingPhone || mismatchAttempts >= 2);
-  const supportMessage = mismatchAttempts >= 2
-    ? 'The information you entered does not match our records. Please contact support for assistance.'
-    : missingEmail && missingPhone
-      ? 'No email address or phone number found for this account. Please contact support.'
-      : missingEmail
-        ? 'No email address found for this account. Please contact support.'
-        : 'No phone number found for this account. Please contact support.';
-  const canRegister = !!userData && !userData.user_exists && !missingEmail && !missingPhone;
+  const needsSupport =
+    !!userData &&
+    !userData.user_exists &&
+    (missingEmail || missingPhone || mismatchAttempts >= 2);
+  const supportMessage =
+    mismatchAttempts >= 2
+      ? "The information you entered does not match our records. Please contact support for assistance."
+      : missingEmail && missingPhone
+        ? "No email address or phone number found for this account. Please contact support."
+        : missingEmail
+          ? "No email address found for this account. Please contact support."
+          : "No phone number found for this account. Please contact support.";
+  const canRegister =
+    !!userData && !userData.user_exists && !missingEmail && !missingPhone;
 
   if (isLoading) {
     return <LoadingSpinner message="Please wait..." />;
@@ -383,7 +438,7 @@ export default function LoginScreen({ navigation }: Props) {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -392,8 +447,8 @@ export default function LoginScreen({ navigation }: Props) {
           {/* Header Section */}
           <View style={styles.header}>
             <View style={styles.logoContainer}>
-              <Image 
-                source={require('../../assets/logo-clean.png')} 
+              <Image
+                source={require("../../assets/logo-clean.png")}
                 style={styles.logo}
                 resizeMode="contain"
               />
@@ -406,7 +461,7 @@ export default function LoginScreen({ navigation }: Props) {
             {!isRegisterMode ? (
               <>
                 {/* LOGIN MODE */}
-                <Text style={styles.welcomeText}>Welcome back!</Text>
+                <Text style={styles.welcomeText}>Welcome</Text>
                 <Text style={styles.subtitleText}>
                   Sign in to access your account
                 </Text>
@@ -416,40 +471,52 @@ export default function LoginScreen({ navigation }: Props) {
                   <TouchableOpacity
                     style={[
                       styles.toggleButton,
-                      loginWithEmail && styles.toggleButtonActive
+                      loginWithEmail && styles.toggleButtonActive,
                     ]}
                     onPress={() => setLoginWithEmail(true)}
                   >
                     <Ionicons
                       name="mail-outline"
                       size={18}
-                      color={loginWithEmail ? Colors.textInverse : Colors.textSecondary}
+                      color={
+                        loginWithEmail
+                          ? Colors.textInverse
+                          : Colors.textSecondary
+                      }
                       style={styles.toggleIcon}
                     />
-                    <Text style={[
-                      styles.toggleButtonText,
-                      loginWithEmail && styles.toggleButtonTextActive
-                    ]}>
+                    <Text
+                      style={[
+                        styles.toggleButtonText,
+                        loginWithEmail && styles.toggleButtonTextActive,
+                      ]}
+                    >
                       Email
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[
                       styles.toggleButton,
-                      !loginWithEmail && styles.toggleButtonActive
+                      !loginWithEmail && styles.toggleButtonActive,
                     ]}
                     onPress={() => setLoginWithEmail(false)}
                   >
                     <Ionicons
                       name="call-outline"
                       size={18}
-                      color={!loginWithEmail ? Colors.textInverse : Colors.textSecondary}
+                      color={
+                        !loginWithEmail
+                          ? Colors.textInverse
+                          : Colors.textSecondary
+                      }
                       style={styles.toggleIcon}
                     />
-                    <Text style={[
-                      styles.toggleButtonText,
-                      !loginWithEmail && styles.toggleButtonTextActive
-                    ]}>
+                    <Text
+                      style={[
+                        styles.toggleButtonText,
+                        !loginWithEmail && styles.toggleButtonTextActive,
+                      ]}
+                    >
                       Phone
                     </Text>
                   </TouchableOpacity>
@@ -458,7 +525,7 @@ export default function LoginScreen({ navigation }: Props) {
                 {/* Email or Phone Input based on toggle */}
                 <View style={styles.inputContainer}>
                   <Text style={styles.inputLabel}>
-                    {loginWithEmail ? 'Email Address' : 'Phone Number'}
+                    {loginWithEmail ? "Email Address" : "Phone Number"}
                   </Text>
                   <View style={styles.inputWrapper}>
                     <Ionicons
@@ -495,47 +562,24 @@ export default function LoginScreen({ navigation }: Props) {
                     <Text style={styles.errorText}>{phoneError}</Text>
                   )}
                   {!loginWithEmail && !phoneError && phone.length > 0 && (
-                    <Text style={styles.hintText}>Format: 0XX XXX XXXX (10 digits)</Text>
+                    <Text style={styles.hintText}>
+                      Format: 0XX XXX XXXX (10 digits)
+                    </Text>
                   )}
                 </View>
 
-                {/* Password Input */}
-                <View style={styles.inputContainer}>
-                  <View style={styles.passwordLabelRow}>
-                    <Text style={styles.inputLabel}>Password</Text>
+                <PasswordField
+                  label="Password"
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Enter your password"
+                  disabled={isLoading}
+                  labelAction={
                     <TouchableOpacity onPress={handleForgotPassword}>
                       <Text style={styles.forgotPasswordLink}>Forgot?</Text>
                     </TouchableOpacity>
-                  </View>
-                  <View style={styles.inputWrapper}>
-                    <Ionicons
-                      name="lock-closed-outline"
-                      size={20}
-                      color={Colors.textSecondary}
-                      style={styles.inputIcon}
-                    />
-                    <TextInput
-                      style={[styles.textInput, styles.passwordInput]}
-                      value={password}
-                      onChangeText={setPassword}
-                      placeholder="Enter your password"
-                      placeholderTextColor={Colors.textMuted}
-                      secureTextEntry={!showPassword}
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                    />
-                    <TouchableOpacity
-                      onPress={() => setShowPassword(!showPassword)}
-                      style={styles.passwordToggle}
-                    >
-                      <Ionicons
-                        name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                        size={20}
-                        color={Colors.textSecondary}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
+                  }
+                />
 
                 {/* Login Button */}
                 <View style={styles.buttonContainer}>
@@ -550,7 +594,9 @@ export default function LoginScreen({ navigation }: Props) {
 
                 {/* Switch to Register */}
                 <View style={styles.switchModeContainer}>
-                  <Text style={styles.switchModeText}>Don't have an account? </Text>
+                  <Text style={styles.switchModeText}>
+                    Don't have an account?{" "}
+                  </Text>
                   <TouchableOpacity onPress={toggleMode}>
                     <Text style={styles.switchModeLink}>Create Account</Text>
                   </TouchableOpacity>
@@ -558,10 +604,16 @@ export default function LoginScreen({ navigation }: Props) {
 
                 {/* Forgot Email Link */}
                 <View style={styles.forgotEmailContainer}>
-                  <TouchableOpacity onPress={() => navigation.navigate('ForgotEmail')}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("ForgotEmail")}
+                  >
                     <Text style={styles.forgotEmailLink}>
-                      <Ionicons name="help-circle-outline" size={16} color={Colors.textSecondary} />
-                      {' '}Forgot your email address?
+                      <Ionicons
+                        name="help-circle-outline"
+                        size={16}
+                        color={Colors.textSecondary}
+                      />{" "}
+                      Forgot your email address?
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -580,11 +632,19 @@ export default function LoginScreen({ navigation }: Props) {
                     <View style={styles.customerInfoHeader}>
                       <Text style={styles.customerInfoLabel}>Client Code</Text>
                       <TouchableOpacity onPress={() => setUserData(null)}>
-                        <Ionicons name="pencil" size={16} color={Colors.primary} />
+                        <Ionicons
+                          name="pencil"
+                          size={16}
+                          color={Colors.primary}
+                        />
                       </TouchableOpacity>
                     </View>
-                    <Text style={styles.customerInfoValue}>{userData.client_code}</Text>
-                    <Text style={styles.customerName}>{userData.customer_name}</Text>
+                    <Text style={styles.customerInfoValue}>
+                      {userData.client_code}
+                    </Text>
+                    <Text style={styles.customerName}>
+                      {userData.customer_name}
+                    </Text>
                     {userData.accounts && userData.accounts.length > 0 && (
                       <Text style={styles.accountInfo}>
                         {userData.accounts.length} account(s) found
@@ -643,7 +703,9 @@ export default function LoginScreen({ navigation }: Props) {
                           />
                         </View>
                       ) : (
-                        <Text style={styles.supportHintText}>No email address found for this account.</Text>
+                        <Text style={styles.supportHintText}>
+                          No email address found for this account.
+                        </Text>
                       )}
                     </View>
 
@@ -669,7 +731,9 @@ export default function LoginScreen({ navigation }: Props) {
                           />
                         </View>
                       ) : (
-                        <Text style={styles.supportHintText}>No phone number found for this account.</Text>
+                        <Text style={styles.supportHintText}>
+                          No phone number found for this account.
+                        </Text>
                       )}
                     </View>
 
@@ -681,47 +745,29 @@ export default function LoginScreen({ navigation }: Props) {
                           onPress={handleWhatsAppSupport}
                           activeOpacity={0.8}
                         >
-                          <Ionicons name="logo-whatsapp" size={18} color={Colors.textInverse} style={styles.whatsappIcon} />
-                          <Text style={styles.whatsappButtonText}>WhatsApp Support</Text>
+                          <Ionicons
+                            name="logo-whatsapp"
+                            size={18}
+                            color={Colors.textInverse}
+                            style={styles.whatsappIcon}
+                          />
+                          <Text style={styles.whatsappButtonText}>
+                            WhatsApp Support
+                          </Text>
                         </TouchableOpacity>
                       </View>
                     )}
 
-                    {/* Password Input */}
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.inputLabel}>Create Password</Text>
-                      <View style={styles.inputWrapper}>
-                        <Ionicons
-                          name="lock-closed-outline"
-                          size={20}
-                          color={Colors.textSecondary}
-                          style={styles.inputIcon}
-                        />
-                        <TextInput
-                          style={[styles.textInput, styles.passwordInput]}
-                          value={password}
-                          onChangeText={setPassword}
-                          placeholder="Create a strong password"
-                          placeholderTextColor={Colors.textMuted}
-                          secureTextEntry={!showPassword}
-                          autoCapitalize="none"
-                          autoCorrect={false}
-                        />
-                        <TouchableOpacity
-                          onPress={() => setShowPassword(!showPassword)}
-                          style={styles.passwordToggle}
-                        >
-                          <Ionicons
-                            name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                            size={20}
-                            color={Colors.textSecondary}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                      <Text style={styles.passwordHint}>
-                        Password must be at least 8 characters long
-                      </Text>
-                    </View>
+                    <PasswordField
+                      label="Create Password"
+                      value={password}
+                      onChangeText={setPassword}
+                      placeholder="Create a strong password"
+                      helperText={`Password must be at least ${PASSWORD_MIN_LENGTH} characters long`}
+                      disabled={isLoading}
+                      autoComplete="new-password"
+                      textContentType="newPassword"
+                    />
                   </>
                 )}
 
@@ -749,7 +795,9 @@ export default function LoginScreen({ navigation }: Props) {
 
                 {/* Switch to Login */}
                 <View style={styles.switchModeContainer}>
-                  <Text style={styles.switchModeText}>Already have an account? </Text>
+                  <Text style={styles.switchModeText}>
+                    Already have an account?{" "}
+                  </Text>
                   <TouchableOpacity onPress={toggleMode}>
                     <Text style={styles.switchModeLink}>Sign In</Text>
                   </TouchableOpacity>
@@ -758,12 +806,21 @@ export default function LoginScreen({ navigation }: Props) {
             )}
           </View>
 
-          {/* Footer */}
+          {/* Customer Care */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              Need help?{' '}
-              <Text style={styles.footerLinkText}>Contact Support</Text>
-            </Text>
+            <TouchableOpacity
+              onPress={() => setShowCustomerCareModal(true)}
+              accessibilityRole="button"
+              accessibilityLabel="Contact Customer Care"
+              style={styles.customerCareLink}
+            >
+              <Text style={styles.footerText}>
+                {isRegisterMode
+                  ? "Unable to register? "
+                  : "Need help signing in? "}
+                <Text style={styles.footerLinkText}>Contact Customer Care</Text>
+              </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -773,7 +830,7 @@ export default function LoginScreen({ navigation }: Props) {
         visible={showResetConfirm}
         type="confirm"
         title="Reset Password"
-        message={`A password reset code will be sent to ${loginWithEmail ? 'your email' : 'the email associated with this phone number'}. Continue?`}
+        message={`A password reset code will be sent to ${loginWithEmail ? "your email" : "the email associated with this phone number"}. Continue?`}
         confirmText="Send Reset Code"
         cancelText="Cancel"
         onConfirm={sendResetCode}
@@ -789,7 +846,11 @@ export default function LoginScreen({ navigation }: Props) {
         confirmText="Continue"
         onConfirm={() => {
           setShowResetSentModal(false);
-          navigation.navigate('ResetPassword');
+          navigation.navigate("ResetPassword", {
+            identifier: loginWithEmail
+              ? email.trim()
+              : normalizePhoneNumber(phone),
+          });
         }}
         onCancel={() => setShowResetSentModal(false)}
         showCancel={false}
@@ -800,11 +861,21 @@ export default function LoginScreen({ navigation }: Props) {
         visible={showMismatchModal}
         type="confirm"
         title="Verify Information"
-        message={`The ${mismatchType === 'both' ? 'email and phone number' : mismatchType} you entered does not match our records. Are you sure this information is correct?`}
+        message={`The ${mismatchType === "both" ? "email and phone number" : mismatchType} you entered does not match our records. Are you sure this information is correct?`}
         confirmText="Yes, Continue"
         cancelText="Let me correct it"
         onConfirm={handleRegisterWithMismatch}
         onCancel={handleMismatchRetry}
+      />
+
+      <CustomerCareModal
+        visible={showCustomerCareModal}
+        onClose={() => setShowCustomerCareModal(false)}
+        message={
+          isRegisterMode
+            ? "If registration was unsuccessful, contact us and we will help you create your account."
+            : "If you are unable to sign in, contact us and we will help you regain access."
+        }
       />
     </SafeAreaView>
   );
@@ -823,12 +894,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: Spacing.xxl,
     paddingBottom: Spacing.xl,
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: Spacing.md,
   },
   logo: {
@@ -841,7 +912,7 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.medium,
     color: Colors.textSecondary,
     letterSpacing: Typography.letterSpacing.wider,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   formContainer: {
     flex: 1,
@@ -849,13 +920,13 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     ...CommonStyles.h2,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: Spacing.xs,
   },
   subtitleText: {
     ...CommonStyles.body,
     color: Colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: Spacing.xl,
     lineHeight: Typography.lg * Typography.lineHeights.relaxed,
   },
@@ -868,16 +939,16 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   customerInfoHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: Spacing.xs,
   },
   customerInfoLabel: {
     fontSize: Typography.xs,
     fontWeight: Typography.weights.semibold,
     color: Colors.textSecondary,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     letterSpacing: Typography.letterSpacing.wider,
   },
   customerInfoValue: {
@@ -894,7 +965,7 @@ const styles = StyleSheet.create({
     fontSize: Typography.xs,
     color: Colors.textSecondary,
     marginTop: Spacing.xs,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   inputContainer: {
     marginBottom: Spacing.lg,
@@ -905,11 +976,11 @@ const styles = StyleSheet.create({
     color: Colors.text,
     marginBottom: Spacing.xs,
     letterSpacing: Typography.letterSpacing.wide,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.md,
     borderWidth: 1,
@@ -943,10 +1014,10 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
   },
   whatsappButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#25D366',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#25D366",
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.md,
     marginTop: Spacing.sm,
@@ -959,16 +1030,10 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.semibold,
     color: Colors.textInverse,
   },
-  passwordInput: {
-    paddingRight: Spacing.sm,
-  },
-  passwordToggle: {
-    padding: Spacing.xs,
-  },
   switchModeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: Spacing.md,
   },
   switchModeText: {
@@ -980,11 +1045,6 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontWeight: Typography.weights.semibold,
   },
-  passwordHint: {
-    fontSize: Typography.xs,
-    color: Colors.textMuted,
-    marginTop: Spacing.xs,
-  },
   buttonContainer: {
     marginTop: Spacing.sm,
   },
@@ -992,7 +1052,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   backButton: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: Spacing.sm,
   },
   backButtonText: {
@@ -1001,20 +1061,32 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.medium,
   },
   footer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: Spacing.lg,
+  },
+  registrationHelpText: {
+    color: Colors.textSecondary,
+    fontSize: Typography.sm,
+    lineHeight: 20,
+    textAlign: "center",
+    marginBottom: Spacing.sm,
+  },
+  customerCareLink: {
+    minHeight: 44,
+    alignItems: "center",
+    justifyContent: "center",
   },
   footerText: {
     fontSize: Typography.sm,
     color: Colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
   },
   footerLinkText: {
     color: Colors.primary,
     fontWeight: Typography.weights.semibold,
   },
   loginMethodToggle: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.md,
     padding: 4,
@@ -1024,9 +1096,9 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     borderRadius: BorderRadius.sm,
@@ -1045,19 +1117,13 @@ const styles = StyleSheet.create({
   toggleButtonTextActive: {
     color: Colors.textInverse,
   },
-  passwordLabelRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: Spacing.xs,
-  },
   forgotPasswordLink: {
     fontSize: Typography.sm,
     color: Colors.primary,
     fontWeight: Typography.weights.semibold,
   },
   forgotEmailContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: Spacing.md,
   },
   forgotEmailLink: {

@@ -8,6 +8,10 @@ export interface ApiResponse<T> {
   // Additional properties for error handling
   error_code?: string;
   requires_email_input?: boolean;
+  meta?: {
+    source: 'network' | 'cache';
+    cached_at?: string;
+  };
 }
 
 // Email Format Types
@@ -35,13 +39,7 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   token: string;
-  user: {
-    id: number;
-    email: string;
-    phone: string | null;
-    first_name: string;
-    last_name: string;
-  };
+  user: User;
   accounts: {
     id: number;
     client_code: string;
@@ -233,24 +231,32 @@ export interface DashboardData {
       code: string;
       description: string;
       amount: number;
+      amount_net: number;
+      amount_vat: number;
+      vat_rate: number;
+      amount_includes_vat: boolean;
       quantity: number;
     }>;
     total_subscription_amount?: number;
+    total_subscription_net_amount?: number;
+    total_subscription_vat_amount?: number;
+    subscription_amounts_include_vat?: boolean;
+    subscription_amounts_are_authoritative?: boolean;
   };
   customer: {
     customer_number: string;
     name: string;
     email: EmailDisplay;
-    phone: string;
-    address: string;
-    package_name: string;
-    package_speed: string;
-    monthly_fee: number;
+    phone?: string;
+    address?: string;
+    package_name?: string;
+    package_speed?: string;
+    monthly_fee?: number;
     status: string;
     account_type?: string; // 'Current' or 'Post'
     status_reason?: string | null; // Suspension reason if applicable
-    installation_date: string;
-    last_payment_date: string;
+    installation_date?: string;
+    last_payment_date?: string;
     balance: number;
     service_type: string;
     customerid: number;
@@ -260,11 +266,11 @@ export interface DashboardData {
       download_gb: number;
       upload_gb: number;
       total_gb: number;
-      days_remaining: number;
-      daily_average: number;
+      days_remaining?: number;
+      daily_average?: number;
       period: string;
     };
-    previous_month: {
+    previous_month?: {
       download_gb: number;
       upload_gb: number;
       total_gb: number;
@@ -273,7 +279,7 @@ export interface DashboardData {
       name: string;
       speed: string;
       limit_gb: number;
-      monthly_fee: number;
+      monthly_fee?: number;
       subscription_plan?: string;
       subscription_limit?: string;
       download_speed_mbps?: number;
@@ -300,6 +306,11 @@ export interface DashboardData {
       due_date: string;
     } | null;
     next_billing_date: string;
+    billing_scope?: {
+      applied: boolean;
+      cutoff_date: string | null;
+      source: BillingScopeSource;
+    };
   };
   alerts: {
     open_tickets: number;
@@ -308,7 +319,7 @@ export interface DashboardData {
     connection_status: string;
   };
   recent_payments: any[];
-  outstanding_invoices: Array<{
+  outstanding_invoices?: Array<{
     id: number;
     customer_number: string;
     invoice_number: string;
@@ -318,8 +329,8 @@ export interface DashboardData {
     issue_date: string;
   }>;
   active_tickets: any[];
-  current_outages: any[];
-  unread_notifications: number;
+  current_outages?: any[];
+  unread_notifications?: number;
 }
 
 // Usage Data Types
@@ -363,6 +374,7 @@ export interface DetailedUsageData {
       package_amount: number;
       total_monthly_amount?: number;
       formatted_total_amount?: string;
+      amounts_include_vat?: boolean;
       limit_gb: number | null;
       is_uncapped: boolean;
       subscription_limit: string;
@@ -376,8 +388,11 @@ export interface DetailedUsageData {
       code: string;
       description: string;
       amount_excl_vat: number;
+      vat_amount: number;
+      vat_rate: number;
       amount_incl_vat: number;
       formatted_amount: string;
+      amount_includes_vat: boolean;
       traffic_cap: string | null;
       status: string;
     }>;
@@ -406,6 +421,7 @@ export interface DetailedUsageData {
       download_mb: number;
       upload_mb: number;
       total_mb: number;
+      has_data?: boolean;
     };
     average_daily: {
       download_mb: number;
@@ -467,11 +483,17 @@ export interface DetailedBillingData {
     current_balance: number;
     client_owes_amount: number;
     we_owe_client_amount: number;
-    credit_remaining: number;
-    prepayment_remaining: number;
+    credit_remaining: number | null;
+    prepayment_remaining: number | null;
     account_status: string;
     last_payment_date: string | null;
-    last_payment_amount: number;
+    last_payment_amount: number | null;
+    last_paid_invoice_amount: number | null;
+    last_payment_is_transaction_level: boolean;
+    balance_source: 'azotel_statement' | 'invoice_ledger_fallback' | 'installation_scoped_invoice_ledger';
+    invoice_ledger_balance: number;
+    balance_reconciled: boolean | null;
+    service_account_status: string;
   };
   invoices: {
     all_invoices: BillingInvoice[];
@@ -482,39 +504,72 @@ export interface DetailedBillingData {
   };
   billing_info: {
     package_amount: number;
+    package_net_amount: number;
+    package_vat_amount: number;
+    package_vat_rate: number | null;
+    package_amount_is_authoritative: boolean;
+    package_amount_source: 'azotel_subscription_tax_breakdown' | 'azotel_subscription_amount_fallback';
     billing_cycle: string;
+    billing_cycle_months: number | null;
+    billing_cycle_source: 'azotel_customer_frequency' | 'unavailable';
     next_billing_date: string | null;
+    next_billing_date_source: 'unavailable';
+    estimated_next_billing_date: string | null;
+    estimated_next_billing_date_source: 'latest_invoice_date_plus_billing_frequency';
+    next_billing_date_is_estimated: boolean;
     estimated_next_amount: number;
-    billing_day: string;
+    estimated_next_amount_source: 'current_active_subscriptions';
+    billing_day: string | null;
+    estimated_billing_day: string | null;
     payment_method: string;
-    auto_payment_enabled: boolean;
+    auto_payment_enabled: boolean | null;
     billing_email: EmailDisplay;
     billing_address: string;
   };
   payment_history: {
+    year: number;
     monthly_breakdown: MonthlyBilling[];
-    total_paid_this_year: number;
+    total_paid_this_year: number | null;
+    invoice_paid_amount_with_payment_date_this_year: number;
+    is_transaction_level: boolean;
+    source: 'azotel_invoice_records';
     average_monthly_amount: number;
   };
   alerts: {
-    has_overdue: boolean;
+    has_overdue: boolean | null;
+    overdue_status: 'overdue' | 'not_overdue' | 'unknown';
     has_unpaid_invoices: boolean;
     client_owes_money: boolean;
     we_owe_client: boolean;
-    payment_due_soon: boolean;
-    low_credit: boolean;
+    payment_due_soon: boolean | null;
+    payment_due_soon_status: 'due_soon' | 'not_due_soon' | 'unknown';
+    low_credit: boolean | null;
     auto_payment_failed: boolean;
   };
   raw_data: {
     customer_statement: any;
     subscription_details: any;
   };
+  billing_scope: {
+    applied: boolean;
+    cutoff_date: string | null;
+    source: BillingScopeSource;
+    installation_maintenance_id: string | null;
+    installation_status: string | null;
+    total_invoice_count: number;
+    scoped_invoice_count: number;
+  };
 }
+
+export type BillingScopeSource =
+  | 'latest_maintenance_installation_date_reported'
+  | 'all_invoices_no_valid_installation';
 
 export interface BillingInvoice {
   invoice_number: string;
   amount: number;
   amount_paid: number;
+  amount_credited: number;
   outstanding_amount: number;
   status: string;
   invoice_date: string;
@@ -563,6 +618,7 @@ export interface TicketMessage {
   attachments: TicketAttachment[];
   reaction?: string | null;
   is_own_message: boolean;
+  delivery_status?: 'local' | 'delivered' | null;
 }
 
 export interface TicketAttachment {
@@ -651,10 +707,10 @@ export interface Outage {
   status: 'investigating' | 'identified' | 'monitoring' | 'resolved';
   startTime: string;
   estimatedResolution?: string;
-  updates: OutageUpdate[];
+  updates: PublicOutageUpdate[];
 }
 
-export interface OutageUpdate {
+export interface PublicOutageUpdate {
   id: string;
   message: string;
   timestamp: string;
@@ -668,7 +724,7 @@ export interface OutageReport {
   status: 'investigating' | 'identified' | 'monitoring' | 'resolved';
   startTime: string;
   estimatedResolution?: string;
-  updates: OutageUpdate[];
+  updates: PublicOutageUpdate[];
 }
 
 // Payment Types
@@ -785,4 +841,13 @@ export interface SubmitRatingRequest {
   customer_id: number;
   rating: number;
   feedback: string | null;
+}
+
+export interface TowerNotification {
+  ticket_id: number;
+  title: string;
+  message: string;
+  created_at: string;
+  is_read: boolean;
+  tower_names: string[];
 }

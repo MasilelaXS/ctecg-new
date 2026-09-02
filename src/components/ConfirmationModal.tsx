@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Platform,
-  type ReactNode,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Colors, Typography, Spacing } from '../constants/Design';

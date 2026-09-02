@@ -42,22 +42,25 @@ export default function YocoPaymentWebView({
     
     console.log('Yoco WebView URL:', url);
 
-    // Check for success URL
-    if (url.includes('ctecg.co.za/payment/success')) {
+    // Match only the trusted HTTPS callback origin and exact callback paths.
+    const isCallback = (path: 'success' | 'cancel' | 'failure') =>
+      new RegExp(`^https://(?:www\\.)?ctecg\\.co\\.za/payment/${path}(?:[/?#]|$)`, 'i').test(url);
+
+    if (isCallback('success')) {
       console.log('Payment successful:', paymentReference);
       onSuccess(paymentReference);
       return;
     }
 
     // Check for cancel URL
-    if (url.includes('ctecg.co.za/payment/cancel')) {
+    if (isCallback('cancel')) {
       console.log('Payment cancelled by user');
       setShowCancelledModal(true);
       return;
     }
 
     // Check for failure URL
-    if (url.includes('ctecg.co.za/payment/failure')) {
+    if (isCallback('failure')) {
       console.log('Payment failed');
       setShowFailedModal(true);
       return;

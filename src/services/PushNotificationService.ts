@@ -67,26 +67,20 @@ class PushNotificationService {
         return null;
       }
 
-      // Get the push token
+      // Use Expo push tokens on both platforms so the backend has one current,
+      // supported delivery path. Native Android FCM tokens require separate
+      // Firebase HTTP v1 service-account infrastructure.
       if (Platform.OS === 'android') {
-        // For Android, use FCM device token
-        const tokenData = await Notifications.getDevicePushTokenAsync();
-        this.pushToken = tokenData.data;
-        console.log('FCM Token:', this.pushToken);
-
-        // Android specific: Create notification channel
         await this.setupAndroidChannels();
-      } else {
-        // For iOS, use Expo push token (handled by Expo push service)
-        const projectId =
-          Constants.expoConfig?.extra?.eas?.projectId ||
-          Constants.easConfig?.projectId;
-        const tokenData = await Notifications.getExpoPushTokenAsync(
-          projectId ? { projectId } : undefined
-        );
-        this.pushToken = tokenData.data;
-        console.log('Expo Push Token:', this.pushToken);
       }
+
+      const projectId =
+        Constants.expoConfig?.extra?.eas?.projectId ||
+        Constants.easConfig?.projectId;
+      const tokenData = await Notifications.getExpoPushTokenAsync(
+        projectId ? { projectId } : undefined
+      );
+      this.pushToken = tokenData.data;
 
       return this.pushToken;
     } catch (error) {
@@ -130,6 +124,14 @@ class PushNotificationService {
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 500, 250, 500],
       lightColor: '#ff0000',
+      sound: 'default',
+    });
+
+    await Notifications.setNotificationChannelAsync('notifications', {
+      name: 'Service Notifications',
+      importance: Notifications.AndroidImportance.HIGH,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#cc0000',
       sound: 'default',
     });
 
