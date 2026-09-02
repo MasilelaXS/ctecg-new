@@ -80,8 +80,6 @@ export default function Header({
     <>
       <StatusBar
         barStyle={getStatusBarStyle()}
-        backgroundColor={getBackgroundColor()}
-        translucent={variant === 'transparent'}
       />
       <View
         style={[

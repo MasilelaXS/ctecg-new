@@ -1481,7 +1481,6 @@ export default function ChatScreen({ route, navigation }: ChatScreenProps) {
           transparent={false}
           animationType="fade"
           onRequestClose={() => setViewerImageUrl(null)}
-          statusBarTranslucent
         >
           <View style={styles.imageViewerContainer}>
             <TouchableOpacity

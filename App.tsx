@@ -56,7 +56,7 @@ export default function App() {
     <SafeAreaProvider>
       <AuthProvider>
         <AppContent />
-        <StatusBar style="dark" backgroundColor="#FFFFFF" />
+        <StatusBar style="dark" />
         <Toast config={toastConfig} />
       </AuthProvider>
     </SafeAreaProvider>
